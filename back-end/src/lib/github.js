@@ -97,5 +97,16 @@ export function createGithubClient(config, { fetchImpl = globalThis.fetch } = {}
         defaultBranch: data.default_branch ?? 'main',
       };
     },
+
+    async fetchReadme(ref) {
+      const url = `https://api.github.com/repos/${ref.owner}/${ref.repo}/readme`;
+      const response = await request(url);
+      if (response.status === 404) return '';
+      if (!response.ok) throw new Error(`获取 GitHub README 失败（HTTP ${response.status}）`);
+
+      const data = await response.json();
+      if (typeof data.content !== 'string') return '';
+      return Buffer.from(data.content.replace(/\s/g, ''), 'base64').toString('utf8');
+    },
   };
 }

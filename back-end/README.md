@@ -23,22 +23,43 @@ build.yml 调用 GitHub API 补充动态字段并生成 output/*.json
 
 ## 本地命令
 
+### 首次启动
+
+后端需要先把 `repos/*.md` 构建成 `output/` 下的 JSON 文件，然后 API 服务才能读取项目数据。
+请使用 Node.js `>=20.6.0`，在仓库根目录执行：
+
 ```bash
 cd back-end
 npm install
-npm run validate
 npm run build:offline
-npm test
-```
-
-启动本地 API（默认监听 `http://127.0.0.1:3001`）：
-
-```bash
 npm run start
 ```
 
-接口包括 `GET /health`、`GET /projects` 和 `GET /projects/:id`。启动前先运行
-`npm run build:offline` 生成 `output/`；也可以通过 `PORT` 和 `HOST` 环境变量修改监听地址。
+启动成功后，API 默认监听 `http://127.0.0.1:3001`。可以打开以下地址检查服务：
+
+- `http://127.0.0.1:3001/health`：健康检查
+- `http://127.0.0.1:3001/projects`：项目列表
+- `http://127.0.0.1:3001/projects/<id>`：项目详情
+
+Windows PowerShell 如果因为执行策略无法运行 `npm`，请使用 `npm.cmd`，例如：
+
+```bash
+npm.cmd run build:offline
+npm.cmd run start
+```
+
+保持服务运行时，可以在另一个终端执行测试或重新构建。修改 `repos/` 后，需要重新运行构建命令，API 才会读取新的数据。
+
+### 常用命令
+
+```bash
+npm run validate       # 校验 repos/*.md 的 front matter、Schema 和重复项
+npm run build:offline  # 不访问 GitHub，使用本地 Markdown 构建数据
+npm run build          # 访问 GitHub，补充仓库信息和 README 回退内容
+npm run start          # 启动 API 服务
+npm run dev            # 以 watch 模式启动 API 服务
+npm test               # 运行后端测试
+```
 
 联网构建使用：
 
@@ -46,7 +67,24 @@ npm run start
 npm run build
 ```
 
-联网构建会使用 `GITHUB_TOKEN`（可选）读取公开仓库的描述、stars、语言、topics、许可证和默认分支。匿名请求会受到 GitHub 限流限制。
+联网构建会使用 `GITHUB_TOKEN`（可选）读取公开仓库的描述、stars、语言、topics、许可证、默认分支和 README。匿名请求会受到 GitHub 限流限制。
+
+### 配置
+
+可以在 `back-end/.env` 中配置：
+
+```env
+GITHUB_TOKEN=your_github_token
+GITHUB_TIMEOUT_MS=10000
+```
+
+API 服务支持以下环境变量：
+
+```bash
+PORT=3001 HOST=127.0.0.1 npm run start
+```
+
+也可以通过 `OUTPUT_DIR` 指定 JSON 产物目录。默认情况下，构建产物位于 `back-end/output/`。
 
 ## 输入和产物
 

@@ -165,6 +165,26 @@ export function analyzeReadme(markdown) {
   };
 }
 
+/** 在项目介绍或 Features 为空时，按需补齐内容。 */
+export function fillProjectContent(markdown, { readme = '', description = '' } = {}) {
+  const text = String(markdown ?? '').replace(/\r\n?/g, '\n');
+  const featuresHeading = /^\s{0,3}##\s+Features\s*#*\s*$/im;
+  const match = featuresHeading.exec(text);
+  const intro = match ? text.slice(0, match.index).trim() : text.trim();
+  const featureBody = match
+    ? text.slice(match.index + match[0].length).match(/^[\s\S]*?(?=^\s{0,3}#{1,6}\s+|$)/m)?.[0].trim() ?? ''
+    : '';
+
+  let result = text.trim();
+  const replacedIntro = !intro && String(readme).trim();
+  if (replacedIntro) result = String(readme).trim();
+  if (match && !featureBody && String(description).trim()) {
+    if (replacedIntro) result = `${result}\n\n${match[0].trim()}`;
+    result = `${result}\n\n${String(description).trim()}`;
+  }
+  return result.trim();
+}
+
 function escapeHtml(value) {
   return String(value)
     .replace(/&/g, '&amp;')

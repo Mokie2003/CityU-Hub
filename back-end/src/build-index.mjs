@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { aggregateProjects } from './lib/aggregate.js';
 import { createGithubClient, parseRepoUrl } from './lib/github.js';
-import { analyzeReadme, guessTagsFromReadme } from './lib/markdown.js';
+import { analyzeReadme, fillProjectContent, guessTagsFromReadme } from './lib/markdown.js';
 import { slugify } from './lib/slug.js';
 import { loadConfig } from './config.js';
 import { parseFrontmatterDocument } from './lib/frontmatter.js';
@@ -55,12 +55,25 @@ async function enrichProject(meta, content, fileName, github, useOffline) {
   let githubMeta = null;
   if (!useOffline) githubMeta = await github.fetchRepoMeta(ref);
 
-  const analysis = analyzeReadme(content);
+  const featuresHeading = content.match(/^\s{0,3}##\s+Features\s*#*\s*$/im);
+  const intro = featuresHeading ? content.slice(0, featuresHeading.index) : content;
+  const featureBody = featuresHeading
+    ? content.slice(featuresHeading.index + featuresHeading[0].length).split(/^\s{0,3}#{1,6}\s+/m, 1)[0]
+    : '';
+  const needsReadme = !intro.trim();
+  const needsDescription = Boolean(featuresHeading && !featureBody.trim());
+  const fetchedReadme = needsReadme && !useOffline ? await github.fetchReadme(ref) : '';
+  const enrichedContent = fillProjectContent(content, {
+    readme: fetchedReadme,
+    description: needsDescription ? githubMeta?.description : '',
+  });
+
+  const analysis = analyzeReadme(enrichedContent);
   const tags = [
     ...new Set([
       ...meta.tags,
       ...(githubMeta?.topics ?? []),
-      ...guessTagsFromReadme(content, { language: githubMeta?.language }),
+      ...guessTagsFromReadme(enrichedContent, { language: githubMeta?.language }),
     ]),
   ].slice(0, 12);
   const id = meta.id || slugify(`${ref.owner}-${ref.repo}`);
@@ -98,19 +111,19 @@ async function enrichProject(meta, content, fileName, github, useOffline) {
     updatedAt: now,
     sourceFile: path.posix.join('repos', fileName),
     readmeUrl: `/data/projects/${id}.json`,
-    content,
+    content: enrichedContent,
     analysis,
   };
 }
 
-export async function buildIndex({ inputDir = reposDir, outputPath = outputDir, useOffline = offline } = {}) {
+export async function buildIndex({ inputDir = reposDir, outputPath = outputDir, useOffline = offline, githubClient } = {}) {
   const entries = await fs.readdir(inputDir, { withFileTypes: true });
   const files = entries
     .filter((entry) => entry.isFile() && entry.name.endsWith('.md') && entry.name !== '_template.md')
     .map((entry) => entry.name)
     .sort();
   const config = loadConfig();
-  const github = createGithubClient(config);
+  const github = githubClient ?? createGithubClient(config);
   const projects = [];
   const ids = new Map();
   const repoUrls = new Map();

@@ -8,6 +8,8 @@
 # enrollmentYear: 2024
 # repoUrl: https://github.com/owner/repository
 # homepageUrl: https://example.com
+# 如果想使用项目的简介，请删除Features后面的内容
+# 如果想使用项目的README，请将项目介绍留空
 title: My Project
 author: your-github-name
 authorName: 你的姓名
