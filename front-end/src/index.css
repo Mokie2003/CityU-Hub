@@ -440,6 +440,134 @@ html.cursor-hidden * {
   border-top: none;
 }
 
+/* ---------- 像素宠物 ---------- */
+.pet-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  will-change: transform;
+}
+
+.pet-face {
+  transform-origin: center;
+}
+
+.pet-body {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  pointer-events: auto;
+  filter: drop-shadow(0 0 8px rgba(244, 124, 148, 0.55));
+}
+
+/* 三张像素图叠放，动画帧由脚本切换 opacity，避免频繁重渲染 */
+.pet-frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+@keyframes pet-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes pet-breathe {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.94);
+  }
+}
+
+@keyframes pet-jump {
+  0% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-14px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.pet-bob {
+  animation: pet-bob 0.3s step-end infinite;
+}
+
+.pet-bob-fast {
+  animation: pet-bob 0.14s step-end infinite;
+}
+
+.pet-breathe {
+  animation: pet-breathe 1.8s step-end infinite;
+}
+
+.pet-jump {
+  animation: pet-jump 0.46s step-end 1;
+}
+
+/* 被宠物戳到的组件会闪一下 */
+@keyframes pet-poked {
+  0%,
+  100% {
+    box-shadow: none;
+  }
+  50% {
+    box-shadow: 0 0 0 3px #f47c94, 0 0 26px var(--glow-brand);
+  }
+}
+
+.pet-poked {
+  animation: pet-poked 0.48s step-end 1;
+}
+
+.pet-bubble {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50%, -10px);
+  border: 3px solid var(--c-line);
+  background-color: var(--c-surface);
+  color: var(--c-ink);
+  padding: 6px 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 3px 3px 0 var(--c-shadow);
+}
+
+.pet-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  transform: translateX(-50%) rotate(45deg);
+  background-color: var(--c-surface);
+  border-right: 3px solid var(--c-line);
+  border-bottom: 3px solid var(--c-line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-bob,
+  .pet-bob-fast,
+  .pet-breathe,
+  .pet-poked {
+    animation: none;
+  }
+}
+
 /* ---------- 横向滚动容器 ---------- */
 .edge-fade {
   mask-image: linear-gradient(
@@ -561,3 +689,4 @@ html.cursor-hidden * {
   background-color: var(--c-elevated);
   color: var(--c-muted);
 }
+

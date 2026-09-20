@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { enrichProjectsWithGithub } from '../api/github';
 import { fetchProjectById, fetchProjects } from '../api/projects';
 import type { Project, ProjectsResponse } from '../types';
 
@@ -18,24 +19,33 @@ export function useProjects(): ProjectsState {
 
   useEffect(() => {
     let alive = true;
+    const controller = new AbortController();
     setLoading(true);
     setError(null);
 
-    fetchProjects()
-      .then((res) => {
+    const run = async () => {
+      try {
+        const res = await fetchProjects();
         if (!alive) return;
         setData(res);
-      })
-      .catch((err: unknown) => {
+        setLoading(false);
+
+        // 列表先渲染，缺失的语言 / stars 再异步从 GitHub 补齐
+        const enriched = await enrichProjectsWithGithub(res.projects, controller.signal);
+        if (alive && enriched) {
+          setData((prev) => (prev ? { ...prev, projects: enriched } : prev));
+        }
+      } catch (err: unknown) {
         if (!alive) return;
         setError(err instanceof Error ? err.message : '数据加载失败');
-      })
-      .finally(() => {
-        if (alive) setLoading(false);
-      });
+        setLoading(false);
+      }
+    };
+    run();
 
     return () => {
       alive = false;
+      controller.abort();
     };
   }, [nonce]);
 
@@ -65,25 +75,31 @@ export function useProject(id: string | undefined): ProjectState {
     }
 
     let alive = true;
+    const controller = new AbortController();
     setLoading(true);
     setError(null);
 
-    fetchProjectById(id)
-      .then((res) => {
-        if (alive) setProject(res);
-      })
-      .catch((err: unknown) => {
-        if (alive) {
-          setProject(null);
-          setError(err instanceof Error ? err.message : '数据加载失败');
-        }
-      })
-      .finally(() => {
-        if (alive) setLoading(false);
-      });
+    const run = async () => {
+      try {
+        const res = await fetchProjectById(id);
+        if (!alive) return;
+        setProject(res);
+        setLoading(false);
+
+        const enriched = await enrichProjectsWithGithub([res], controller.signal);
+        if (alive && enriched) setProject(enriched[0]);
+      } catch (err: unknown) {
+        if (!alive) return;
+        setProject(null);
+        setError(err instanceof Error ? err.message : '数据加载失败');
+        setLoading(false);
+      }
+    };
+    run();
 
     return () => {
       alive = false;
+      controller.abort();
     };
   }, [id]);
 

@@ -26,14 +26,21 @@ export const ProjectCard = memo(function ProjectCard({ project, index }: Project
       className="card-brutal cursor-target animate-fade-in-up group flex flex-col p-5"
     >
       <div className="flex items-center gap-2">
-        <img
-          src={project.authorAvatar}
-          alt={`${project.author} 的头像`}
-          loading="lazy"
-          width={24}
-          height={24}
-          className="size-6 border-2 border-line object-cover bg-elevated"
-        />
+        {project.authorAvatar ? (
+          <img
+            src={project.authorAvatar}
+            alt={`${project.author} 的头像`}
+            loading="lazy"
+            width={24}
+            height={24}
+            className="size-6 border-2 border-line bg-elevated object-cover"
+          />
+        ) : (
+          // 后端离线构建时没有头像，用首字母占位
+          <span className="pixel grid size-6 shrink-0 place-items-center border-2 border-line bg-elevated text-[7px] text-ink uppercase">
+            {project.author.slice(0, 1)}
+          </span>
+        )}
         <span className="mono text-[11px] text-muted">{project.author}</span>
         {project.demoUrl && (
           <span className="pixel border-2 border-accent px-1.5 py-1 text-[7px] text-accent">
@@ -65,7 +72,7 @@ export const ProjectCard = memo(function ProjectCard({ project, index }: Project
             className="size-2.5 shrink-0 border border-line"
             style={{ backgroundColor: languageColor(project.language) }}
           />
-          {project.language}
+          {project.language || '—'}
         </span>
         <span className="flex items-center gap-1 text-brand">
           <Star className="size-3.5" />

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TriangleAlert, X } from 'lucide-react';
 import { Header } from '../components/Header';
+import { EmptyState } from '../components/EmptyState';
 import { ProjectGrid } from '../components/ProjectGrid';
 import { SearchBar } from '../components/SearchBar';
 import { Sidebar } from '../components/Sidebar';
@@ -231,6 +232,14 @@ export function HomePage() {
                   重新加载
                 </button>
               </div>
+            ) : !loading && (data?.total ?? 0) === 0 ? (
+              // 接口通了但没有任何数据：多是 back-end/output 还没构建
+              <EmptyState
+                title="后端还没有数据"
+                description="接口返回 0 个项目。请在 back-end 目录执行 npm install && npm run build:offline 生成 output/，再执行 npm run start 启动接口。"
+                actionLabel="重新加载"
+                onAction={reload}
+              />
             ) : (
               <ProjectGrid projects={results} loading={loading} onReset={resetAll} />
             )}

@@ -2,13 +2,13 @@
 title: extend-slides
 author: lllllllly
 authorName: 噜噜啦
-major: computer sciece
+major: Computer Sciece
 enrollmentYear: 2026
 repoUrl: https://github.com/L01nki1/extend-slides
 homepageUrl: ''
 tags:
   - skills
-category: meow
+category: 学习辅助
 featured: false
 status: active
 ---

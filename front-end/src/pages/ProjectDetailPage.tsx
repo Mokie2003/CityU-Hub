@@ -59,15 +59,35 @@ export function ProjectDetailPage() {
           <>
             <article className="panel-brutal mt-6 p-6">
               <div className="flex items-center gap-2">
-                <img
-                  src={project.authorAvatar}
-                  alt={`${project.author} 的头像`}
-                  loading="lazy"
-                  width={28}
-                  height={28}
-                  className="size-7 border-2 border-line bg-elevated object-cover"
-                />
-                <span className="mono text-[12px] text-muted">{project.author}</span>
+                {project.authorAvatar ? (
+                  <img
+                    src={project.authorAvatar}
+                    alt={`${project.authorName || project.author} 的头像`}
+                    loading="lazy"
+                    width={28}
+                    height={28}
+                    className="size-7 border-2 border-line bg-elevated object-cover"
+                  />
+                ) : (
+                  <span className="pixel grid size-7 shrink-0 place-items-center border-2 border-line bg-elevated text-[8px] text-ink uppercase">
+                    {(project.authorName || project.author).slice(0, 1)}
+                  </span>
+                )}
+                <span className="flex min-w-0 flex-col leading-tight">
+                  <span className="mono truncate text-[12px] text-ink">
+                    {project.authorName || project.author}
+                  </span>
+                  {(project.major || project.enrollmentYear) && (
+                    <span className="mono truncate text-[11px] text-muted">
+                      {[
+                        project.major,
+                        project.enrollmentYear ? `${project.enrollmentYear} 级` : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' · ')}
+                    </span>
+                  )}
+                </span>
                 <span className="mono text-[12px] text-muted">//</span>
                 <Link
                   to={`/?q=author:${encodeURIComponent(project.author)}`}
@@ -145,7 +165,7 @@ export function ProjectDetailPage() {
                 <div className="flex items-center gap-2">
                   <Scale className="size-3.5" />
                   <dt className="sr-only">License</dt>
-                  <dd>{project.license}</dd>
+                  <dd>{project.license || '—'}</dd>
                 </div>
                 <div className="flex items-center gap-2">
                   <span
@@ -153,7 +173,7 @@ export function ProjectDetailPage() {
                     style={{ backgroundColor: languageColor(project.language) }}
                   />
                   <dt className="sr-only">Language</dt>
-                  <dd>{project.language}</dd>
+                  <dd>{project.language || '—'}</dd>
                 </div>
                 <div className="flex items-center gap-2">
                   <Calendar className="size-3.5" />

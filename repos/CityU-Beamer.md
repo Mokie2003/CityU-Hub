@@ -2,13 +2,13 @@
 title: cityu-beamer
 author: Brandon
 authorName: cxb
-major: computer science
+major: Computer Science
 enrollmentYear: 2026
 repoUrl: https://github.com/inscripoem/cityu-beamer
 homepageUrl: ''
 tags:
   - slides
-category: slides
+category: 学习辅助
 featured: false
 status: active
 ---

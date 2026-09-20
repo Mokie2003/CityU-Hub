@@ -1,14 +1,18 @@
 /**
  * 数据契约对应的 TS 类型定义。
- * 后端就绪后此文件的类型无需改动，只需把 api 层的 USE_MOCK 置为 false。
+ * 前端只认这份契约：数据可以来自 back-end 的 /projects 接口，
+ * 也可以来自 public/data 下的静态 JSON，组件层无需区分。
  */
 
 export interface Project {
   id: string;
   name: string;
   author: string;
+  /** 作者实名（GitHub 用户名为 author） */
   authorName?: string;
+  /** 专业 */
   major?: string;
+  /** 入学年份 */
   enrollmentYear?: number;
   authorAvatar: string;
   repo: string;
