@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  /** 可选的 HTTP API 根地址；未配置时使用 public/data 静态数据 */
+  /** 后端就绪后填写真实接口地址 */
   readonly VITE_API_BASE?: string;
 }
 

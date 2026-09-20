@@ -7,17 +7,17 @@ on:
       - 'repos/**'
       - 'schema/**'
       - 'back-end/**'
-      - 'front-end/**'
       - '.github/workflows/build.yml'
   workflow_dispatch:
 
 jobs:
   build-data:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: back-end
     permissions:
       contents: read
-      pages: write
-      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -26,38 +26,12 @@ jobs:
           cache: npm
           cache-dependency-path: back-end/package-lock.json
       - run: npm ci
-        working-directory: back-end
       - run: npm run validate
-        working-directory: back-end
       - run: npm run build
-        working-directory: back-end
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-node@v4
+      - uses: actions/upload-artifact@v4
         with:
-          node-version: 20
-          cache: npm
-          cache-dependency-path: front-end/package-lock.json
-      - run: npm ci
-        working-directory: front-end
-      - run: npm run sync-data
-        working-directory: front-end
-      - run: npm run build
-        working-directory: front-end
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: front-end/dist
-
-  deploy:
-    needs: build-data
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          name: cityu-hub-data
+          path: back-end/output/
+          if-no-files-found: error
