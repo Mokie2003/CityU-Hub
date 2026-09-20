@@ -1,6 +1,6 @@
 /**
  * 数据契约对应的 TS 类型定义。
- * 后端就绪后此文件的类型无需改动，只需把 api 层的 USE_MOCK 置为 false。
+ * 静态数据和 HTTP API 使用同一份前端数据类型。
  */
 
 export interface Project {

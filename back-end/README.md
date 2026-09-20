@@ -55,6 +55,8 @@ npm run build
 
 `back-end/output/` 是构建产物，不是作者编辑入口，也不应成为新的数据源。
 
+当前项目没有运行中的 HTTP API。前端默认读取部署后的静态文件 `/data/projects.json`；如需接入独立 API，前端构建时设置 `VITE_API_BASE`，并提供 `/projects` 与 `/projects/:id` 接口。
+
 ## 目录
 
 ```text

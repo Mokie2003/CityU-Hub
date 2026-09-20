@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "sync-data": "node scripts/sync-data.mjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview"
   },
