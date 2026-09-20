@@ -31,6 +31,15 @@ npm run build:offline
 npm test
 ```
 
+启动本地 API（默认监听 `http://127.0.0.1:3001`）：
+
+```bash
+npm run start
+```
+
+接口包括 `GET /health`、`GET /projects` 和 `GET /projects/:id`。启动前先运行
+`npm run build:offline` 生成 `output/`；也可以通过 `PORT` 和 `HOST` 环境变量修改监听地址。
+
 联网构建使用：
 
 ```bash

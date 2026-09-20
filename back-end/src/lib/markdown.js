@@ -165,6 +165,90 @@ export function analyzeReadme(markdown) {
   };
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function renderInline(markdown) {
+  let html = escapeHtml(markdown);
+  html = html.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+["'][^"']*["'])?\)/g, '<img src="$2" alt="$1">');
+  html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer noopener">$1</a>');
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+  html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
+  return html;
+}
+
+export function renderMarkdownHtml(markdown) {
+  const lines = String(markdown ?? '').replace(/\r\n?/g, '\n').split('\n');
+  const blocks = [];
+  let paragraph = [];
+  let list = [];
+  let code = null;
+
+  const flushParagraph = () => {
+    if (paragraph.length) {
+      blocks.push(`<p>${renderInline(paragraph.join(' '))}</p>`);
+      paragraph = [];
+    }
+  };
+  const flushList = () => {
+    if (list.length) {
+      blocks.push(`<ul>${list.map((item) => `<li>${renderInline(item)}</li>`).join('')}</ul>`);
+      list = [];
+    }
+  };
+
+  for (const line of lines) {
+    if (code) {
+      if (line.trim().startsWith('```')) {
+        blocks.push(`<pre><code>${escapeHtml(code.join('\n'))}</code></pre>`);
+        code = null;
+      } else {
+        code.push(line);
+      }
+      continue;
+    }
+    if (line.trim().startsWith('```')) {
+      flushParagraph();
+      flushList();
+      code = [];
+      continue;
+    }
+    const heading = line.match(/^\s{0,3}(#{1,6})\s+(.+?)\s*#*\s*$/);
+    if (heading) {
+      flushParagraph();
+      flushList();
+      const level = heading[1].length;
+      blocks.push(`<h${level}>${renderInline(heading[2])}</h${level}>`);
+      continue;
+    }
+    const item = line.match(/^\s*[-*+]\s+(.+)$/);
+    if (item) {
+      flushParagraph();
+      list.push(item[1]);
+      continue;
+    }
+    if (!line.trim()) {
+      flushParagraph();
+      flushList();
+      continue;
+    }
+    paragraph.push(line.trim());
+  }
+  flushParagraph();
+  flushList();
+  if (code) blocks.push(`<pre><code>${escapeHtml(code.join('\n'))}</code></pre>`);
+  return blocks.join('\n');
+}
+
 /** 仓库没提供 topics 时，用 README 关键词兜底推断标签 */
 export function guessTagsFromReadme(markdown, { language, topics = [] } = {}) {
   const lower = String(markdown ?? '').toLowerCase();

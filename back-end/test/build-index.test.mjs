@@ -50,6 +50,7 @@ test('buildIndex 将项目 Markdown 构建为静态索引与详情 JSON', async 
     const list = JSON.parse(await fs.readFile(path.join(outputDir, 'projects.json'), 'utf8'));
     const detail = JSON.parse(await fs.readFile(path.join(outputDir, 'projects', 'demo-project.json'), 'utf8'));
     assert.equal(list[0].content, undefined);
+    assert.equal(list[0].forks, 0);
     assert.match(detail.content, /README 驱动/);
     assert.equal(detail.readmeUrl, '/data/projects/demo-project.json');
   } finally {

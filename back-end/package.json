@@ -8,6 +8,8 @@
     "node": ">=20.6.0"
   },
   "scripts": {
+    "start": "node src/server.mjs",
+    "dev": "node --watch src/server.mjs",
     "validate": "node src/validate-repos.mjs",
     "build": "node src/build-index.mjs",
     "build:offline": "node src/build-index.mjs --offline",

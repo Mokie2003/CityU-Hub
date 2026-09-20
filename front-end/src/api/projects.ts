@@ -1,10 +1,9 @@
 import type { Project, ProjectsResponse } from '../types';
 
-/** 后端就绪后改为 false，并配置 VITE_API_BASE */
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 const MOCK_URL = `${import.meta.env.BASE_URL}data/projects.json`;
-const API_BASE = import.meta.env.VITE_API_BASE;
+const API_BASE = (import.meta.env.VITE_API_BASE || '/api').replace(/\/$/, '');
 
 let cache: ProjectsResponse | null = null;
 

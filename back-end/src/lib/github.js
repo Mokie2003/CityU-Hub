@@ -84,11 +84,13 @@ export function createGithubClient(config, { fetchImpl = globalThis.fetch } = {}
       return {
         repo: data.name ?? ref.repo,
         owner: data.owner?.login ?? ref.owner,
+        authorAvatar: data.owner?.avatar_url ?? '',
         description: data.description ?? '',
         homepageUrl: data.homepage ?? '',
         language: data.language ?? '',
         topics: Array.isArray(data.topics) ? data.topics : [],
         stars: Number.isFinite(data.stargazers_count) ? data.stargazers_count : 0,
+        forks: Number.isFinite(data.forks_count) ? data.forks_count : 0,
         pushedAt: data.pushed_at ?? null,
         license: data.license?.spdx_id ?? null,
         archived: Boolean(data.archived),
