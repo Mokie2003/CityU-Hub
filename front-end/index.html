@@ -1,10 +1,36 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/jpeg" href="%BASE_URL%cityu.jpg" />
+    <link rel="apple-touch-icon" href="%BASE_URL%cityu.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CityU Hub</title>
+    <meta
+      name="description"
+      content="CityU Hub —— 香港城市大学全校开源项目导航站，支持按作者、标签、语言、分类快速检索。"
+    />
+    <title>CityU Hub · 城大开源自助导航</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // 首屏前确定主题，避免闪烁：URL ?theme= > localStorage > 默认暗色
+      (function () {
+        try {
+          var hashQuery = window.location.hash.indexOf('?') >= 0
+            ? window.location.hash.slice(window.location.hash.indexOf('?') + 1)
+            : '';
+          var params = new URLSearchParams(hashQuery || window.location.search);
+          var theme = params.get('theme') || window.localStorage.getItem('cityu-hub-theme') || 'dark';
+          document.documentElement.classList.toggle('dark', theme !== 'light');
+        } catch (error) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
