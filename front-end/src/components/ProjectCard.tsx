@@ -36,18 +36,36 @@ export const ProjectCard = memo(function ProjectCard({ project, index }: Project
             className="size-6 border-2 border-line bg-elevated object-cover"
           />
         ) : (
-          // 后端离线构建时没有头像，用首字母占位
+          // 后端离线构建时没有头像，用 GitHub 用户名首字母占位
           <span className="pixel grid size-6 shrink-0 place-items-center border-2 border-line bg-elevated text-[7px] text-ink uppercase">
             {project.author.slice(0, 1)}
           </span>
         )}
-        <span className="mono text-[11px] text-muted">{project.author}</span>
+        <span className="flex min-w-0 flex-col leading-tight">
+          <span className="mono truncate text-[11px] text-ink">{project.author}</span>
+          {(() => {
+            // 第二行：真名（与用户名不同才展示）+ 专业 + 入学年份
+            const realName =
+              project.authorName && project.authorName !== project.author
+                ? project.authorName
+                : '';
+            const meta = [
+              realName,
+              project.major,
+              project.enrollmentYear ? `${project.enrollmentYear} 级` : '',
+            ].filter(Boolean);
+            if (meta.length === 0) return null;
+            return (
+              <span className="mono truncate text-[10px] text-muted">{meta.join(' · ')}</span>
+            );
+          })()}
+        </span>
         {project.demoUrl && (
-          <span className="pixel border-2 border-accent px-1.5 py-1 text-[7px] text-accent">
+          <span className="pixel shrink-0 border-2 border-accent px-1.5 py-1 text-[7px] text-accent">
             DEMO
           </span>
         )}
-        <span className="pixel ml-auto text-[10px] text-muted">
+        <span className="pixel ml-auto shrink-0 text-[10px] text-muted">
           [{String(index + 1).padStart(2, '0')}]
         </span>
       </div>

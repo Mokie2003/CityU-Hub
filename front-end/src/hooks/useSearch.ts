@@ -1,33 +1,66 @@
 import { useMemo } from 'react';
 import type { Project, SortKey } from '../types';
-import { parseQuery, type ParsedQuery } from '../utils/searchParser';
+import { parseQuery, type Qualifiers } from '../utils/searchParser';
 
-/** 匹配权重：项目名 > 标签 > 描述/分类 */
+/** 模糊匹配权重：项目名 > 标签 > 作者 > 描述/分类/语言 */
 const WEIGHT = {
-  name: 3,
-  tag: 2,
+  exactName: 10,
+  name: 6,
+  exactTag: 4,
+  tag: 3,
+  author: 2,
+  description: 1,
   other: 1,
   none: 0,
 } as const;
 
-function matchesQualifiers(project: Project, qualifiers: ParsedQuery['qualifiers']): boolean {
-  const { author, tag, lang, category } = qualifiers;
-  if (author && project.author.toLowerCase() !== author.toLowerCase()) return false;
-  if (lang && project.language.toLowerCase() !== lang.toLowerCase()) return false;
-  if (category && project.category.toLowerCase() !== category.toLowerCase()) return false;
-  if (tag && !project.tags.some((item) => item.toLowerCase() === tag.toLowerCase())) return false;
-  return true;
+const lower = (value: string | undefined) => (value ?? '').toLowerCase();
+
+/**
+ * 限定符筛选规则：
+ * - 不同限定符之间是「与」：`author:alice lang:Python` 两个条件都要满足
+ * - `tag:` 可以写多个，同样是「与」：`tag:NLP tag:情感分析` 表示两个标签都要有
+ * - `author:` / `lang:` / `category:` 都是单值字段，写多个时按「任意一个命中」处理
+ * - `author:` 同时匹配 GitHub 用户名与作者实名
+ */
+function matchesQualifiers(project: Project, qualifiers: Qualifiers): boolean {
+  const authors = qualifiers.author.map((value) => value.toLowerCase());
+  if (authors.length > 0) {
+    const names = [lower(project.author), lower(project.authorName)];
+    if (!authors.some((value) => names.includes(value))) return false;
+  }
+
+  const languages = qualifiers.lang.map((value) => value.toLowerCase());
+  if (languages.length > 0 && !languages.includes(lower(project.language))) return false;
+
+  const categories = qualifiers.category.map((value) => value.toLowerCase());
+  if (categories.length > 0 && !categories.includes(lower(project.category))) return false;
+
+  return qualifiers.tag.every((tag) =>
+    project.tags.some((item) => item.toLowerCase() === tag.toLowerCase()),
+  );
 }
 
+/** 自由文本的模糊匹配：全部关键词都要命中，命中位置越靠前分越高 */
 function termScore(project: Project, term: string): number {
-  if (project.name.toLowerCase().includes(term)) return WEIGHT.name;
-  if (project.tags.some((tag) => tag.toLowerCase().includes(term))) return WEIGHT.tag;
+  const name = lower(project.name);
+  if (name === term) return WEIGHT.exactName;
+  if (name.includes(term)) return WEIGHT.name;
+
+  if (project.tags.some((tag) => lower(tag) === term)) return WEIGHT.exactTag;
+  if (project.tags.some((tag) => lower(tag).includes(term))) return WEIGHT.tag;
+
+  if (`${lower(project.author)} ${lower(project.authorName)}`.includes(term)) return WEIGHT.author;
+  if (lower(project.description).includes(term)) return WEIGHT.description;
+
   if (
-    project.description.toLowerCase().includes(term) ||
-    project.category.toLowerCase().includes(term)
+    lower(project.category).includes(term) ||
+    lower(project.language).includes(term) ||
+    lower(project.repo).includes(term)
   ) {
     return WEIGHT.other;
   }
+
   return WEIGHT.none;
 }
 
@@ -44,13 +77,12 @@ function compareBy(sort: SortKey, a: Project, b: Project): number {
 }
 
 /**
- * 先按限定符（author/tag/lang/category）过滤，再对自由文本做多字段模糊匹配，
- * 最后按「完全匹配 name > 匹配 tags > 匹配 description」排序。
+ * 先按限定符过滤，再对自由文本做多字段模糊匹配，最后按匹配度 + 排序方式排序。
+ * `xx:xx xx:xx` 同时匹配；只有 `xx` 时按全文模糊匹配。
  */
 export function useSearch(projects: Project[], query: string, sort: SortKey = 'updated'): Project[] {
   return useMemo(() => {
-    const { qualifiers, freeText } = parseQuery(query);
-    const terms = freeText.toLowerCase().split(/\s+/).filter(Boolean);
+    const { qualifiers, terms } = parseQuery(query);
 
     const scored: Array<{ project: Project; score: number }> = [];
 
@@ -58,18 +90,16 @@ export function useSearch(projects: Project[], query: string, sort: SortKey = 'u
       if (!matchesQualifiers(project, qualifiers)) continue;
 
       let score = 0;
-      if (terms.length > 0) {
-        let matched = true;
-        for (const term of terms) {
-          const weight = termScore(project, term);
-          if (weight === WEIGHT.none) {
-            matched = false;
-            break;
-          }
-          score += weight;
+      let matchedAll = true;
+      for (const term of terms) {
+        const weight = termScore(project, term);
+        if (weight === WEIGHT.none) {
+          matchedAll = false;
+          break;
         }
-        if (!matched) continue;
+        score += weight;
       }
+      if (!matchedAll) continue;
 
       scored.push({ project, score });
     }

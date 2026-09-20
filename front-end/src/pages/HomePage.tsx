@@ -9,7 +9,7 @@ import { TagChips } from '../components/TagChips';
 import { useProjects } from '../hooks/useProjects';
 import { useSearch } from '../hooks/useSearch';
 import { useUrlState } from '../hooks/useUrlState';
-import type { SortKey } from '../types';
+import type { AuthorItem, SortKey } from '../types';
 import { formatDateTime } from '../utils/formatNumber';
 import { parseQuery } from '../utils/searchParser';
 
@@ -90,7 +90,20 @@ export function HomePage() {
 
   const results = useSearch(scoped, query, sort);
 
-  const activeAuthor = parseQuery(query).qualifiers.author;
+  // 作者榜：聚合数据只有用户名与计数，头像 / 实名从项目里补
+  const authorList = useMemo<AuthorItem[]>(() => {
+    const projects = data?.projects ?? [];
+    return (data?.authors ?? []).map((item) => {
+      const sample = projects.find((project) => project.author === item.name);
+      return {
+        ...item,
+        avatar: sample?.authorAvatar ?? '',
+        realName: sample?.authorName ?? '',
+      };
+    });
+  }, [data]);
+
+  const activeAuthor = parseQuery(query).qualifiers.author[0];
   const hasFilter = Boolean(query || tagsParam || category);
 
   useEffect(() => {
@@ -106,7 +119,7 @@ export function HomePage() {
     <Sidebar
       categories={data?.categories ?? []}
       tags={data?.tags ?? []}
-      authors={data?.authors ?? []}
+      authors={authorList}
       total={data?.total ?? 0}
       activeCategory={category}
       selectedTags={selectedTags}
@@ -122,7 +135,7 @@ export function HomePage() {
     `${data?.total ?? 0} PROJECTS`,
     `${data?.authors.length ?? 0} CONTRIBUTORS`,
     `${data?.categories.length ?? 0} CATEGORIES`,
-    'SYNTAX: author: tag: lang: category:',
+    'SYNTAX: author:alice tag:NLP lang:Python category:学习辅助',
     'ENTER = SEARCH / ESC = CLEAR',
   ].join('   ✦   ');
 

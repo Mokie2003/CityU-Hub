@@ -36,6 +36,12 @@ export interface CountItem {
   count: number;
 }
 
+/** 侧栏作者榜用：在计数之外补上 GitHub 头像与作者实名 */
+export interface AuthorItem extends CountItem {
+  avatar?: string;
+  realName?: string;
+}
+
 export interface ProjectsResponse {
   generatedAt: string;
   total: number;

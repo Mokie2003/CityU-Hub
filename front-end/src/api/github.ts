@@ -5,9 +5,11 @@ interface GithubRepoMeta {
   language: string;
   stars: number;
   forks: number;
+  /** 仓库所有者的头像（与 back-end 的 authorAvatar 取法一致） */
+  avatar: string;
 }
 
-const CACHE_KEY = 'cityu-hub:github-meta';
+const CACHE_KEY = 'cityu-hub:github-meta:v2';
 /** 缓存 6 小时，避免反复打 GitHub 匿名接口（每小时 60 次） */
 const CACHE_TTL = 6 * 60 * 60 * 1000;
 /** 单次最多补这么多仓库，其余等下次访问 */
@@ -52,11 +54,13 @@ async function fetchRepoMeta(slug: string, signal?: AbortSignal): Promise<Github
     language?: string | null;
     stargazers_count?: number;
     forks_count?: number;
+    owner?: { avatar_url?: string };
   };
   return {
     language: data.language ?? '',
     stars: data.stargazers_count ?? 0,
     forks: data.forks_count ?? 0,
+    avatar: data.owner?.avatar_url ?? '',
   };
 }
 
@@ -84,8 +88,8 @@ export async function enrichProjectsWithGithub(
         metas.set(slug, cached.meta);
         continue;
       }
-      // 后端已经给出语言和 stars 的就不用再请求
-      if (project.language && project.stars > 0) continue;
+      // 语言、stars、头像都齐了就不用再请求
+      if (project.language && project.stars > 0 && project.authorAvatar) continue;
       if (queue.length >= MAX_REQUESTS || queue.some((item) => item.slug === slug)) continue;
       queue.push({ slug });
     }
@@ -123,11 +127,17 @@ export async function enrichProjectsWithGithub(
       const language = project.language || meta.language;
       const stars = meta.stars || project.stars;
       const forks = meta.forks || project.forks;
-      if (language === project.language && stars === project.stars && forks === project.forks) {
+      const authorAvatar = project.authorAvatar || meta.avatar;
+      if (
+        language === project.language &&
+        stars === project.stars &&
+        forks === project.forks &&
+        authorAvatar === project.authorAvatar
+      ) {
         return project;
       }
       changed = true;
-      return { ...project, language, stars, forks };
+      return { ...project, language, stars, forks, authorAvatar };
     });
 
     return changed ? merged : null;

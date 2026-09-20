@@ -26,44 +26,44 @@ W: '#ffffff', // 眼白
 T: '#e67722', // 深橘斑纹
 };
 
-/** 走路第一帧：迈步，尾巴向上弯 */
+/** 走路第一帧：尖三角耳 + 竖瞳 + 长胡须 + 虎斑尾，双爪分开 */
 const CAT_WALK_A = [
-'.B.......B.',
-'.o.......o.',
-'.OOO...OOO.',
-'.OOOOOOOOOO.',
-'.OOOWWOOOO.',
-'.OOOWBWOOB.',
-'.OOOOOOOOOO.',
-'.OOTTOOOOOB',
-'.OO.....OOB',
-'.BB.....BB.',
+  '..O....O..',
+  '..Oo..oO..',
+  '.OOOOOOOO.',
+  '.BWBOOBWB.',
+  '.BWBOOBWB.',
+  'BBOOBBOOBB',
+  'BBOOBOOOBB',
+  'BOOOOOOOOT',
+  'BOTTOOTTOT',
+  '.BB....BBT',
 ];
-/** 走路第二帧：换腿，尾巴向下摆 */
+/** 走路第二帧：双爪收拢 */
 const CAT_WALK_B = [
-'.B.......B.',
-'.o.......o.',
-'.OOO...OOO.',
-'.OOOOOOOOOO.',
-'.OOOWWOOOO.',
-'.OOOWBWOOB.',
-'.OOOOOOOOOOB',
-'.OOTTOOOOOB',
-'..OO...OO..',
-'..BB...BB..',
+  '..O....O..',
+  '..Oo..oO..',
+  '.OOOOOOOO.',
+  '.BWBOOBWB.',
+  '.BWBOOBWB.',
+  'BBOOBBOOBB',
+  'BBOOBOOOBB',
+  'BOOOOOOOOT',
+  'BOTTOOTTOT',
+  '..BB..BB.T',
 ];
-/** 坐下待机帧：蜷起来，尾巴圈在身体旁边 */
+/** 坐下待机帧：整体压低一行，双爪收到身下 */
 const CAT_SIT = [
-'..........',
-'.B.......B.',
-'.o.......o.',
-'.OOO...OOO.',
-'.OOOWWOOOO.',
-'.OOOWBWOOB.',
-'.OOOOOOOOOO.',
-'.OOOOOOOOOO.',
-'.OOTTTTOOOB',
-'.OBBBBBBOOB',
+  '..........',
+  '..O....O..',
+  '..Oo..oO..',
+  '.OOOOOOOO.',
+  '.BWBOOBWB.',
+  '.BWBOOBWB.',
+  'BBOOBBOOBB',
+  'BBOOBOOOBB',
+  'BOOOOOOOOT',
+  '.BBBBBBBBT',
 ];
 const CAT_FRAMES = [CAT_WALK_A, CAT_WALK_B, CAT_SIT];
 const SPEECH = ['MIAO~', 'ニャー', 'PURR~', 'MEOW!', 'POKE!', 'PET ME!'];

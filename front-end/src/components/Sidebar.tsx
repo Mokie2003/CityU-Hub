@@ -1,12 +1,12 @@
 import { FolderTree, Tags, Trophy } from 'lucide-react';
-import type { CountItem } from '../types';
+import type { AuthorItem, CountItem } from '../types';
 import { slugify } from '../utils/slugify';
 import { TagChips } from './TagChips';
 
 interface SidebarProps {
   categories: CountItem[];
   tags: CountItem[];
-  authors: CountItem[];
+  authors: AuthorItem[];
   total: number;
   activeCategory: string;
   selectedTags: string[];
@@ -104,10 +104,34 @@ export function Sidebar({
                 className="row-brutal"
               >
                 <span className="flex min-w-0 items-center gap-2">
-                  <span className="pixel grid size-6 shrink-0 place-items-center border-2 border-line text-[8px] text-ink">
+                  {/* 排名 */}
+                  <span className="pixel w-4 shrink-0 text-[9px] text-brand tabular-nums">
                     {String(index + 1).padStart(2, '0')}
                   </span>
-                  <span className="truncate">{author.name}</span>
+                  {/* GitHub 头像，没有头像时用用户名首字母 */}
+                  {author.avatar ? (
+                    <img
+                      src={author.avatar}
+                      alt={`${author.name} 的头像`}
+                      loading="lazy"
+                      width={20}
+                      height={20}
+                      className="size-5 shrink-0 border-2 border-line bg-elevated object-cover"
+                    />
+                  ) : (
+                    <span className="pixel grid size-5 shrink-0 place-items-center border-2 border-line bg-elevated text-[7px] text-ink uppercase">
+                      {author.name.slice(0, 1)}
+                    </span>
+                  )}
+                  {/* 账号（真名） */}
+                  <span className="flex min-w-0 items-baseline gap-1">
+                    <span className="truncate">{author.name}</span>
+                    {author.realName && author.realName !== author.name && (
+                      <span className="shrink-0 text-[11px] opacity-70">
+                        （{author.realName}）
+                      </span>
+                    )}
+                  </span>
                 </span>
                 <span className="text-[11px] tabular-nums opacity-70">[{author.count}]</span>
               </button>

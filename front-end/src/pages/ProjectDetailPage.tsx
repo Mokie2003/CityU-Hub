@@ -70,23 +70,26 @@ export function ProjectDetailPage() {
                   />
                 ) : (
                   <span className="pixel grid size-7 shrink-0 place-items-center border-2 border-line bg-elevated text-[8px] text-ink uppercase">
-                    {(project.authorName || project.author).slice(0, 1)}
+                    {project.author.slice(0, 1)}
                   </span>
                 )}
                 <span className="flex min-w-0 flex-col leading-tight">
-                  <span className="mono truncate text-[12px] text-ink">
-                    {project.authorName || project.author}
-                  </span>
-                  {(project.major || project.enrollmentYear) && (
-                    <span className="mono truncate text-[11px] text-muted">
-                      {[
-                        project.major,
-                        project.enrollmentYear ? `${project.enrollmentYear} 级` : '',
-                      ]
-                        .filter(Boolean)
-                        .join(' · ')}
-                    </span>
-                  )}
+                  <span className="mono truncate text-[12px] text-ink">{project.author}</span>
+                  {(() => {
+                    const meta = [
+                      project.authorName && project.authorName !== project.author
+                        ? project.authorName
+                        : '',
+                      project.major,
+                      project.enrollmentYear ? `${project.enrollmentYear} 级` : '',
+                    ].filter(Boolean);
+                    if (meta.length === 0) return null;
+                    return (
+                      <span className="mono truncate text-[11px] text-muted">
+                        {meta.join(' · ')}
+                      </span>
+                    );
+                  })()}
                 </span>
                 <span className="mono text-[12px] text-muted">//</span>
                 <Link
