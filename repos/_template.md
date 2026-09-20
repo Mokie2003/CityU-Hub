@@ -3,10 +3,16 @@
 # id: my-project
 # title: My Project
 # author: your-github-name
+# authorName: 你的姓名
+# major: 你的专业
+# enrollmentYear: 2024
 # repoUrl: https://github.com/owner/repository
 # homepageUrl: https://example.com
 title: My Project
 author: your-github-name
+authorName: 你的姓名
+major: 你的专业
+enrollmentYear: 2024
 repoUrl: https://github.com/owner/repository
 homepageUrl: ''
 tags:

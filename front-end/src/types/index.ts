@@ -7,6 +7,9 @@ export interface Project {
   id: string;
   name: string;
   author: string;
+  authorName?: string;
+  major?: string;
+  enrollmentYear?: number;
   authorAvatar: string;
   repo: string;
   description: string;

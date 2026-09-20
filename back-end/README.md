@@ -1,6 +1,6 @@
 # CityU-Hub 静态数据构建器
 
-这里不是运行中的 Web 后端，而是把作者提交的 `repos/*.md` 构建成前端可直接读取的静态 JSON。
+这是把作者提交的 `repos/*.md` 构建成前端可直接读取的静态 JSON。
 
 ## 工作流
 
@@ -42,6 +42,8 @@ npm run build
 ## 输入和产物
 
 输入文件格式见根目录 `repos/_template.md`。每个文件包含 YAML front matter 和 Markdown 正文。
+
+作者信息字段：`author` 是 GitHub 用户名，`authorName` 是展示用姓名，`major` 是专业，`enrollmentYear` 是四位入学年份；后三项均为必填。
 
 构建产物写入 `back-end/output/`，并被 `.gitignore` 忽略：
 

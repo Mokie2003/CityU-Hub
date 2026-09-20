@@ -21,6 +21,8 @@ npm run build:offline
 ## 约定
 
 - `repoUrl` 必须是公开 GitHub 仓库地址。
+- `author` 填写 GitHub 用户名；`authorName`、`major` 和 `enrollmentYear` 必须填写作者的姓名、专业和入学年份。
+- `enrollmentYear` 使用四位数字，例如 `2024`。
 - `id` 可省略，构建器会根据仓库 owner 和 repo 生成；显式填写后不可随意修改。
 - `tags` 使用小写短标签，最多 12 个。
 - 项目介绍正文写在 front matter 后面，构建器会把它写入项目详情 JSON。

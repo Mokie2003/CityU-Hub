@@ -34,7 +34,7 @@ function normalizeTags(value) {
   if (value === undefined || value === null) return [];
   const values = Array.isArray(value) ? value : typeof value === 'string' ? value.split(',') : null;
   if (!values) throw invalid('tags 必须是字符串或字符串数组');
-  const tags = [...new Set(values.map((tag) => requireString(tag, 'tags 元素', 32).toLowerCase()))];
+  const tags = [...new Set(values.map((tag) => requireString(tag, 'tags 元素', 16).toLowerCase()))];
   if (tags.length > 12) throw invalid('tags 最多 12 个');
   return tags;
 }
@@ -51,11 +51,21 @@ function requireBoolean(value, name) {
   return value;
 }
 
+function requireEnrollmentYear(value) {
+  if (!Number.isInteger(value) || value < 1960 || value > 2100) {
+    throw invalid('enrollmentYear 必须是 1960 到 2100 之间的年份');
+  }
+  return value;
+}
+
 const ALLOWED_FIELDS = [
   'id',
   'title',
   'summary',
   'author',
+  'authorName',
+  'major',
+  'enrollmentYear',
   'repoUrl',
   'homepageUrl',
   'tags',
@@ -91,6 +101,9 @@ export function parseFrontmatterDocument(content, fileName = 'document.md') {
     title: requireString(data.title, 'title', 200),
     summary: optionalString(data.summary, 'summary', 600),
     author: requireString(data.author, 'author', 120),
+    authorName: requireString(data.authorName, 'authorName', 120),
+    major: requireString(data.major, 'major', 120),
+    enrollmentYear: requireEnrollmentYear(data.enrollmentYear),
     repoUrl: optionalHttpUrl(data.repoUrl, 'repoUrl'),
     homepageUrl: optionalHttpUrl(data.homepageUrl, 'homepageUrl') ?? '',
     tags: normalizeTags(data.tags, 'tags') ?? [],

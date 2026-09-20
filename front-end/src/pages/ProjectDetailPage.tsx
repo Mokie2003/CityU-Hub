@@ -85,6 +85,29 @@ export function ProjectDetailPage() {
               </h1>
               <p className="mono mt-3 text-[13px] leading-6 text-muted">{project.description}</p>
 
+              {(project.authorName || project.major || project.enrollmentYear) && (
+                <dl className="mono mt-4 grid gap-2 border-l-4 border-brand pl-3 text-[12px] text-muted sm:grid-cols-3">
+                  {project.authorName && (
+                    <div>
+                      <dt className="text-[10px] text-ink">姓名</dt>
+                      <dd>{project.authorName}</dd>
+                    </div>
+                  )}
+                  {project.major && (
+                    <div>
+                      <dt className="text-[10px] text-ink">专业</dt>
+                      <dd>{project.major}</dd>
+                    </div>
+                  )}
+                  {project.enrollmentYear && (
+                    <div>
+                      <dt className="text-[10px] text-ink">入学年份</dt>
+                      <dd>{project.enrollmentYear}</dd>
+                    </div>
+                  )}
+                </dl>
+              )}
+
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <a
                   href={project.githubUrl}

@@ -17,6 +17,9 @@ test('buildIndex 将项目 Markdown 构建为静态索引与详情 JSON', async 
       'id: demo-project',
       'title: Demo Project',
       'author: demo-owner',
+      'authorName: Demo Student',
+      'major: Computer Science',
+      'enrollmentYear: 2024',
       'repoUrl: https://github.com/demo-owner/demo-project',
       'tags: [react, showcase]',
       'category: web',
@@ -38,6 +41,9 @@ test('buildIndex 将项目 Markdown 构建为静态索引与详情 JSON', async 
     const result = await buildIndex({ inputDir, outputPath: outputDir, useOffline: true });
     assert.equal(result.projects.length, 1);
     assert.equal(result.projects[0].id, 'demo-project');
+    assert.equal(result.projects[0].authorName, 'Demo Student');
+    assert.equal(result.projects[0].major, 'Computer Science');
+    assert.equal(result.projects[0].enrollmentYear, 2024);
     assert.equal(result.projects[0].summary, '一个用于展示学生作品的示例项目，支持在线浏览项目介绍和文档内容。');
     assert.deepEqual(result.aggregates.tags, [{ name: 'react', count: 1 }, { name: 'showcase', count: 1 }]);
 
