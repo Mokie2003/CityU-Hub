@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
+import { UsefulLinks } from './UsefulLinks';
 
 /** icon/cityu.jpg 已同步到 public/，页内 logo 与站点图标共用同一份文件 */
 const cityuLogo = `${import.meta.env.BASE_URL}cityu.jpg`;
@@ -50,6 +51,7 @@ export function Header({ searchSlot, onOpenSidebar }: HeaderProps) {
         </div>
 
         <div className="ml-auto flex items-center gap-2">
+          <UsefulLinks />
           <ThemeToggle />
         </div>
       </div>
