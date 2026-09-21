@@ -17,7 +17,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/tailwindcss-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-f47c94?style=for-the-badge&logo=github&logoColor=white)](CONTRIBUTING.md)
 
-**[简体中文](#简体中文) · [English](#english)**
+**[简体中文](#简体中文) · [繁體中文](#繁體中文) · [English](#english)**
 
 </div>
 
@@ -157,6 +157,135 @@ cd back-end  && npm test        # 后端测试必须通过
 </a>
 
 **期待在贡献者名单里看到你。**
+
+---
+
+## 繁體中文
+
+### 這是什麼
+
+CityU Hub 是一個面向**香港城市大學（CityU）學生開源項目**的展示與檢索網站。同學們把自己寫的小工具、課程項目、研究程式碼提交進來，其他人在同一個頁面就能按**分類 / 標籤 / 語言 / 作者**篩選，搜尋並直接跳到 GitHub 儲存庫。
+
+網站解決的三個問題：
+
+- **散**：校內項目散落在聊天群組、課程群組和個人主頁裡，沒有統一入口。
+- **找不到**：想找「有沒有人做過 NLP 相關的東西」時，沒有任何可檢索的索引。
+- **認不出作者**：看得到儲存庫，卻不知道是哪個主修、哪一屆的同學。
+
+### 網站內容與功能
+
+| 功能 | 說明 |
+| --- | --- |
+| 項目瀏覽 | 卡片流展示項目名、摘要、標籤、語言色塊、Star 數與最近更新時間 |
+| 搜尋語法 | `author:alice`、`tag:NLP`、`lang:Python`、`category:機器學習`，可疊加 `author:alice lang:Python`；不帶冒號的字詞走全文模糊搜尋 |
+| 篩選與排序 | 分類頁籤、標籤 chips、作者榜一鍵篩選；支援按最近更新 / Star / 名稱排序 |
+| 項目詳情 | 渲染儲存庫 README、作者真實姓名與主修年級、Demo 與 GitHub 外部連結 |
+| 可分享連結 | 搜尋詞、篩選、分類、排序、主題全部同步到 URL，重新整理或分享後狀態不丟 |
+| 主題 | 亮 / 暗雙主題切換，首屏前注入、無閃爍 |
+| 常用入口 | 右上角 🔗 抽屜內建 AIMS / Canvas / 學校官網 / CityUHK Portal |
+
+### 技術棧
+
+**前端**：React 19 · TypeScript 5.9 · Vite 6 · Tailwind CSS v4（CSS-first）· React Router 7（HashRouter）· lucide-react
+**後端**：Node.js ≥ 20.6（原生 `node:http`，零框架）· ajv（JSON Schema 驗證）· js-yaml（front matter 解析）
+
+### 項目結構
+
+```text
+CityU-Hub/
+├── repos/                      # 項目條目：每個項目一個 Markdown（front matter + 正文）
+│   ├── _template.md            # 提交模板，複製它開始寫自己的項目
+│   ├── CityU-Beamer.md
+│   └── extend-slides.md
+├── schema/
+│   └── repo.schema.json        # front matter 的 JSON Schema，CI 用它把關
+├── back-end/                   # 索引建構器 + 唯讀 HTTP API
+│   ├── src/build-index.mjs     # repos/*.md → output/*.json（可加 --offline）
+│   ├── src/validate-repos.mjs  # 按 schema 驗證、項目 ID / 儲存庫網址檢查重複
+│   ├── src/server.mjs          # /health、/projects、/projects/:id（預設 127.0.0.1:3001）
+│   └── output/                 # 建構產物，已 gitignore
+├── front-end/                  # 前端網站
+│   ├── public/data/            # 靜態備援資料（沒有後端時也能執行）
+│   └── src/
+│       ├── api/                # 唯一資料出口：介面 / 靜態 JSON / GitHub 中繼資料補齊
+│       ├── components/         # 卡片、搜尋列、側欄、篩選與排序等
+│       ├── hooks/              # useProjects、useSearch、useUrlState
+│       ├── pages/              # 首頁、項目詳情頁
+│       └── utils/              # 搜尋語法解析、格式化、slug
+├── scripts/
+│   └── sync-and-build.sh       # 目標機器拉取最新程式碼並重建前後端
+└── .github/workflows/          # build.yml（建構資料）/ validate.yml（PR 驗證）/ deploy.yml（自動同步重建）
+```
+
+### 資料流
+
+```text
+repos/*.md ─► npm run validate ─► build-index ─┬─► back-end/output/*.json
+                                               │        │
+                       GitHub API 補 stars /   │        ├─► server.mjs（REST API）
+                       語言 / license / 描述 ───┘        └─► 前端 fetch（缺失欄位執行時再補）
+```
+
+- `npm run build` 會呼叫 GitHub API 補齊動態欄位（需要 `GITHUB_TOKEN`，見 `back-end/.env.example`）。
+- `npm run build:offline` 完全不連網，適合本機與 CI；缺的 Star 數、語言由前端執行時補齊並快取在 localStorage。
+
+### 本機執行
+
+```bash
+# 1) 產生資料並啟動介面（http://127.0.0.1:3001）
+cd back-end
+npm install
+npm run build:offline        # 有 token 時可用 npm run build
+npm run start
+
+# 2) 另開一個終端機啟動前端（http://localhost:5173）
+cd front-end
+npm install
+npm run dev
+```
+
+正式建置走靜態資料；要讓線上環境也連後端，建置時設定 `VITE_API_BASE=https://你的介面位址`。
+
+### 成為貢獻者
+
+**非常歡迎你參與 CityU Hub！** 無論你是想把自己的項目放上來、修一個前端小 bug、補一段文件，還是只提一個想法，都是這個項目需要的貢獻。
+
+#### 方式一：提交你的項目（最主要）
+
+1. **Fork** 本儲存庫並 clone 到本機，從 `main` 開一個分支，例如 `feat/add-my-project`。
+2. 複製 `repos/_template.md` 為 `repos/你的項目名.md`，填寫 front matter 與正文。
+3. 必填欄位：`title`、`author`（GitHub 使用者名稱）、`authorName`（真實姓名）、`major`（主修）、`enrollmentYear`（入學年份，四位數字）、`repoUrl`（必須是公開的 `https://github.com/...` 位址）。可選：`id`、`summary`、`homepageUrl`、`tags`（最多 12 個小寫短標籤）、`category`、`featured`、`status`（`active` / `hidden` / `archived`）。**schema 不允許出現未定義的欄位。**
+4. 正文寫在 front matter 之後：填了 `summary` 就用摘要，正文留空則回退到展示你儲存庫的 README。
+5. 本機自我檢查（務必先跑通）：
+   ```bash
+   cd back-end
+   npm install
+   npm run validate      # front matter 是否符合 schema、ID 與儲存庫網址是否重複
+   npm test              # 建構器單元測試
+   npm run build:offline # 確認能正常建構出資料
+   ```
+6. 提交 Pull Request 到 `main`。CI 會自動跑 `validate` 與測試；通過後由維護者 review 合併。合併後建構 workflow 會補齊 stars、語言、license 等動態欄位並重新產生 JSON，網站隨即更新。
+
+> 目錄、欄位名稱、列舉值的完整約定見 [`CONTRIBUTING.md`](CONTRIBUTING.md) 與 [`schema/repo.schema.json`](schema/repo.schema.json)。
+
+#### 方式二：改進網站本身
+
+前端 / 後端 / workflow 的 PR 同樣歡迎。動手前請先開一個 issue 說清楚你想做什麼，避免重複勞動；提交前請確認：
+
+```bash
+cd front-end && npm run build   # 型別檢查 + 打包必須通過
+cd back-end  && npm test        # 後端測試必須通過
+```
+
+#### 方式三：文件、翻譯與回饋
+
+發現錯別字、想補英文翻譯、有更好的介面建議，都可以直接開 issue 或提 PR——這類貢獻和程式碼同等重要。
+
+<a href="https://github.com/Warpshlczy/CityU-Hub/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Warpshlczy/CityU-Hub" alt="CityU Hub contributors" />
+</a>
+
+**期待在貢獻者名單裡看到你。**
 
 ---
 
