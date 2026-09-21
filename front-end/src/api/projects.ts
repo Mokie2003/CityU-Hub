@@ -1,18 +1,15 @@
 import type { Project, ProjectsResponse } from '../types';
 
-/** 后端 API 默认地址（见 back-end/src/server.mjs，可用 PORT / HOST 修改） */
-const DEFAULT_DEV_API = 'http://127.0.0.1:3001';
-
 /**
  * 数据来源：
- * 1. 配置了 VITE_API_BASE（例如部署后的后端）→ 走真实接口；
- * 2. 开发环境未配置 → 默认连本地 back-end（http://127.0.0.1:3001）；
+ * 1. 配置了 VITE_API_BASE（例如部署后的后端）→ 走该地址；
+ * 2. 开发环境未配置 → 走同源 `/api`，由 Vite 反代到本机 back-end（见 vite.config.ts），
  * 3. 生产构建且未配置 → 留空，直接读打包进 public/data 的静态数据。
  *
  * 无论走哪条路径，返回给组件的都是同一份数据契约，接口不可用时自动回退到静态数据。
  */
 const API_BASE = (
-  import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? DEFAULT_DEV_API : '')
+  import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? '/api' : '')
 ).replace(/\/+$/, '');
 
 /** 静态兜底数据（GitHub Pages 上没有后端进程时使用） */
