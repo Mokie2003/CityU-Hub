@@ -53,8 +53,6 @@ CityU Hub 是一个面向**香港城市大学（CityU）学生开源项目**的�
 | 项目详情 | 渲染仓库 README、作者实名与专业年级、Demo 与 GitHub 外链 |
 | 可分享链接 | 搜索词、筛选、分类、排序、主题全部同步到 URL，刷新/分享后状态不丢 |
 | 主题 | 亮 / 暗双主题切换，首屏前注入、无闪烁 |
-| 视觉风格 | Brutalist Pixel：像素字体、硬边框、红粉 `#f47c94` + 紫 `#a855f7` 辉光、CRT 扫描线 |
-| 彩蛋 | 页面里会自己走动、奔跑、和用户及卡片互动的像素猫；跟随光标的 Target Cursor |
 | 常用入口 | 右上角 🔗 抽屉内置 AIMS / Canvas / 学校官网 / CityUHK Portal |
 
 ### 技术栈
@@ -81,7 +79,7 @@ CityU-Hub/
 │   ├── public/data/            # 静态兜底数据（没有后端时也能跑）
 │   └── src/
 │       ├── api/                # 唯一数据出口：接口 / 静态 JSON / GitHub 元数据补齐
-│       ├── components/         # 卡片、搜索栏、侧栏、像素猫、光标等
+│       ├── components/         # 卡片、搜索栏、侧栏、筛选与排序等
 │       ├── hooks/              # useProjects、useSearch、useUrlState
 │       ├── pages/              # 首页、项目详情页
 │       └── utils/              # 搜索语法解析、格式化、slug
@@ -184,8 +182,6 @@ The three problems it solves:
 | Project detail | Renders the repository README, the author's real name, major and enrollment year, plus demo and GitHub links |
 | Shareable URLs | Query, filters, category, sort and theme are all synced to the URL, so refresh and sharing keep the exact view |
 | Theme | Light / dark toggle injected before first paint, with no flash |
-| Visual style | Brutalist Pixel: pixel type, hard borders, pink `#f47c94` + purple `#a855f7` glow, CRT scanlines |
-| Easter eggs | A pixel cat that wanders, runs and interacts with you and the cards; a Target Cursor that follows the pointer |
 | Useful links | The 🔗 drawer in the header collects AIMS / Canvas / CityU website / CityUHK Portal |
 
 ### Tech stack
@@ -212,7 +208,7 @@ CityU-Hub/
 │   ├── public/data/            # Static fallback data (works without the API)
 │   └── src/
 │       ├── api/                # Single data entry: API / static JSON / GitHub metadata
-│       ├── components/         # Cards, search bar, sidebar, pixel cat, cursor, …
+│       ├── components/         # Cards, search bar, sidebar, filters and sorting
 │       ├── hooks/              # useProjects, useSearch, useUrlState
 │       ├── pages/              # Home, project detail
 │       └── utils/              # Search parser, formatting, slug helpers
