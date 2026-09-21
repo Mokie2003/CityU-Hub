@@ -11,7 +11,7 @@ interface UsefulLink {
 const USEFUL_LINKS: UsefulLink[] = [
   {
     name: 'CityU AIMS',
-    url: 'https://aims.cityu.edu.hk/',
+    url: 'https://banweb.cityu.edu.hk/',
     description: '选课、成绩与学籍系统',
   },
   {
@@ -26,7 +26,7 @@ const USEFUL_LINKS: UsefulLink[] = [
   },
   {
     name: 'CityUHK Portal',
-    url: 'https://www.cityu.edu.hk/its/services-facilities/list-of-services-facilities/c/cityuhk-portal?c=%7B50520DE6-2A0E-4A46-BE9F-1E8074961FC8%7D',
+    url: 'https://www.cityu.edu.hk/portal/dashboard',
     description: '校内服务与设施入口',
   },
 ];

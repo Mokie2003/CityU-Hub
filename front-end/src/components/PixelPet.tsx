@@ -1,15 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-/* ------------------------------------------------------------------
- * 像素猫咪：在页面的「空隙」里自由穿行
- * 思路参考 oneko（追着光标跑的猫）与 Shimeji（沿边缘行走的桌面宠物）：
- * 1. 扫描 DOM，把有背景/边框/控件样式的元素视为「实体」，其余是空隙
- * 2. 用 4px 分辨率生成通行网格，并把实体按猫咪半个身位外扩
- * 3. A* 在网格上寻路，猫沿着「卡片之间 24px 的沟槽」走过去，不覆盖组件
- * ------------------------------------------------------------------ */
+
 const CELL = 4;
 const PET_W = 20;
 const PET_H = 20;
-/** 障碍外扩量，保证猫身不会压到组件上（24px 的沟槽会留出 8px 通道） */
 const INFLATE = PET_W / 2 - 2;
 const TOP_PADDING = 108;
 const WALK_SPEED = 62;
@@ -17,54 +10,55 @@ const RUN_SPEED = 168;
 const ACCEL = 520;
 const CURSOR_NOTICE_RANGE = 190;
 const CURSOR_COOLDOWN = 7000;
-// ========== 【修改：猫咪配色，橘猫风格】 ==========
+
+// ========== 【修改：纯黑猫咪配色】 ==========
 const PIXEL_COLORS: Record<string, string> = {
-O: '#f9a857', // 橘色猫身
-o: '#ffddb0', // 浅橘肚子、内耳
-B: '#222222', // 黑：瞳孔、胡须、爪尖、轮廓
-W: '#ffffff', // 眼白
-T: '#e67722', // 深橘斑纹
+  B: '#000000', // 纯黑猫身、轮廓
+  W: '#ffffff', // 白色：耳朵内侧、眼睛
 };
 
-/** 走路第一帧：尖三角耳 + 竖瞳 + 长胡须 + 虎斑尾，双爪分开 */
+/** 走路第一帧：双爪分开 */
 const CAT_WALK_A = [
-  '..O....O..',
-  '..Oo..oO..',
-  '.OOOOOOOO.',
-  '.BWBOOBWB.',
-  '.BWBOOBWB.',
-  'BBOOBBOOBB',
-  'BBOOBOOOBB',
-  'BOOOOOOOOT',
-  'BOTTOOTTOT',
-  '.BB....BBT',
+  '..B....B..',
+  '..BW..WB..',
+  '.BBBBBBBB.',
+  '.BBBBBBBB.',
+  '.BWWBBWWB.',
+  'BBBBBBBBBB',
+  'BBBBBBBBBB',
+  'BBBBBBBBBB',
+  'BBBBBBBBBB',
+  '.BB....BBB',
 ];
+
 /** 走路第二帧：双爪收拢 */
 const CAT_WALK_B = [
-  '..O....O..',
-  '..Oo..oO..',
-  '.OOOOOOOO.',
-  '.BWBOOBWB.',
-  '.BWBOOBWB.',
-  'BBOOBBOOBB',
-  'BBOOBOOOBB',
-  'BOOOOOOOOT',
-  'BOTTOOTTOT',
-  '..BB..BB.T',
+  '..B....B..',
+  '..BW..WB..',
+  '.BBBBBBBB.',
+  '.BBBBBBBB.',
+  '.BWWBBWWB.',
+  'BBBBBBBBBB',
+  'BBBBBBBBBB',
+  'BBBBBBBBBB',
+  'BBBBBBBBBB',
+  '..BB..BB.B',
 ];
+
 /** 坐下待机帧：整体压低一行，双爪收到身下 */
 const CAT_SIT = [
   '..........',
-  '..O....O..',
-  '..Oo..oO..',
-  '.OOOOOOOO.',
-  '.BWBOOBWB.',
-  '.BWBOOBWB.',
-  'BBOOBBOOBB',
-  'BBOOBOOOBB',
-  'BOOOOOOOOT',
-  '.BBBBBBBBT',
+  '..B....B..',
+  '..BW..WB..',
+  '.BBBBBBBB.',
+  '.BBBBBBBB.',
+  '.BWWBBWWB.',
+  'BBBBBBBBBB',
+  'BBBBBBBBBB',
+  'BBBBBBBBBB',
+  '.BBBBBBBBB',
 ];
+
 const CAT_FRAMES = [CAT_WALK_A, CAT_WALK_B, CAT_SIT];
 const SPEECH = ['MIAO~', 'ニャー', 'PURR~', 'MEOW!', 'POKE!', 'PET ME!'];
 type Pose = 'idle' | 'walk' | 'run' | 'jump';
