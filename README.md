@@ -4,7 +4,7 @@
 
 # CityU Hub
 
-**城大开源自助导航 · Discover what CityU students are building**
+**香港城大开源自助导航 · 香港城市大學學生項目和開源自助檢索平台 · Discover what CityU students are building**
 
 [![Build project data](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/build.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/build.yml)
 [![Validate submissions](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/validate.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/validate.yml)
