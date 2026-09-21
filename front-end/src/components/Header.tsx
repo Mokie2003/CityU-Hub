@@ -4,7 +4,7 @@ import { Menu } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { UsefulLinks } from './UsefulLinks';
 
-/** icon/cityu.jpg 已同步到 public/，页内 logo 与站点图标共用同一份文件 */
+/** 页内 logo 与站点图标共用 public/cityu.jpg 这一份文件 */
 const cityuLogo = `${import.meta.env.BASE_URL}cityu.jpg`;
 
 interface HeaderProps {
@@ -13,7 +13,7 @@ interface HeaderProps {
   onOpenSidebar?: () => void;
 }
 
-/** 固定顶栏：3px 硬白边框 + 像素 logo（icon/cityu.jpg） */
+/** 固定顶栏：3px 硬白边框 + 像素 logo（public/cityu.jpg） */
 export function Header({ searchSlot, onOpenSidebar }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b-[3px] border-line bg-canvas">

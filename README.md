@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="front-end/icon/cityu.jpg" alt="CityU Hub logo" width="140" />
+<img src="front-end/public/cityu.jpg" alt="CityU Hub logo" width="280" />
 
 # CityU Hub
 
@@ -21,6 +21,14 @@
 
 </div>
 
+<div align="center">
+
+<img src="front-end/public/screenshot.png" alt="CityU Hub 首页截图 / homepage screenshot" width="920" />
+
+**站点一览 · Homepage at a glance**
+
+</div>
+
 ---
 
 ## 简体中文
@@ -29,7 +37,7 @@
 
 CityU Hub 是一个面向**香港城市大学（CityU）学生开源项目**的展示与检索网站。同学们把自己写的小工具、课程项目、科研代码提交进来，其他人在一个页面里就能按**分类 / 标签 / 语言 / 作者**筛选，搜索并直接跳到 GitHub 仓库。
 
-网站解决的三个问题：
+我们建站的初衷：
 
 - **散**：校内项目散落在聊天群、课程群和各人主页里，没有统一入口。
 - **找不到**：想找「有没有人做过 NLP 相关的东西」时，没有任何可检索的索引。
