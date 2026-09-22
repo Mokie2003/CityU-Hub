@@ -58,6 +58,8 @@ test('buildIndex 把项目 Markdown 构建成前端直接可读的静态 JSON', 
     assert.equal(project.updatedAt, project.createdAt);
     assert.match(project.description, /示例项目/);
     assert.match(project.readmeHtml, /README 驱动/);
+    // 作者写了 Features 就原样渲染
+    assert.match(project.readmeHtml, /<h2>Features<\/h2>/);
     assert.deepEqual(result.aggregates.tags, [
       { name: 'react', count: 1 },
       { name: 'showcase', count: 1 },
@@ -81,27 +83,47 @@ test('buildIndex 把项目 Markdown 构建成前端直接可读的静态 JSON', 
   }
 });
 
-test('buildIndex 在介绍和 Features 为空时回退到 GitHub README 与仓库简介', async () => {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'cityu-hub-fallback-'));
+test('buildIndex 不补齐 Features：留空或不写都不展示，也不使用仓库简介', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'cityu-hub-features-'));
   const inputDir = path.join(root, 'repos');
   const outputDir = path.join(root, 'output');
   await fs.mkdir(inputDir);
   await fs.writeFile(
-    path.join(inputDir, 'empty.md'),
+    path.join(inputDir, 'empty-features.md'),
     [
       '---',
-      'title: Empty Project',
+      'id: empty-features',
+      'title: Empty Features',
       'author: demo-owner',
       'authorName: Demo Owner',
       'major: Computer Science',
       'enrollmentYear: 2024',
-      'repoUrl: https://github.com/demo-owner/empty-project',
+      'repoUrl: https://github.com/demo-owner/empty-features',
       'category: other',
       'featured: false',
       '---',
       '',
       '## Features',
       '',
+    ].join('\n'),
+    'utf8',
+  );
+  await fs.writeFile(
+    path.join(inputDir, 'no-features.md'),
+    [
+      '---',
+      'id: no-features',
+      'title: No Features',
+      'author: demo-owner',
+      'authorName: Demo Owner',
+      'major: Computer Science',
+      'enrollmentYear: 2024',
+      'repoUrl: https://github.com/demo-owner/no-features',
+      'category: other',
+      'featured: false',
+      '---',
+      '',
+      '只写了项目介绍，没有写 Features 段落。',
     ].join('\n'),
     'utf8',
   );
@@ -112,7 +134,7 @@ test('buildIndex 在介绍和 Features 为空时回退到 GitHub README 与仓�
       outputPath: outputDir,
       githubClient: {
         fetchRepoMeta: async () => ({
-          repo: 'empty-project',
+          repo: 'demo-project',
           owner: 'demo-owner',
           description: '来自 GitHub 的仓库简介。',
           defaultBranch: 'main',
@@ -120,12 +142,19 @@ test('buildIndex 在介绍和 Features 为空时回退到 GitHub README 与仓�
         fetchReadme: async () => '# Remote Project\n\n来自 GitHub README 的项目介绍。',
       },
     });
-    const project = result.projects[0];
-    assert.equal(project.name, 'Empty Project');
-    assert.match(project.readmeHtml, /来自 GitHub README 的项目介绍/);
-    assert.match(project.readmeHtml, /来自 GitHub 的仓库简介/);
-    assert.match(project.description, /来自 GitHub README 的项目介绍/);
-    assert.equal((project.readmeHtml.match(/<h2>Features<\/h2>/g) ?? []).length, 1);
+
+    // 介绍留空仍然回退到 GitHub README
+    const withEmptyFeatures = result.projects.find((p) => p.id === 'empty-features');
+    assert.match(withEmptyFeatures.readmeHtml, /来自 GitHub README 的项目介绍/);
+    // 但 Features 留空既不会补仓库简介，也不会留下空标题
+    assert.doesNotMatch(withEmptyFeatures.readmeHtml, /来自 GitHub 的仓库简介/);
+    assert.doesNotMatch(withEmptyFeatures.readmeHtml, /Features/);
+
+    // 整段没写 Features 时，详情页同样不出现 Features
+    const withoutFeatures = result.projects.find((p) => p.id === 'no-features');
+    assert.match(withoutFeatures.readmeHtml, /没有写 Features 段落/);
+    assert.doesNotMatch(withoutFeatures.readmeHtml, /<h2[^>]*>Features<\/h2>/);
+    assert.doesNotMatch(withoutFeatures.readmeHtml, /来自 GitHub 的仓库简介/);
   } finally {
     await fs.rm(root, { recursive: true, force: true });
   }

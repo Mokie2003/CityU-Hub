@@ -7,9 +7,9 @@ const FRONTEND_PORT = 5173
 
 /**
  * 允许用域名访问 dev / preview：Vite 的 DNS 重绑定保护默认只放行 localhost 与 IP 地址，
- * 用域名（例如 cityu-hub.cloud-ip.cc）访问时必须显式列出；前缀点号表示放行其所有子域名。
+ * 用域名（例如 cityu-hub.bond）访问时必须显式列出；前缀点号表示放行其所有子域名。
  */
-const ALLOWED_HOSTS = ['cityu-hub.cloud-ip.cc', '.cloud-ip.cc']
+const ALLOWED_HOSTS = ['cityu-hub.bond', '.cityu-hub.bond']
 
 export default defineConfig(({ mode }) => {
   // 部署在子路径（例如 GitHub Pages 的 /CityU-Hub/）时设置 BASE_PATH，默认部署在域名根路径

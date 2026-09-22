@@ -60,7 +60,7 @@ export function SearchBar({ value, onChange, placeholder }: SearchBarProps) {
             }
           }}
           placeholder={
-            placeholder ?? '搜索 xx:xx ｜ 例：author:alice tag:NLP lang:Python category:学习辅助'
+            placeholder ?? '搜索 xx:xx ｜ 例：author:alice tag:NLP lang:Python category:Study Case'
           }
           aria-label="搜索项目"
           className="input-brutal h-11 w-full pr-11 pl-9 text-sm"

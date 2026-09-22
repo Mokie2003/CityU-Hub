@@ -165,24 +165,40 @@ export function analyzeReadme(markdown) {
   };
 }
 
-/** 在项目介绍或 Features 为空时，按需补齐内容。 */
-export function fillProjectContent(markdown, { readme = '', description = '' } = {}) {
-  const text = String(markdown ?? '').replace(/\r\n?/g, '\n');
-  const featuresHeading = /^\s{0,3}##\s+Features\s*#*\s*$/im;
-  const match = featuresHeading.exec(text);
-  const intro = match ? text.slice(0, match.index).trim() : text.trim();
-  const featureBody = match
-    ? text.slice(match.index + match[0].length).match(/^[\s\S]*?(?=^\s{0,3}#{1,6}\s+|$)/m)?.[0].trim() ?? ''
-    : '';
+const FEATURES_HEADING = /^\s{0,3}##\s+Features\s*#*\s*$/im;
+const NEXT_HEADING = /^\s{0,3}#{1,6}\s+/;
 
-  let result = text.trim();
-  const replacedIntro = !intro && String(readme).trim();
-  if (replacedIntro) result = String(readme).trim();
-  if (match && !featureBody && String(description).trim()) {
-    if (replacedIntro) result = `${result}\n\n${match[0].trim()}`;
-    result = `${result}\n\n${String(description).trim()}`;
+/** 取 `## Features` 标题到下一个标题之间的正文，空段落返回空字符串 */
+function featuresSectionBody(text, heading) {
+  const lines = text.slice(heading.index + heading[0].length).split('\n');
+  const body = [];
+  for (const line of lines) {
+    if (NEXT_HEADING.test(line)) break;
+    body.push(line);
   }
-  return result.trim();
+  return body.join('\n').trim();
+}
+
+/** 作者没写内容的 `## Features` 段落整体去掉，后面的段落照常保留 */
+function dropEmptyFeaturesSection(text) {
+  const heading = FEATURES_HEADING.exec(text);
+  if (!heading || featuresSectionBody(text, heading)) return text;
+  const before = text.slice(0, heading.index).trim();
+  const after = text.slice(heading.index + heading[0].length).trim();
+  return [before, after].filter(Boolean).join('\n\n');
+}
+
+/**
+ * 项目介绍留空时按需回退到 GitHub README。
+ * `## Features` 完全由作者决定：写空或不写都不会展示，也不会用仓库简介补齐。
+ */
+export function fillProjectContent(markdown, { readme = '' } = {}) {
+  const text = String(markdown ?? '').replace(/\r\n?/g, '\n');
+  const heading = FEATURES_HEADING.exec(text);
+  const intro = (heading ? text.slice(0, heading.index) : text).trim();
+  const rest = heading ? text.slice(heading.index).trim() : '';
+  const head = !intro && String(readme).trim() ? String(readme).trim() : intro;
+  return dropEmptyFeaturesSection([head, rest].filter(Boolean).join('\n\n'));
 }
 
 /** 仓库没提供 topics 时，用 README 关键词兜底推断标签 */

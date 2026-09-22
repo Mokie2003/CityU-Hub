@@ -46,7 +46,8 @@ function toDate(value, fallback) {
 
 /**
  * 把一个 repos/<id>.md 解析成前端契约（web/src/types/index.ts 里的 Project）。
- * 正文里的 `## Features` 为空、或开头没有介绍时，联网构建会回退到 GitHub README / 仓库简介。
+ * 开头没有介绍时，联网构建会回退到 GitHub README；
+ * `## Features` 完全由作者决定，写空或不写都不展示，也不做任何补齐。
  */
 async function buildProject(meta, content, fileName, github, useOffline, fileDate) {
   const ref = parseRepoUrl(meta.repoUrl);
@@ -57,16 +58,8 @@ async function buildProject(meta, content, fileName, github, useOffline, fileDat
 
   const featuresHeading = content.match(/^\s{0,3}##\s+Features\s*#*\s*$/im);
   const intro = featuresHeading ? content.slice(0, featuresHeading.index) : content;
-  const featureBody = featuresHeading
-    ? content.slice(featuresHeading.index + featuresHeading[0].length).split(/^\s{0,3}#{1,6}\s+/m, 1)[0]
-    : '';
-  const needsReadme = !intro.trim();
-  const needsDescription = Boolean(featuresHeading && !featureBody.trim());
-  const fetchedReadme = needsReadme && !useOffline ? await github.fetchReadme(ref) : '';
-  const enrichedContent = fillProjectContent(content, {
-    readme: fetchedReadme,
-    description: needsDescription ? githubMeta?.description : '',
-  });
+  const fetchedReadme = !intro.trim() && !useOffline ? await github.fetchReadme(ref) : '';
+  const enrichedContent = fillProjectContent(content, { readme: fetchedReadme });
 
   const analysis = analyzeReadme(enrichedContent);
   const tags = [
