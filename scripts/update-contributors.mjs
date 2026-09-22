@@ -6,11 +6,15 @@
  * `<!-- contributors:start -->` … `<!-- contributors:end -->` 标记区块。
  * 只渲染头像、不显示提交次数，机器人账号（`xxx[bot]`）会被过滤掉。
  *
- * 关于「占满整行」：GitHub 的 markdown 样式是
- *   table { display: block; width: max-content; max-width: 100%; }
- * 且会剥掉内联 style，所以 `width="100%"` 无效；这里在头像两侧各铺一段
- * 不可见的 `&emsp;`，让 max-content 刚好超过正文的 1012px 上限，
- * 表格被 max-width:100% 卡在最大宽度；行高不写死，随头像数量自动变化。
+ * 关于「居中 + 占满整行」：GitHub 的 markdown 样式是
+ *   table { display: block; width: max-content; max-width: 100%; overflow: auto; }
+ * 且会剥掉内联 style，所以 `width="100%"` 无效。表格先按 max-content 排版，
+ * 再被 max-width 卡到正文列宽，而超出部分只会向右溢出 —— 一旦内容超宽，
+ * 两侧等量的 `&emsp;` 只会让头像块居中于「超宽的内容行」，而非居中于正文列，
+ * 头像就会整体偏右。所以这里按头像块宽度反推占位：
+ *   (正文列宽 - 头像块宽) / 2
+ * 让「占位 + 头像 + 占位」刚好铺满正文列，头像块便落在正文列的中线上。
+ * 行高不写死，随头像数量自动变化。
  *
  * 用法：
  *   node scripts/update-contributors.mjs
@@ -26,8 +30,14 @@ const PER_PAGE = 100;
 /** 展示尺寸与取图尺寸（取图放大，高分屏不糊） */
 const AVATAR_WIDTH = 80;
 const AVATAR_FILE_SIZE = 200;
-/** 头像两侧各 30 个 &emsp;（约 960px），加上头像本身刚好超过正文的 1012px 上限 */
-const WIDTH_FILLER = '&emsp;'.repeat(30);
+/** 头像之间的间距（两个 &nbsp; 约 9px） */
+const AVATAR_GAP = 9;
+/** GitHub 正文列宽 1012px，扣除单元格左右内边距（13px）与边框（1px）后的可用宽度 */
+const CONTENT_WIDTH = 984;
+/** &emsp;（em space）在 16px 正文字号下的宽度 */
+const EM_SPACE = 16;
+/** 面板下方的致谢文案 */
+const THANKS_LINE = '✨Thank you all for your contributions to this repository✨';
 
 const token = process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN ?? '';
 
@@ -59,6 +69,19 @@ function avatarUrl(item, size = AVATAR_FILE_SIZE) {
   return `${url}${url.includes('?') ? '&' : '?'}s=${size}`;
 }
 
+/** 头像墙宽度：N 个头像 + N-1 段间距 */
+function rowWidth(count) {
+  return count > 0 ? count * AVATAR_WIDTH + (count - 1) * AVATAR_GAP : 0;
+}
+
+/**
+ * 单侧占位（`&emsp;`）数量：按头像块宽度反推，让整行刚好铺满正文列，
+ * 头像块因此居中于正文列。头像多到铺满整列时不再需要占位。
+ */
+function fillerCount(count) {
+  return Math.max(0, Math.round((CONTENT_WIDTH - rowWidth(count)) / 2 / EM_SPACE));
+}
+
 /** 头像墙：只有头像，悬停显示用户名，点击进个人主页 */
 function renderAvatars(contributors) {
   if (contributors.length === 0) return '&nbsp;';
@@ -66,17 +89,19 @@ function renderAvatars(contributors) {
     .map(
       (item) =>
         `<a href="${item.html_url}" title="${item.login}">` +
-        `<img src="${avatarUrl(item)}" width="${AVATAR_WIDTH}" height="${AVATAR_WIDTH}" alt="${item.login}" /></a>&nbsp;&nbsp;`,
+        `<img src="${avatarUrl(item)}" width="${AVATAR_WIDTH}" height="${AVATAR_WIDTH}" alt="${item.login}" /></a>`,
     )
-    .join('\n');
+    .join('&nbsp;&nbsp;');
 }
 
-/** 单行面板：占位 + 头像墙 + 占位，边框占满正文宽度 */
+/** 单行面板：占位 + 头像墙 + 占位（边框占满正文宽度），下方一行致谢 */
 function renderPanel(contributors) {
+  const filler = '&emsp;'.repeat(fillerCount(contributors.length));
   return [
     '<table border="1" cellspacing="0" cellpadding="14">',
-    `<tr><td align="center">${WIDTH_FILLER}${renderAvatars(contributors)}${WIDTH_FILLER}</td></tr>`,
+    `<tr><td align="center">${filler}${renderAvatars(contributors)}${filler}</td></tr>`,
     '</table>',
+    THANKS_LINE,
   ].join('\n');
 }
 
