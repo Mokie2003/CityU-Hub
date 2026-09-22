@@ -15,9 +15,8 @@
  *
  * 用法：
  *   node scripts/update-screenshot.mjs
- *   SITE_URL=https://cityu-hub.bond/ SCREENSHOT_BY=alice node scripts/update-screenshot.mjs
+ *   SITE_URL=https://cityu-hub.bond/ node scripts/update-screenshot.mjs
  */
-import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
@@ -27,21 +26,13 @@ const OUT_PATH = path.resolve(process.env.OUT_PATH ?? 'web/public/screenshot.png
 const README_PATH = process.env.README_PATH ?? 'README.md';
 const START = '<!-- screenshot:start -->';
 const END = '<!-- screenshot:end -->';
+/** 截图由 CI 里的机器人完成并提交，标注固定写它 */
+const CAPTURED_BY = 'github-actions[bot]';
 const VIEWPORT = { width: 1440, height: 900 };
 /** 2 倍密度：桌面高分屏下文字与边框不糊 */
 const DEVICE_SCALE_FACTOR = 2;
 /** 卡片有 stagger 淡入（最多 400ms 延迟 + 动画时长），多等一会再拍 */
 const SETTLE_MS = 1500;
-
-/** 截图者：CI 里由 workflow 传 github.actor，本地取 git 配置的 user.name */
-function resolveCapturedBy() {
-  if (process.env.SCREENSHOT_BY?.trim()) return process.env.SCREENSHOT_BY.trim();
-  try {
-    return execFileSync('git', ['config', 'user.name'], { encoding: 'utf8' }).trim() || 'unknown';
-  } catch {
-    return 'unknown';
-  }
-}
 
 /** 北京时间，形如 2026-09-23 10:35 */
 function formatCapturedAt(date) {
@@ -70,16 +61,19 @@ async function readIfExists(file) {
   }
 }
 
-/** 标记区块内容：截图 + 说明 + 截图时间与截图者（简中 / 繁中 / 英文） */
-function renderBlock(capturedAt, capturedBy) {
+/**
+ * 标记区块内容：截图 → 时间与截图者（小一号的 <sub>，简中 / 繁中 / 英文）→ 说明。
+ * GitHub 会剥掉 <small>，只保留 <sub> / <sup>，所以缩小字号用 <sub>。
+ */
+function renderBlock(capturedAt) {
   const src = path.relative(process.cwd(), OUT_PATH).split(path.sep).join('/');
   return [
     START,
     `<img src="${src}" alt="CityU Hub 首页截图 / homepage screenshot" width="920" />`,
     '',
-    '**站点一览 · Homepage at a glance**',
+    `<sub>截图时间 / 截圖時間 / captured at: ${capturedAt} (UTC+8) · 截图者 / 截圖者 / by: @${CAPTURED_BY}</sub>`,
     '',
-    `截图时间 / 截圖時間 / captured at: ${capturedAt} (UTC+8) · 截图者 / 截圖者 / by: @${capturedBy}`,
+    '**站点一览 · Homepage at a glance**',
     END,
   ].join('\n');
 }
@@ -129,7 +123,6 @@ await fs.writeFile(OUT_PATH, shot);
 console.log(`已更新 ${OUT_PATH}：${previousShot ? pngSize(previousShot) : '无'} → ${pngSize(shot)}（${shot.length} 字节）`);
 
 const capturedAt = formatCapturedAt(new Date());
-const capturedBy = resolveCapturedBy();
 const readme = await readIfExists(README_PATH);
 if (readme === null) {
   console.warn(`未找到 ${README_PATH}，跳过截图标注`);
@@ -142,10 +135,10 @@ if (!pattern.test(readme)) {
   process.exit(0);
 }
 
-const next = readme.replace(pattern, renderBlock(capturedAt, capturedBy));
+const next = readme.replace(pattern, renderBlock(capturedAt));
 if (next === readme) {
   console.log('截图标注无变化');
 } else {
   await fs.writeFile(README_PATH, next, 'utf8');
-  console.log(`已在 ${README_PATH} 标注：${capturedAt} (UTC+8) · @${capturedBy}`);
+  console.log(`已在 ${README_PATH} 标注：${capturedAt} (UTC+8) · @${CAPTURED_BY}`);
 }

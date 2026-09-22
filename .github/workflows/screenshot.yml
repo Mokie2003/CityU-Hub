@@ -1,7 +1,8 @@
 name: Screenshot
 
 # 每次推送到 main 后重新抓一张站点首页截图，覆盖 web/public/screenshot.png，
-# 并在 README 的 <!-- screenshot:start --> 区块里标注截图时间与截图者（取 github.actor）。
+# 并在 README 的 <!-- screenshot:start --> 区块里标注截图时间与截图者
+# （固定写 github-actions[bot]，与提交者一致）。
 # 截图只是资源替换，不需要再跑一遍构建，所以提交时不带 [skip ci]。
 on:
   push:
@@ -46,8 +47,6 @@ jobs:
       - name: 抓取站点首页截图
         env:
           SITE_URL: https://cityu-hub.bond/
-          # 写进 README 的截图者
-          SCREENSHOT_BY: ${{ github.actor }}
         run: node scripts/update-screenshot.mjs
 
       - name: 有变化就提交并推送

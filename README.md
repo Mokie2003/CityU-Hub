@@ -25,9 +25,9 @@
 <!-- screenshot:start -->
 <img src="web/public/screenshot.png" alt="CityU Hub 首页截图 / homepage screenshot" width="920" />
 
-**站点一览 · Homepage at a glance**
+<sub>截图时间 / 截圖時間 / captured at: 2026-09-23 02:56 (UTC+8) · 截图者 / 截圖者 / by: @github-actions[bot]</sub>
 
-截图时间 / 截圖時間 / captured at: 2026-09-23 02:52 (UTC+8) · 截图者 / 截圖者 / by: @Warpshlczy
+**站点一览 · Homepage at a glance**
 <!-- screenshot:end -->
 
 <a href="https://cityu-hub.bond">
