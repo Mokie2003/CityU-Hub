@@ -51,7 +51,6 @@ CityU Hub 是一个面向**香港城市大学（CityU）学生开源项目**的�
 | 筛选与排序 | 分类页签、标签 chips、作者榜一键筛选；支持按最近更新 / Star / 名称排序 |
 | 项目详情 | 渲染仓库 README、作者实名与专业年级、Demo 与 GitHub 外链 |
 | 可分享链接 | 搜索词、筛选、分类、排序、主题全部同步到 URL，刷新/分享后状态不丢 |
-| 主题 | 亮 / 暗双主题切换，首屏前注入、无闪烁 |
 | 常用入口 | 右上角 🔗 抽屉内置 AIMS / Canvas / 学校官网 / CityUHK Portal |
 
 ### 技术栈
@@ -83,7 +82,7 @@ CityU-Hub/
 │       └── utils/              # 搜索语法解析、格式化、slug
 ├── scripts/
 │   └── sync-and-build.sh       # 目标机器拉取最新代码并重建站点
-├── vercel.json                 # Vercel 部署配置（构建命令 / 输出目录 / 关闭框架预设）
+├── vercel.json                 # 部署配置（构建命令 / 输出目录 / 关闭框架预设）
 └── .github/workflows/          # ci.yml（校验 + 构建）/ deploy.yml（自托管机器同步重建）
 ```
 
@@ -120,31 +119,6 @@ npm run preview      # 本地预览构建产物
 npm run validate     # 校验 repos/*.md 的 front matter、Schema 与重复项
 npm test             # 解析器单元测试
 ```
-
-### 一键部署到 Vercel
-
-整站是纯静态产物，Vercel 的 Git 集成会在每次 push 后自动拉取代码、重新解析 `repos/*.md` 并重新发布，不需要任何手动步骤。
-
-**首次导入**：Vercel Dashboard → Add New → Project → Import 本仓库，然后按下面这张表确认设置：
-
-| 设置项 | 值 | 说明 |
-| --- | --- | --- |
-| Root Directory | **留空（仓库根目录）** | 必须留空，npm workspaces 要从根目录统一安装依赖 |
-| Framework Preset | Other | [`vercel.json`](vercel.json) 已用 `"framework": null` 固定，避免被识别成 Vite 后去根目录找 `dist` |
-| Build Command | `npm run build` | 已由 `vercel.json` 声明，无需手填 |
-| Output Directory | `web/dist` | 已由 `vercel.json` 声明，无需手填 |
-| Node.js Version | 24.x | 来自根 [`package.json`](package.json) 的 `engines.node` |
-
-其余保持默认，点 Deploy 即可。构建过程等价于本机的这两条命令：
-
-```bash
-npm install    # 根目录一次装好 repos-parser 与 web 的依赖
-npm run build  # 解析 repos/*.md → 类型检查 → 打包到 web/dist
-```
-
-想用静态数据补齐 stars / 语言 / 头像，在 Vercel 项目的环境变量里加一个 `GITHUB_TOKEN`，并把构建命令改成 `npm run build:online`。
-
-> `scripts/sync-and-build.sh` 与 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) 是给自建服务器（38.175.192.15）用的：由自托管 runner 或 crontab 轮询拉取最新代码并重建，与 Vercel 互不影响。
 
 ### 成为贡献者
 
@@ -241,7 +215,7 @@ CityU-Hub/
 │       └── utils/              # 搜尋語法解析、格式化、slug
 ├── scripts/
 │   └── sync-and-build.sh       # 目標機器拉取最新程式碼並重建網站
-├── vercel.json                 # Vercel 部署設定（建構指令 / 輸出目錄 / 關閉框架預設）
+├── vercel.json                 # 部署設定（建構指令 / 輸出目錄 / 關閉框架預設）
 └── .github/workflows/          # ci.yml（驗證 + 建構）/ deploy.yml（自架機器同步重建）
 ```
 
@@ -278,31 +252,6 @@ npm run preview      # 本機預覽建構產物
 npm run validate     # 驗證 repos/*.md 的 front matter、Schema 與重複項
 npm test             # 解析器單元測試
 ```
-
-### 一鍵部署到 Vercel
-
-整站是純靜態產物，Vercel 的 Git 整合會在每次 push 後自動拉取程式碼、重新解析 `repos/*.md` 並重新發佈，不需要任何手動步驟。
-
-**首次匯入**：Vercel Dashboard → Add New → Project → Import 本儲存庫，然後按下面這張表確認設定：
-
-| 設定項 | 值 | 說明 |
-| --- | --- | --- |
-| Root Directory | **留空（儲存庫根目錄）** | 必須留空，npm workspaces 要從根目錄統一安裝依賴 |
-| Framework Preset | Other | [`vercel.json`](vercel.json) 已用 `"framework": null` 固定，避免被識別成 Vite 後去根目錄找 `dist` |
-| Build Command | `npm run build` | 已由 `vercel.json` 宣告，無需手填 |
-| Output Directory | `web/dist` | 已由 `vercel.json` 宣告，無需手填 |
-| Node.js Version | 24.x | 來自根 [`package.json`](package.json) 的 `engines.node` |
-
-其餘保持預設，點 Deploy 即可。建構過程等於本機這兩條指令：
-
-```bash
-npm install    # 根目錄一次裝好 repos-parser 與 web 的依賴
-npm run build  # 解析 repos/*.md → 型別檢查 → 打包到 web/dist
-```
-
-想用靜態資料補齊 stars / 語言 / 頭像，在 Vercel 專案的環境變數裡加一個 `GITHUB_TOKEN`，並把建構指令改成 `npm run build:online`。
-
-> `scripts/sync-and-build.sh` 與 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) 是給自架伺服器（38.175.192.15）用的：由自託管 runner 或 crontab 輪詢拉取最新程式碼並重建，與 Vercel 互不影響。
 
 ### 成為貢獻者
 
@@ -436,31 +385,6 @@ npm run preview      # preview the production build locally
 npm run validate     # check front matter, schema and duplicate entries in repos/*.md
 npm test             # parser unit tests
 ```
-
-### One-command deployment to Vercel
-
-The whole site is static, and Vercel's Git integration pulls the latest code, re-parses `repos/*.md` and republishes on every push — nothing manual.
-
-**First import**: Vercel Dashboard → Add New → Project → Import this repository, then confirm the settings below:
-
-| Setting | Value | Notes |
-| --- | --- | --- |
-| Root Directory | **leave empty (repo root)** | Required — npm workspaces must install from the repo root |
-| Framework Preset | Other | Pinned by `"framework": null` in [`vercel.json`](vercel.json), so Vercel does not treat this as Vite and look for `dist` at the root |
-| Build Command | `npm run build` | Already declared in `vercel.json` |
-| Output Directory | `web/dist` | Already declared in `vercel.json` |
-| Node.js Version | 24.x | Taken from `engines.node` in the root [`package.json`](package.json) |
-
-Leave everything else at its default and press Deploy. The build is equivalent to these two local commands:
-
-```bash
-npm install    # installs both repos-parser and web from the repo root
-npm run build  # parses repos/*.md → type-check → bundles into web/dist
-```
-
-To bake stars / language / avatars into the static data, add a `GITHUB_TOKEN` environment variable to the Vercel project and switch the build command to `npm run build:online`.
-
-> `scripts/sync-and-build.sh` and [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) cover the self-hosted route (38.175.192.15): a self-hosted runner or a crontab poll pulls the latest code and rebuilds, independently of Vercel.
 
 ### Become a contributor
 
