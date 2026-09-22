@@ -1,0 +1,60 @@
+name: Screenshot
+
+# 每次推送到 main 后重新抓一张站点首页截图，覆盖 web/public/screenshot.png，
+# README 里引用的那张「站点一览」图就跟着更新（纯静态资源，提交后随站点一起发布）。
+# 截图只是资源替换，不需要再跑一遍构建，所以提交时不带 [skip ci]。
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: screenshot
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    name: 抓取首页截图并提交
+    # 机器人自己推的截图提交带 [skip-shot] 标记，且 actor 是 github-actions[bot]，
+    # 两种情况都跳过，避免「提交 → 触发 → 再提交」的自我循环。
+    if: ${{ github.event_name != 'push' || (!contains(github.event.head_commit.message, '[skip-shot]') && github.actor != 'github-actions[bot]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci --no-audit --no-fund
+
+      - name: 安装 Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: 配置 git 身份
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: 抓取站点首页截图
+        env:
+          SITE_URL: https://cityu-hub.bond/
+        run: node scripts/update-screenshot.mjs
+
+      - name: 有变化就提交并推送
+        run: |
+          if git diff --quiet -- web/public/screenshot.png; then
+            echo "截图无变化，跳过提交"
+            exit 0
+          fi
+          git add web/public/screenshot.png
+          git commit -m "chore(screenshot): 更新站点首页截图 [skip-shot]"
+          git pull --rebase origin main
+          git push origin main

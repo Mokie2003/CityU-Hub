@@ -17,10 +17,14 @@
     "dev": "npm run dev --workspace web",
     "preview": "npm run preview --workspace web",
     "validate": "npm run validate --workspace repos-parser",
-    "test": "npm test --workspace repos-parser"
+    "test": "npm test --workspace repos-parser",
+    "update:screenshot": "node scripts/update-screenshot.mjs"
   },
   "allowScripts": {
     "esbuild@0.25.12": true
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
 }
