@@ -126,7 +126,7 @@ npm run dev
 1. **Fork** 本仓库并 clone 到本地，从 `main` 建一个分支，例如 `feat/add-my-project`。
 2. 复制 `repos/_template.md` 为 `repos/你的项目名.md`，填写 front matter 与正文。
 3. 必填字段：`title`、`author`（GitHub 用户名）、`authorName`（真实姓名）、`major`（专业）、`enrollmentYear`（入学年份，四位数字）、`repoUrl`（必须是公开的 `https://github.com/...` 地址）。可选：`id`、`summary`、`homepageUrl`、`tags`（最多 12 个小写短标签）、`category`、`featured`、`status`（`active` / `hidden` / `archived`）。**schema 不允许出现未定义的字段。**
-4. 正文写在 front matter 之后：填了 `summary` 就用摘要，正文留空则回退到展示你仓库的 README。
+4. 正文写在 front matter 之后：你可以在这里自定义想展示的项目简介与功能介绍。如果想使用GitHub项目页上的简介，请在`Features`后面留空。如果想使用项目的README，请将项目介绍留空。程序会自动拉取你的项目。
 5. 本地自检（务必先跑通）：
    ```bash
    cd back-end
