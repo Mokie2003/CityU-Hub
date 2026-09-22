@@ -1,7 +1,7 @@
 ---
 title: CityU-CS-Guide
-author: null1024-ws
-authorName: B1ad3
+author: B1ad3
+authorName: null1024-ws
 major: Computer Science
 enrollmentYear: 2026
 repoUrl: https://github.com/null1024-ws/CityU-CS-Guide
