@@ -26,9 +26,9 @@ const PER_PAGE = 100;
 /** 展示尺寸与取图尺寸（取图放大，高分屏不糊） */
 const AVATAR_WIDTH = 96;
 const AVATAR_FILE_SIZE = 240;
-/** 标题行左右各 80 个 &emsp;，合计约 2500px，必定超过容器宽度 */
-const WIDTH_FILLER = '&emsp;'.repeat(80);
-const PANEL_TITLE = '▛▀▀▀  CONTRIBUTORS · 贡献者 · 貢獻者  ▀▀▀▜';
+/** 标题行左右各 30 个 &emsp;（约 960px），加上标题本身刚好超过 GitHub 正文的 1012px 上限 */
+const WIDTH_FILLER = '&emsp;'.repeat(30);
+const PANEL_TITLE = '✨ ▛▀▀▀  CONTRIBUTORS · 贡献者 · 貢獻者  ▀▀▀▜';
 
 const token = process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN ?? '';
 
