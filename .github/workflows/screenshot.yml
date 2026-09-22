@@ -1,7 +1,7 @@
 name: Screenshot
 
 # 每次推送到 main 后重新抓一张站点首页截图，覆盖 web/public/screenshot.png，
-# README 里引用的那张「站点一览」图就跟着更新（纯静态资源，提交后随站点一起发布）。
+# 并在 README 的 <!-- screenshot:start --> 区块里标注截图时间与截图者（取 github.actor）。
 # 截图只是资源替换，不需要再跑一遍构建，所以提交时不带 [skip ci]。
 on:
   push:
@@ -46,15 +46,17 @@ jobs:
       - name: 抓取站点首页截图
         env:
           SITE_URL: https://cityu-hub.bond/
+          # 写进 README 的截图者
+          SCREENSHOT_BY: ${{ github.actor }}
         run: node scripts/update-screenshot.mjs
 
       - name: 有变化就提交并推送
         run: |
-          if git diff --quiet -- web/public/screenshot.png; then
+          if git diff --quiet -- web/public/screenshot.png README.md; then
             echo "截图无变化，跳过提交"
             exit 0
           fi
-          git add web/public/screenshot.png
+          git add web/public/screenshot.png README.md
           git commit -m "chore(screenshot): 更新站点首页截图 [skip-shot]"
           git pull --rebase origin main
           git push origin main

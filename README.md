@@ -22,9 +22,13 @@
 
 <div align="center">
 
+<!-- screenshot:start -->
 <img src="web/public/screenshot.png" alt="CityU Hub 首页截图 / homepage screenshot" width="920" />
 
 **站点一览 · Homepage at a glance**
+
+截图时间 / 截圖時間 / captured at: 2026-09-23 02:51 (UTC+8) · 截图者 / 截圖者 / by: @Warpshlczy
+<!-- screenshot:end -->
 
 <a href="https://cityu-hub.bond">
   <img src="https://img.shields.io/badge/%E7%AB%8B%E5%8D%B3%E8%AE%BF%E9%97%AE%E7%BD%91%E7%AB%99-cityu--hub.bond-f47c94?style=for-the-badge&logo=vercel&logoColor=white" alt="立即访问网站 / visit site" />
