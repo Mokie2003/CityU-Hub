@@ -43,5 +43,6 @@ npm run build
 - `id` 可省略，解析器会根据仓库 owner 和 repo 生成；显式填写后不可随意修改。
 - `tags` 使用小写短标签，最多 12 个。
 - 项目介绍正文写在 front matter 后面，解析器会把它渲染成项目详情页的 HTML。
+- `## Features` 段落完全可选：不写或留空都不会展示 Features，也不会用 GitHub 仓库简介补齐；想展示仓库 README，把项目介绍留空即可。
 - `status: hidden` 的条目不会出现在站点上。
 - 不要提交 `web/public/data/`，它是构建时自动生成的产物。

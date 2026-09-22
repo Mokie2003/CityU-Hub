@@ -177,7 +177,7 @@ npm test             # 解析器单元测试
 1. **Fork** 本仓库并 clone 到本地，从 `feature` 建一个分支，例如 `feat/add-my-project`。也可以直接点上面的[一键新建项目文件](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)在网页上填。
 2. 复制 `repos/_template.md` 为 `repos/你的项目名.md`，填写 front matter 与正文。
 3. 必填字段：`title`、`author`（GitHub 用户名）、`authorName`（真实姓名）、`major`（专业）、`enrollmentYear`（入学年份，四位数字）、`repoUrl`（必须是公开的 `https://github.com/...` 地址）。可选：`id`、`summary`、`homepageUrl`、`tags`（最多 12 个小写短标签）、`category`、`featured`、`status`（`active` / `hidden` / `archived`）。**schema 不允许出现未定义的字段。**
-4. 正文写在 front matter 之后：你可以在这里自定义想展示的项目简介与功能介绍。如果想使用 GitHub 项目页上的简介，请在 `Features` 后面留空；如果想使用项目的 README，请将项目介绍留空。程序会自动拉取。
+4. 正文写在 front matter 之后：开头写项目介绍，`## Features` 段落完全由作者自行决定——写了才展示，**留空或整段不写都不会出现 Features**，也不会用 GitHub 仓库简介去补齐。想让项目页直接展示仓库 README，把项目介绍留空即可。
 5. 本地自检（务必先跑通）：
    ```bash
    npm install
@@ -349,7 +349,7 @@ npm test             # 解析器單元測試
 1. **Fork** 本儲存庫並 clone 到本機，從 `feature` 開一個分支，例如 `feat/add-my-project`。也可以直接點上面的[一鍵新建項目檔案](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)在網頁上填。
 2. 複製 `repos/_template.md` 為 `repos/你的項目名.md`，填寫 front matter 與正文。
 3. 必填欄位：`title`、`author`（GitHub 使用者名稱）、`authorName`（真實姓名）、`major`（主修）、`enrollmentYear`（入學年份，四位數字）、`repoUrl`（必須是公開的 `https://github.com/...` 位址）。可選：`id`、`summary`、`homepageUrl`、`tags`（最多 12 個小寫短標籤）、`category`、`featured`、`status`（`active` / `hidden` / `archived`）。**schema 不允許出現未定義的欄位。**
-4. 正文寫在 front matter 之後：填了 `summary` 就用摘要，正文留空則回退到展示你儲存庫的 README。
+4. 正文寫在 front matter 之後：`summary` 用來當卡片摘要，開頭寫項目介紹，`## Features` 段落完全由作者自行決定——寫了才展示，**留空或整段不寫都不會出現 Features**，也不會用 GitHub 儲存庫簡介去補齊；把項目介紹留空則回退到展示儲存庫 README。
 5. 本機自我檢查（務必先跑通）：
    ```bash
    npm install
@@ -521,7 +521,7 @@ site change PR ────────► dev ─────┘
 1. **Fork** this repository, clone it, and branch off `feature`, e.g. `feat/add-my-project`. You can also use the [one-click new project file](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) link and fill it in right in the browser.
 2. Copy `repos/_template.md` to `repos/your-project.md` and fill in the front matter and the body.
 3. Required fields: `title`, `author` (GitHub username), `authorName`, `major`, `enrollmentYear` (four digits), `repoUrl` (must be a public `https://github.com/...` URL). Optional: `id`, `summary`, `homepageUrl`, `tags` (max 12 short lowercase tags), `category`, `featured`, `status` (`active` / `hidden` / `archived`). **The schema rejects any undefined field.**
-4. Put your description after the front matter: with `summary` set it is used as the card text; leave the body empty to fall back to your repository README.
+4. Put your description after the front matter: `summary` becomes the card text. The `## Features` section is entirely up to you — write it and it renders, **leave it empty or omit it and no Features block appears**, and the repository description is never used as a substitute. Leave the intro empty to fall back to your repository README.
 5. Verify locally before opening the PR:
    ```bash
    npm install
