@@ -8,7 +8,7 @@
 ```text
 作者编辑 repos/<id>.md
         │
-        │ Pull Request
+        │ Pull Request（目标分支 feature）
         ▼
 validate-repos.mjs 校验 front matter、Schema、重复 ID 与重复仓库
         │
@@ -17,7 +17,7 @@ validate-repos.mjs 校验 front matter、Schema、重复 ID 与重复仓库
 build-index.mjs 生成 web/public/data/*.json
         │
         ▼
-web 的 npm run build 打包 web/dist，由 Vercel 或自建服务器发布
+web 的 npm run build 打包 web/dist，由自建服务器发布
 ```
 
 只有合并到 `main` 的内容才会进入构建；PR 不直接发布网页内容。

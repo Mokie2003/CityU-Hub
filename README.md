@@ -9,11 +9,24 @@
 [![CI](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/ci.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/ci.yml)
 [![Sync & rebuild](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/deploy.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/deploy.yml)
 [![GitHub stars](https://img.shields.io/github/stars/Warpshlczy/CityU-Hub?style=for-the-badge&logo=github&label=stars&color=f47c94)](https://github.com/Warpshlczy/CityU-Hub/stargazers)
+[![License: MIT](https://img.shields.io/badge/license-MIT-f47c94?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
 
-[![Node.js](https://img.shields.io/badge/node-%E2%89%A520.6-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
 [![React](https://img.shields.io/badge/react-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/typescript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/vite-6-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev)
 [![Tailwind CSS](https://img.shields.io/badge/tailwindcss-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![React Router](https://img.shields.io/badge/react%20router-7-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white)](https://reactrouter.com)
+[![lucide-react](https://img.shields.io/badge/lucide--react-1-F56565?style=for-the-badge&logo=lucide&logoColor=white)](https://lucide.dev)
+
+[![Node.js](https://img.shields.io/badge/node-%E2%89%A520.6-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
+[![marked](https://img.shields.io/badge/marked-15-111111?style=for-the-badge&logo=markdown&logoColor=white)](https://marked.js.org)
+[![ajv](https://img.shields.io/badge/ajv-8-23C8D2?style=for-the-badge)](https://ajv.js.org)
+[![js-yaml](https://img.shields.io/badge/js--yaml-4-CB171E?style=for-the-badge&logo=yaml&logoColor=white)](https://github.com/nodeca/js-yaml)
+[![GitHub Actions](https://img.shields.io/badge/github%20actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/actions)
+
+[![Submit a project](https://img.shields.io/badge/submit%20a%20project-PR%20to%20feature-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)
+[![Report a bug](https://img.shields.io/badge/report%20a%20bug-issue-dc2626?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20)
+[![Request a feature](https://img.shields.io/badge/request%20a%20feature-issue-a855f7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-f47c94?style=for-the-badge&logo=github&logoColor=white)](CONTRIBUTING.md)
 
 **[简体中文](#简体中文) · [繁體中文](#繁體中文) · [English](#english)**
@@ -82,7 +95,6 @@ CityU-Hub/
 │       └── utils/              # 搜索语法解析、格式化、slug
 ├── scripts/
 │   └── sync-and-build.sh       # 目标机器拉取最新代码并重建站点
-├── vercel.json                 # 部署配置（构建命令 / 输出目录 / 关闭框架预设）
 └── .github/workflows/          # ci.yml（校验 + 构建）/ deploy.yml（自托管机器同步重建）
 ```
 
@@ -120,13 +132,45 @@ npm run validate     # 校验 repos/*.md 的 front matter、Schema 与重复项
 npm test             # 解析器单元测试
 ```
 
+### 一键入口
+
+不想翻文档就直接点，链接已经带好标签与目标分支：
+
+| 想做的事 | 一键唤起 | 说明 |
+| --- | --- | --- |
+| 提交自己的项目 | [新建 `repos/我的项目.md`](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | 打开 GitHub 文件编辑器，没权限会自动 fork，文件建在 `feature` 分支，提交即开 PR |
+| 报告 Bug | [开 Bug Issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20) | 已预填标题 `[Bug]` 与 `bug` 标签 |
+| 提功能建议 / 提问 | [开建议 Issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20) | 已预填标题 `[Feature]` 与 `enhancement` 标签 |
+| 看别人提了什么 | [浏览全部 Issue](https://github.com/Warpshlczy/CityU-Hub/issues) | 先搜一下，避免重复 |
+
+### 分支模型
+
+仓库只有三条长期分支，默认分支是 `main`；旧分支 `master` 已删除，请统一用 `main`：
+
+| 分支 | 用途 | 收哪类 PR |
+| --- | --- | --- |
+| `main` | 稳定发布分支，线上的正式版本以它为准 | 只接受 `feature` / `dev` 的合并，不直接往上提交 |
+| `feature` | 只丢 Markdown 文件：`repos/*.md` | 项目作者的「提交我的项目」PR |
+| `dev` | 网站改动与新功能：`web/`、`repos-parser/`、`scripts/`、工作流、文档 | 前端 / 解析器 / 文档类 PR |
+
+```text
+项目提交 PR ─► feature ─┐
+                        ├─► main ─► 正式发布（自建机器重建）
+网站改动 PR ─► dev ─────┘
+```
+
+- **提项目**：从 `feature` 切分支（例如 `feat/add-my-project`），PR 的目标分支选 **`feature`**。
+- **改网站**：从 `dev` 切分支（例如 `feat/search-syntax`），PR 的目标分支选 **`dev`**。
+- 维护者定期把 `feature`、`dev` 合并回 `main`；**只有合并到 `main` 才会触发正式发布**。
+- PR 一打开就会跑 CI（校验 front matter、单元测试、整站构建），与目标分支无关。
+
 ### 成为贡献者
 
 **非常欢迎你参与 CityU Hub！** 无论你是想把自己的项目放上来、修一个前端小 bug、补一段文档，还是只提一个想法，都是这个项目需要的贡献。
 
 #### 方式一：提交你的项目（最主要）
 
-1. **Fork** 本仓库并 clone 到本地，从 `main` 建一个分支，例如 `feat/add-my-project`。
+1. **Fork** 本仓库并 clone 到本地，从 `feature` 建一个分支，例如 `feat/add-my-project`。也可以直接点上面的[一键新建项目文件](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)在网页上填。
 2. 复制 `repos/_template.md` 为 `repos/你的项目名.md`，填写 front matter 与正文。
 3. 必填字段：`title`、`author`（GitHub 用户名）、`authorName`（真实姓名）、`major`（专业）、`enrollmentYear`（入学年份，四位数字）、`repoUrl`（必须是公开的 `https://github.com/...` 地址）。可选：`id`、`summary`、`homepageUrl`、`tags`（最多 12 个小写短标签）、`category`、`featured`、`status`（`active` / `hidden` / `archived`）。**schema 不允许出现未定义的字段。**
 4. 正文写在 front matter 之后：你可以在这里自定义想展示的项目简介与功能介绍。如果想使用 GitHub 项目页上的简介，请在 `Features` 后面留空；如果想使用项目的 README，请将项目介绍留空。程序会自动拉取。
@@ -137,13 +181,13 @@ npm test             # 解析器单元测试
    npm test           # 解析器单元测试
    npm run build      # 确认能正常解析并构建出站点
    ```
-6. 提交 Pull Request 到 `main`。CI 会自动跑 `validate`、测试与整站构建；通过后由维护者 review 合并。合并后托管平台会自动重新构建发布，站点随即更新。
+6. 提交 Pull Request 到 `feature` 分支。CI 会自动跑 `validate`、测试与整站构建；通过后由维护者 review 合并。合并进 `main` 后托管平台会自动重新构建发布，站点随即更新。
 
 > 目录、字段名、枚举值的完整约定见 [`CONTRIBUTING.md`](CONTRIBUTING.md) 与 [`schema/repo.schema.json`](schema/repo.schema.json)。
 
 #### 方式二：改进网站本身
 
-前端 / 解析器 / 工作流的 PR 同样欢迎。动手前请先开一个 issue 说清楚你想做什么，避免重复劳动；提交前请确认：
+前端 / 解析器 / 工作流的 PR 同样欢迎，请把 PR 提到 **`dev`** 分支。动手前请先开一个 issue 说清楚你想做什么，避免重复劳动；提交前请确认：
 
 ```bash
 npm test        # 解析器测试必须通过
@@ -223,7 +267,6 @@ CityU-Hub/
 │       └── utils/              # 搜尋語法解析、格式化、slug
 ├── scripts/
 │   └── sync-and-build.sh       # 目標機器拉取最新程式碼並重建網站
-├── vercel.json                 # 部署設定（建構指令 / 輸出目錄 / 關閉框架預設）
 └── .github/workflows/          # ci.yml（驗證 + 建構）/ deploy.yml（自架機器同步重建）
 ```
 
@@ -261,13 +304,45 @@ npm run validate     # 驗證 repos/*.md 的 front matter、Schema 與重複項
 npm test             # 解析器單元測試
 ```
 
+### 一鍵入口
+
+不想翻文件就直接點，連結已帶好標籤與目標分支：
+
+| 想做的事 | 一鍵喚起 | 說明 |
+| --- | --- | --- |
+| 提交自己的項目 | [新建 `repos/我的項目.md`](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | 打開 GitHub 檔案編輯器，沒權限會自動 fork，檔案建在 `feature` 分支，提交即開 PR |
+| 報告 Bug | [開 Bug Issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20) | 已預填標題 `[Bug]` 與 `bug` 標籤 |
+| 提功能建議 / 提問 | [開建議 Issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20) | 已預填標題 `[Feature]` 與 `enhancement` 標籤 |
+| 看別人提了什麼 | [瀏覽全部 Issue](https://github.com/Warpshlczy/CityU-Hub/issues) | 先搜一下，避免重複 |
+
+### 分支模型
+
+倉庫只有三條長期分支，預設分支是 `main`；舊分支 `master` 已刪除，請統一使用 `main`：
+
+| 分支 | 用途 | 收哪類 PR |
+| --- | --- | --- |
+| `main` | 穩定發佈分支，線上的正式版本以它為準 | 只接受 `feature` / `dev` 的合併，不直接往上提交 |
+| `feature` | 只丟 Markdown 文件：`repos/*.md` | 項目作者的「提交我的項目」PR |
+| `dev` | 網站改動與新功能：`web/`、`repos-parser/`、`scripts/`、workflow、文件 | 前端 / 解析器 / 文件類 PR |
+
+```text
+項目提交 PR ─► feature ─┐
+                        ├─► main ─► 正式發佈（自架機器重建）
+網站改動 PR ─► dev ─────┘
+```
+
+- **提項目**：從 `feature` 開分支（例如 `feat/add-my-project`），PR 的目標分支選 **`feature`**。
+- **改網站**：從 `dev` 開分支（例如 `feat/search-syntax`），PR 的目標分支選 **`dev`**。
+- 維護者定期把 `feature`、`dev` 合併回 `main`；**只有合併到 `main` 才會觸發正式發佈**。
+- PR 一打開就會跑 CI（驗證 front matter、單元測試、整站建構），與目標分支無關。
+
 ### 成為貢獻者
 
 **非常歡迎你參與 CityU Hub！** 無論你是想把自己的項目放上來、修一個前端小 bug、補一段文件，還是只提一個想法，都是這個項目需要的貢獻。
 
 #### 方式一：提交你的項目（最主要）
 
-1. **Fork** 本儲存庫並 clone 到本機，從 `main` 開一個分支，例如 `feat/add-my-project`。
+1. **Fork** 本儲存庫並 clone 到本機，從 `feature` 開一個分支，例如 `feat/add-my-project`。也可以直接點上面的[一鍵新建項目檔案](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)在網頁上填。
 2. 複製 `repos/_template.md` 為 `repos/你的項目名.md`，填寫 front matter 與正文。
 3. 必填欄位：`title`、`author`（GitHub 使用者名稱）、`authorName`（真實姓名）、`major`（主修）、`enrollmentYear`（入學年份，四位數字）、`repoUrl`（必須是公開的 `https://github.com/...` 位址）。可選：`id`、`summary`、`homepageUrl`、`tags`（最多 12 個小寫短標籤）、`category`、`featured`、`status`（`active` / `hidden` / `archived`）。**schema 不允許出現未定義的欄位。**
 4. 正文寫在 front matter 之後：填了 `summary` 就用摘要，正文留空則回退到展示你儲存庫的 README。
@@ -278,13 +353,13 @@ npm test             # 解析器單元測試
    npm test           # 解析器單元測試
    npm run build      # 確認能正常解析並建構出網站
    ```
-6. 提交 Pull Request 到 `main`。CI 會自動跑 `validate`、測試與整站建構；通過後由維護者 review 合併。合併後託管平台會自動重新建構發佈，網站隨即更新。
+6. 提交 Pull Request 到 `feature` 分支。CI 會自動跑 `validate`、測試與整站建構；通過後由維護者 review 合併。合併進 `main` 後託管平台會自動重新建構發佈，網站隨即更新。
 
 > 目錄、欄位名稱、列舉值的完整約定見 [`CONTRIBUTING.md`](CONTRIBUTING.md) 與 [`schema/repo.schema.json`](schema/repo.schema.json)。
 
 #### 方式二：改進網站本身
 
-前端 / 解析器 / workflow 的 PR 同樣歡迎。動手前請先開一個 issue 說清楚你想做什麼，避免重複勞動；提交前請確認：
+前端 / 解析器 / workflow 的 PR 同樣歡迎，請把 PR 提到 **`dev`** 分支。動手前請先開一個 issue 說清楚你想做什麼，避免重複勞動；提交前請確認：
 
 ```bash
 npm test        # 解析器測試必須通過
@@ -364,7 +439,6 @@ CityU-Hub/
 │       └── utils/              # Search parser, formatting, slug helpers
 ├── scripts/
 │   └── sync-and-build.sh       # Pull the latest code on a target machine and rebuild
-├── vercel.json                 # Vercel deployment config (build / output dir / framework preset off)
 └── .github/workflows/          # ci.yml (validate + build) / deploy.yml (self-hosted sync)
 ```
 
@@ -402,13 +476,45 @@ npm run validate     # check front matter, schema and duplicate entries in repos
 npm test             # parser unit tests
 ```
 
+### One-click entry points
+
+Skip the docs and click straight through — every link already carries the right label and target branch:
+
+| What you want | One-click action | Notes |
+| --- | --- | --- |
+| Submit your project | [Create `repos/my-project.md`](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | Opens the GitHub file editor; without write access it forks for you, creates the file on `feature`, and committing opens the PR |
+| Report a bug | [Open a bug issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20) | Title `[Bug]` and the `bug` label are pre-filled |
+| Request a feature / ask a question | [Open a feature issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20) | Title `[Feature]` and the `enhancement` label are pre-filled |
+| See what's already reported | [Browse all issues](https://github.com/Warpshlczy/CityU-Hub/issues) | Search first to avoid duplicates |
+
+### Branch model
+
+The repository keeps only three long-lived branches; the default branch is `main`, and the old `master` branch has been deleted — use `main` everywhere:
+
+| Branch | Purpose | PRs merged into it |
+| --- | --- | --- |
+| `main` | Stable release branch, the source of truth for production | Only merges from `feature` / `dev`; never commit directly |
+| `feature` | Markdown files only: `repos/*.md` | "Submit my project" PRs from project authors |
+| `dev` | Site changes and new features: `web/`, `repos-parser/`, `scripts/`, workflows, docs | Front end / parser / docs PRs |
+
+```text
+project submission PR ─► feature ─┐
+                                  ├─► main ─► production release (self-hosted rebuild)
+site change PR ────────► dev ─────┘
+```
+
+- **Submitting a project**: branch off `feature` (e.g. `feat/add-my-project`) and target the PR at **`feature`**.
+- **Changing the site**: branch off `dev` (e.g. `feat/search-syntax`) and target the PR at **`dev`**.
+- Maintainers merge `feature` and `dev` back into `main` on a regular basis; **only a merge into `main` triggers a production release**.
+- CI (front matter validation, unit tests, full site build) runs as soon as a PR is opened, regardless of the target branch.
+
 ### Become a contributor
 
 **You are very welcome to contribute to CityU Hub!** Adding your own project, fixing a small front-end bug, improving docs or just sharing an idea — all of it moves this project forward.
 
 #### Option 1: Submit your project (the main path)
 
-1. **Fork** this repository, clone it, and branch off `main`, e.g. `feat/add-my-project`.
+1. **Fork** this repository, clone it, and branch off `feature`, e.g. `feat/add-my-project`. You can also use the [one-click new project file](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) link and fill it in right in the browser.
 2. Copy `repos/_template.md` to `repos/your-project.md` and fill in the front matter and the body.
 3. Required fields: `title`, `author` (GitHub username), `authorName`, `major`, `enrollmentYear` (four digits), `repoUrl` (must be a public `https://github.com/...` URL). Optional: `id`, `summary`, `homepageUrl`, `tags` (max 12 short lowercase tags), `category`, `featured`, `status` (`active` / `hidden` / `archived`). **The schema rejects any undefined field.**
 4. Put your description after the front matter: with `summary` set it is used as the card text; leave the body empty to fall back to your repository README.
@@ -419,13 +525,13 @@ npm test             # parser unit tests
    npm test           # parser unit tests
    npm run build      # make sure the site parses and builds
    ```
-6. Open a Pull Request against `main`. CI runs `validate`, the test suite and a full site build; a maintainer reviews and merges. Once merged, the hosting platform rebuilds and publishes automatically, and the site updates.
+6. Open a Pull Request against `feature`. CI runs `validate`, the test suite and a full site build; a maintainer reviews and merges. Once the change reaches `main`, the hosting platform rebuilds and publishes automatically, and the site updates.
 
 > Full conventions for files, field names and enum values live in [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`schema/repo.schema.json`](schema/repo.schema.json).
 
 #### Option 2: Improve the site itself
 
-PRs for the front end, the parser and the workflows are welcome. Please open an issue first so we can avoid duplicated effort, and make sure these pass:
+PRs for the front end, the parser and the workflows are welcome — target the **`dev`** branch. Please open an issue first so we can avoid duplicated effort, and make sure these pass:
 
 ```bash
 npm test        # parser tests must succeed
