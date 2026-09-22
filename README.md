@@ -36,15 +36,11 @@
 
 <!-- contributors:start -->
 <table border="1" cellspacing="0" cellpadding="14">
-<tr><th align="center">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;✨ ▛▀▀▀  CONTRIBUTORS · 贡献者 · 貢獻者  ▀▀▀▜&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th></tr>
-<tr><td align="center"><a href="https://github.com/Warpshlczy" title="Warpshlczy · 30 commits"><img src="https://avatars.githubusercontent.com/u/119655279?v=4&s=240" width="96" height="96" alt="Warpshlczy" /></a>&nbsp;&nbsp;
-<a href="https://github.com/L01nki1" title="L01nki1 · 10 commits"><img src="https://avatars.githubusercontent.com/u/146166781?v=4&s=240" width="96" height="96" alt="L01nki1" /></a>&nbsp;&nbsp;
-<a href="https://github.com/null1024-ws" title="null1024-ws · 1 commit"><img src="https://avatars.githubusercontent.com/u/79917102?v=4&s=240" width="96" height="96" alt="null1024-ws" /></a>&nbsp;&nbsp;</td></tr>
-<tr><td align="center">[@Warpshlczy](https://github.com/Warpshlczy) (30) · [@L01nki1](https://github.com/L01nki1) (10) · [@null1024-ws](https://github.com/null1024-ws) (1)</td></tr>
+<tr><td align="center">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="https://github.com/Warpshlczy" title="Warpshlczy"><img src="https://avatars.githubusercontent.com/u/119655279?v=4&s=200" width="80" height="80" alt="Warpshlczy" /></a>&nbsp;&nbsp;
+<a href="https://github.com/L01nki1" title="L01nki1"><img src="https://avatars.githubusercontent.com/u/146166781?v=4&s=200" width="80" height="80" alt="L01nki1" /></a>&nbsp;&nbsp;
+<a href="https://github.com/null1024-ws" title="null1024-ws"><img src="https://avatars.githubusercontent.com/u/79917102?v=4&s=200" width="80" height="80" alt="null1024-ws" /></a>&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</td></tr>
 </table>
 <!-- contributors:end -->
-
-**[完整统计 · Full stats](https://github.com/Warpshlczy/CityU-Hub/graphs/contributors)** · 贡献者头像墙与名单由 [`main-sync.yml`](.github/workflows/main-sync.yml) 自动刷新
 
 </div>
 
