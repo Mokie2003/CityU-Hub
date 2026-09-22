@@ -13,7 +13,7 @@ interface ProjectCardProps {
   index: number;
 }
 
-/** 卡片内容：作者 → 项目名 → 描述 → 标签 → 语言/star/更新时间 */
+/** 卡片内容：作者 → 项目名 → 简介（仓库 About + 项目介绍，不含 Features）→ 标签 → 语言/star/更新时间 */
 export const ProjectCard = memo(function ProjectCard({ project, index }: ProjectCardProps) {
   const navigate = useNavigate();
   const detailUrl = `/project/${project.id}`;
@@ -76,15 +76,21 @@ export const ProjectCard = memo(function ProjectCard({ project, index }: Project
         </Link>
       </h3>
 
-      <p className="mt-2 line-clamp-2 min-h-10 text-[13px] leading-5 text-muted">
-        {project.description}
-      </p>
+      {/* 简介：仓库 About（最多两行）+ 项目介绍摘要（最多三行）；两者都没有时整块留空 */}
+      <div className="mt-2 min-h-[6.75rem] space-y-1.5">
+        {project.about && (
+          <p className="line-clamp-2 text-[13px] leading-5 text-ink">{project.about}</p>
+        )}
+        {project.description && (
+          <p className="line-clamp-3 text-[12px] leading-5 text-muted">{project.description}</p>
+        )}
+      </div>
 
-      <div className="mt-3">
+      <div className="mb-4 mt-3">
         <TagChips items={project.tags} max={3} size="sm" />
       </div>
 
-      <div className="mono mt-4 flex items-center gap-3 border-t-[3px] border-line pt-3 text-[11px] text-muted">
+      <div className="mono mt-auto flex items-center gap-3 border-t-[3px] border-line pt-3 text-[11px] text-muted">
         <span className="flex items-center gap-1.5">
           <span
             className="size-2.5 shrink-0 border border-line"

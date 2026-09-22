@@ -155,7 +155,9 @@ export function analyzeReadme(markdown) {
 
   return {
     title: title || '',
-    summary: extractSummary(body, title),
+    // 标题是从正文首行兜底推出来的（正文里没有真实标题行）时，body 中仍留着同一段文本，
+    // 此时不能拿它做去重，否则纯正文的介绍会被判成「与标题重复」而丢掉摘要
+    summary: extractSummary(body, index >= 0 ? title : ''),
     headings,
     images,
     firstImage: images.find((img) => !img.isBadge) ?? null,
@@ -188,6 +190,13 @@ function dropEmptyFeaturesSection(text) {
   return [before, after].filter(Boolean).join('\n\n');
 }
 
+/** 取 `## Features` 之前的介绍正文；Features 段落（含列表）不会进入卡片摘要 */
+export function extractIntroduction(markdown) {
+  const text = String(markdown ?? '').replace(/\r\n?/g, '\n');
+  const heading = FEATURES_HEADING.exec(text);
+  return (heading ? text.slice(0, heading.index) : text).trim();
+}
+
 /**
  * 项目介绍留空时按需回退到 GitHub README。
  * `## Features` 完全由作者决定：写空或不写都不会展示，也不会用仓库简介补齐。
@@ -195,7 +204,7 @@ function dropEmptyFeaturesSection(text) {
 export function fillProjectContent(markdown, { readme = '' } = {}) {
   const text = String(markdown ?? '').replace(/\r\n?/g, '\n');
   const heading = FEATURES_HEADING.exec(text);
-  const intro = (heading ? text.slice(0, heading.index) : text).trim();
+  const intro = extractIntroduction(text);
   const rest = heading ? text.slice(heading.index).trim() : '';
   const head = !intro && String(readme).trim() ? String(readme).trim() : intro;
   return dropEmptyFeaturesSection([head, rest].filter(Boolean).join('\n\n'));

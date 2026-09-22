@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { marked } from 'marked';
 import { aggregateProjects } from './lib/aggregate.js';
 import { createGithubClient, parseRepoUrl } from './lib/github.js';
-import { analyzeReadme, fillProjectContent, guessTagsFromReadme } from './lib/markdown.js';
+import { analyzeReadme, extractIntroduction, fillProjectContent, guessTagsFromReadme } from './lib/markdown.js';
 import { slugify } from './lib/slug.js';
 import { loadConfig } from './config.js';
 import { parseFrontmatterDocument } from './lib/frontmatter.js';
@@ -46,8 +46,9 @@ function toDate(value, fallback) {
 
 /**
  * 把一个 repos/<id>.md 解析成前端契约（web/src/types/index.ts 里的 Project）。
- * 开头没有介绍时，联网构建会回退到 GitHub README；
- * `## Features` 完全由作者决定，写空或不写都不展示，也不做任何补齐。
+ * 卡片简介由两段组成：`about`（GitHub 仓库 About，仓库没写就是空）与 `description`
+ * （本文件正文 Features 之前的介绍摘要）；正文没写介绍时联网构建会回退到 GitHub README。
+ * `## Features` 完全由作者决定，写空或不写都不展示，也不会进入卡片摘要。
  */
 async function buildProject(meta, content, fileName, github, useOffline, fileDate) {
   const ref = parseRepoUrl(meta.repoUrl);
@@ -62,6 +63,8 @@ async function buildProject(meta, content, fileName, github, useOffline, fileDat
   const enrichedContent = fillProjectContent(content, { readme: fetchedReadme });
 
   const analysis = analyzeReadme(enrichedContent);
+  // 摘要只取介绍部分，避免把 Features 列表当成卡片简介
+  const summary = analyzeReadme(extractIntroduction(enrichedContent)).summary;
   const tags = [
     ...new Set([
       ...meta.tags,
@@ -79,7 +82,8 @@ async function buildProject(meta, content, fileName, github, useOffline, fileDat
     enrollmentYear: meta.enrollmentYear,
     authorAvatar: githubMeta?.authorAvatar ?? '',
     repo: `${ref.owner}/${ref.repo}`,
-    description: meta.summary || analysis.summary || githubMeta?.description || '',
+    about: githubMeta?.description ?? '',
+    description: meta.summary || summary || '',
     tags,
     category: meta.category,
     githubUrl: ref.repoUrl,

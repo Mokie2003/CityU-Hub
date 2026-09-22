@@ -15,6 +15,9 @@ export interface Project {
   enrollmentYear?: number;
   authorAvatar: string;
   repo: string;
+  /** GitHub 仓库的 About，仓库没写就是空字符串；卡片与详情页的简介都用它 */
+  about: string;
+  /** 项目介绍（repos/<id>.md 正文中 Features 之前的部分）摘要，只用于卡片 */
   description: string;
   tags: string[];
   category: string;

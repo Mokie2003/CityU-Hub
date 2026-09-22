@@ -106,7 +106,10 @@ export function ProjectDetailPage() {
               <h1 className="glitch mt-4 text-3xl font-black tracking-tight text-ink">
                 {project.name}
               </h1>
-              <p className="mono mt-3 text-[13px] leading-6 text-muted">{project.description}</p>
+              {/* 简介取对应 GitHub 仓库的 About，仓库没写就是空白 */}
+              {project.about && (
+                <p className="mono mt-3 text-[13px] leading-6 text-muted">{project.about}</p>
+              )}
 
               {(project.authorName || project.major || project.enrollmentYear) && (
                 <dl className="mono mt-4 grid gap-2 border-l-4 border-brand pl-3 text-[12px] text-muted sm:grid-cols-3">

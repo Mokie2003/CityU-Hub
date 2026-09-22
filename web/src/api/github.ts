@@ -7,9 +7,12 @@ interface GithubRepoMeta {
   forks: number;
   /** 仓库所有者的头像（与解析器产出的 authorAvatar 取法一致） */
   avatar: string;
+  /** 仓库 About，用于卡片与详情页的简介 */
+  description: string;
 }
 
-const CACHE_KEY = 'cityu-hub:github-meta:v2';
+/** 缓存键带版本号，字段有增减时自动失效旧缓存 */
+const CACHE_KEY = 'cityu-hub:github-meta:v3';
 /** 缓存 6 小时，避免反复打 GitHub 匿名接口（每小时 60 次） */
 const CACHE_TTL = 6 * 60 * 60 * 1000;
 /** 单次最多补这么多仓库，其余等下次访问 */
@@ -54,6 +57,7 @@ async function fetchRepoMeta(slug: string, signal?: AbortSignal): Promise<Github
     language?: string | null;
     stargazers_count?: number;
     forks_count?: number;
+    description?: string | null;
     owner?: { avatar_url?: string };
   };
   return {
@@ -61,6 +65,7 @@ async function fetchRepoMeta(slug: string, signal?: AbortSignal): Promise<Github
     stars: data.stargazers_count ?? 0,
     forks: data.forks_count ?? 0,
     avatar: data.owner?.avatar_url ?? '',
+    description: data.description ?? '',
   };
 }
 
@@ -88,8 +93,8 @@ export async function enrichProjectsWithGithub(
         metas.set(slug, cached.meta);
         continue;
       }
-      // 语言、stars、头像都齐了就不用再请求
-      if (project.language && project.stars > 0 && project.authorAvatar) continue;
+      // 语言、stars、头像、仓库 About 都齐了就不用再请求
+      if (project.language && project.stars > 0 && project.authorAvatar && project.about) continue;
       if (queue.length >= MAX_REQUESTS || queue.some((item) => item.slug === slug)) continue;
       queue.push({ slug });
     }
@@ -128,16 +133,18 @@ export async function enrichProjectsWithGithub(
       const stars = meta.stars || project.stars;
       const forks = meta.forks || project.forks;
       const authorAvatar = project.authorAvatar || meta.avatar;
+      const about = project.about || meta.description;
       if (
         language === project.language &&
         stars === project.stars &&
         forks === project.forks &&
-        authorAvatar === project.authorAvatar
+        authorAvatar === project.authorAvatar &&
+        about === project.about
       ) {
         return project;
       }
       changed = true;
-      return { ...project, language, stars, forks, authorAvatar };
+      return { ...project, language, stars, forks, authorAvatar, about };
     });
 
     return changed ? merged : null;
