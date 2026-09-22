@@ -35,11 +35,9 @@
 
 <div align="center">
 
-<a href="https://cityu-hub.vercel.app" title="CityU Hub">
-  <img src="https://image.thum.io/get/width/1200/crop/800/noanimate/https://cityu-hub.vercel.app" alt="CityU Hub 线上实时预览 / live preview" width="920" />
-</a>
+<img src="web/public/screenshot.png" alt="CityU Hub 首页截图 / homepage screenshot" width="920" />
 
-<iframe src="https://cityu-hub.vercel.app" title="CityU Hub live preview" width="920" height="560" loading="lazy" style="border:3px solid #f47c94;max-width:100%"></iframe>
+**站点一览 · Homepage at a glance**
 
 <a href="https://cityu-hub.vercel.app">
   <img src="https://img.shields.io/badge/%E7%AB%8B%E5%8D%B3%E8%AE%BF%E9%97%AE%E7%BD%91%E7%AB%99-cityu--hub.vercel.app-f47c94?style=for-the-badge&logo=vercel&logoColor=white" alt="立即访问网站 / visit site" />
