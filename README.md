@@ -216,6 +216,14 @@ npm run build   # 类型检查 + 打包必须通过
 
 这意味着：**你提交到 `repos/` 的项目条目仍然归你所有**，MIT 只覆盖 CityU Hub 自身的站点与解析器代码。
 
+### 联系我们
+
+想投稿项目、反馈问题、提建议，或者只是想聊聊？欢迎随时发邮件，我们都会看：
+
+**[contact.cityu-hub@proton.me](mailto:contact.cityu-hub@proton.me)**
+
+[![Email](https://img.shields.io/badge/email-contact.cityu--hub@proton.me-f47c94?style=for-the-badge&logo=protonmail&logoColor=white)](mailto:contact.cityu-hub@proton.me)
+
 ---
 
 ## 繁體中文
@@ -388,6 +396,14 @@ npm run build   # 型別檢查 + 打包必須通過
 
 這意味著：**你提交到 `repos/` 的項目條目仍然歸你所有**，MIT 只覆蓋 CityU Hub 自身的網站與解析器程式碼。
 
+### 聯絡我們
+
+想投稿項目、回報問題、提建議，或只是想聊聊？歡迎隨時寄信，我們都會看：
+
+**[contact.cityu-hub@proton.me](mailto:contact.cityu-hub@proton.me)**
+
+[![Email](https://img.shields.io/badge/email-contact.cityu--hub@proton.me-f47c94?style=for-the-badge&logo=protonmail&logoColor=white)](mailto:contact.cityu-hub@proton.me)
+
 ---
 
 ## English
@@ -559,6 +575,14 @@ Released under the [MIT License](LICENSE), copyright © **CityU Hub contributors
 You are free to use, copy, modify, merge, publish, distribute, sublicense and/or sell copies of the software, as long as the copyright and permission notices are kept in all copies or substantial portions. The software is provided "as is", without warranty of any kind, express or implied.
 
 In practice: **the project entries you submit under `repos/` remain yours** — MIT covers the CityU Hub site and parser code only.
+
+### Contact
+
+Want to submit a project, report a problem, suggest an idea, or just say hi? Drop us an email any time — we read everything:
+
+**[contact.cityu-hub@proton.me](mailto:contact.cityu-hub@proton.me)**
+
+[![Email](https://img.shields.io/badge/email-contact.cityu--hub@proton.me-f47c94?style=for-the-badge&logo=protonmail&logoColor=white)](mailto:contact.cityu-hub@proton.me)
 
 ---
 
