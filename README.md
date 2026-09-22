@@ -194,9 +194,15 @@ npm run build   # 类型检查 + 打包必须通过
 发现错别字、想补英文翻译、有更好的界面建议，都可以直接开 issue 或提 PR——这类贡献和代码同等重要。
 
 <!-- avatars:start -->
-<a href="https://github.com/Warpshlczy" title="Warpshlczy · 30 commits"><img src="https://avatars.githubusercontent.com/u/119655279?v=4&s=96" width="48" height="48" alt="Warpshlczy" /></a>
-<a href="https://github.com/L01nki1" title="L01nki1 · 10 commits"><img src="https://avatars.githubusercontent.com/u/146166781?v=4&s=96" width="48" height="48" alt="L01nki1" /></a>
-<a href="https://github.com/null1024-ws" title="null1024-ws · 1 commit"><img src="https://avatars.githubusercontent.com/u/79917102?v=4&s=96" width="48" height="48" alt="null1024-ws" /></a>
+<table border="1">
+<tr>
+<td align="center">
+<a href="https://github.com/Warpshlczy" title="Warpshlczy · 30 commits"><img src="https://avatars.githubusercontent.com/u/119655279?v=4&s=160" width="64" height="64" alt="Warpshlczy" /></a>&nbsp;&nbsp;
+<a href="https://github.com/L01nki1" title="L01nki1 · 10 commits"><img src="https://avatars.githubusercontent.com/u/146166781?v=4&s=160" width="64" height="64" alt="L01nki1" /></a>&nbsp;&nbsp;
+<a href="https://github.com/null1024-ws" title="null1024-ws · 1 commit"><img src="https://avatars.githubusercontent.com/u/79917102?v=4&s=160" width="64" height="64" alt="null1024-ws" /></a>&nbsp;&nbsp;
+</td>
+</tr>
+</table>
 <!-- avatars:end -->
 
 **贡献者名单**（[完整统计](https://github.com/Warpshlczy/CityU-Hub/graphs/contributors)，头像墙与名单均由 [main-sync.yml](.github/workflows/main-sync.yml) 自动更新）：
@@ -389,9 +395,15 @@ npm run build   # 型別檢查 + 打包必須通過
 發現錯別字、想補英文翻譯、有更好的介面建議，都可以直接開 issue 或提 PR——這類貢獻和程式碼同等重要。
 
 <!-- avatars:start -->
-<a href="https://github.com/Warpshlczy" title="Warpshlczy · 30 commits"><img src="https://avatars.githubusercontent.com/u/119655279?v=4&s=96" width="48" height="48" alt="Warpshlczy" /></a>
-<a href="https://github.com/L01nki1" title="L01nki1 · 10 commits"><img src="https://avatars.githubusercontent.com/u/146166781?v=4&s=96" width="48" height="48" alt="L01nki1" /></a>
-<a href="https://github.com/null1024-ws" title="null1024-ws · 1 commit"><img src="https://avatars.githubusercontent.com/u/79917102?v=4&s=96" width="48" height="48" alt="null1024-ws" /></a>
+<table border="1">
+<tr>
+<td align="center">
+<a href="https://github.com/Warpshlczy" title="Warpshlczy · 30 commits"><img src="https://avatars.githubusercontent.com/u/119655279?v=4&s=160" width="64" height="64" alt="Warpshlczy" /></a>&nbsp;&nbsp;
+<a href="https://github.com/L01nki1" title="L01nki1 · 10 commits"><img src="https://avatars.githubusercontent.com/u/146166781?v=4&s=160" width="64" height="64" alt="L01nki1" /></a>&nbsp;&nbsp;
+<a href="https://github.com/null1024-ws" title="null1024-ws · 1 commit"><img src="https://avatars.githubusercontent.com/u/79917102?v=4&s=160" width="64" height="64" alt="null1024-ws" /></a>&nbsp;&nbsp;
+</td>
+</tr>
+</table>
 <!-- avatars:end -->
 
 **貢獻者名單**（[完整統計](https://github.com/Warpshlczy/CityU-Hub/graphs/contributors)，頭像牆與名單均由 [main-sync.yml](.github/workflows/main-sync.yml) 自動更新）：
@@ -584,9 +596,15 @@ npm run build   # type-check + bundle must succeed
 Typos, English translations, UI suggestions — open an issue or send a PR. These contributions matter as much as code.
 
 <!-- avatars:start -->
-<a href="https://github.com/Warpshlczy" title="Warpshlczy · 30 commits"><img src="https://avatars.githubusercontent.com/u/119655279?v=4&s=96" width="48" height="48" alt="Warpshlczy" /></a>
-<a href="https://github.com/L01nki1" title="L01nki1 · 10 commits"><img src="https://avatars.githubusercontent.com/u/146166781?v=4&s=96" width="48" height="48" alt="L01nki1" /></a>
-<a href="https://github.com/null1024-ws" title="null1024-ws · 1 commit"><img src="https://avatars.githubusercontent.com/u/79917102?v=4&s=96" width="48" height="48" alt="null1024-ws" /></a>
+<table border="1">
+<tr>
+<td align="center">
+<a href="https://github.com/Warpshlczy" title="Warpshlczy · 30 commits"><img src="https://avatars.githubusercontent.com/u/119655279?v=4&s=160" width="64" height="64" alt="Warpshlczy" /></a>&nbsp;&nbsp;
+<a href="https://github.com/L01nki1" title="L01nki1 · 10 commits"><img src="https://avatars.githubusercontent.com/u/146166781?v=4&s=160" width="64" height="64" alt="L01nki1" /></a>&nbsp;&nbsp;
+<a href="https://github.com/null1024-ws" title="null1024-ws · 1 commit"><img src="https://avatars.githubusercontent.com/u/79917102?v=4&s=160" width="64" height="64" alt="null1024-ws" /></a>&nbsp;&nbsp;
+</td>
+</tr>
+</table>
 <!-- avatars:end -->
 
 **Contributors** ([full stats](https://github.com/Warpshlczy/CityU-Hub/graphs/contributors); both the avatar wall and the list are refreshed automatically by [main-sync.yml](.github/workflows/main-sync.yml)):

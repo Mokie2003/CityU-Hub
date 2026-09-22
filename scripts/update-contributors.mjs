@@ -16,8 +16,8 @@ import fs from 'node:fs/promises';
 const REPO = process.env.GITHUB_REPOSITORY ?? 'Warpshlczy/CityU-Hub';
 const README_PATH = process.env.README_PATH ?? 'README.md';
 const PER_PAGE = 100;
-const AVATAR_SIZE = 96;
-const AVATAR_WIDTH = 48;
+const AVATAR_SIZE = 160;
+const AVATAR_WIDTH = 64;
 
 const token = process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN ?? '';
 
@@ -57,19 +57,25 @@ function renderList(contributors) {
     .join(' · ');
 }
 
-/** 头像墙：每个贡献者一个带提示的圆形头像链接 */
+/**
+ * 头像墙：整面墙包一层带边框的 table（GitHub 会过滤内联 style，边框只能靠 table），
+ * 头像之间用 &nbsp; 留白，悬停显示「用户名 · 提交数」。
+ */
 function renderAvatars(contributors) {
   if (contributors.length === 0) return '';
-  return contributors
+  const avatars = contributors
     .map((item) => {
       const count = item.contributions ?? 0;
       const commits = `${count} commit${count === 1 ? '' : 's'}`;
       return (
         `<a href="${item.html_url}" title="${item.login} · ${commits}">` +
-        `<img src="${avatarUrl(item)}" width="${AVATAR_WIDTH}" height="${AVATAR_WIDTH}" alt="${item.login}" /></a>`
+        `<img src="${avatarUrl(item)}" width="${AVATAR_WIDTH}" height="${AVATAR_WIDTH}" alt="${item.login}" /></a>&nbsp;&nbsp;`
       );
     })
     .join('\n');
+  return ['<table border="1">', '<tr>', '<td align="center">', avatars, '</td>', '</tr>', '</table>'].join(
+    '\n',
+  );
 }
 
 const BLOCKS = [
