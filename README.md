@@ -27,7 +27,6 @@
 
 <sub>截图时间 / 截圖時間 / captured at: 2026-09-23 03:00 (UTC+8) · 截图者 / 截圖者 / by: @github-actions[bot]</sub>
 
-**站点一览 · Homepage at a glance**
 <!-- screenshot:end -->
 
 <a href="https://cityu-hub.bond">
