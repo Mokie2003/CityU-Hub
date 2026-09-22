@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * 刷新 README 里的贡献者名单。
+ * 刷新 README 里的贡献者头像墙与名单。
  *
  * 数据来自 GitHub contributors API（按提交次数排序），写入 README 中所有
- * `<!-- contributors:start -->` … `<!-- contributors:end -->` 标记区块。
+ * `<!-- avatars:start -->` … `<!-- avatars:end -->`（头像墙）与
+ * `<!-- contributors:start -->` … `<!-- contributors:end -->`（名单）标记区块。
  * 机器人账号（`xxx[bot]`）会被过滤掉。
  *
  * 用法：
@@ -14,9 +15,9 @@ import fs from 'node:fs/promises';
 
 const REPO = process.env.GITHUB_REPOSITORY ?? 'Warpshlczy/CityU-Hub';
 const README_PATH = process.env.README_PATH ?? 'README.md';
-const START = '<!-- contributors:start -->';
-const END = '<!-- contributors:end -->';
 const PER_PAGE = 100;
+const AVATAR_SIZE = 96;
+const AVATAR_WIDTH = 48;
 
 const token = process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN ?? '';
 
@@ -42,6 +43,12 @@ async function fetchContributors() {
   );
 }
 
+/** 头像地址统一补上尺寸参数 */
+function avatarUrl(item, size = AVATAR_SIZE) {
+  const url = item.avatar_url ?? `https://github.com/${item.login}.png`;
+  return `${url}${url.includes('?') ? '&' : '?'}s=${size}`;
+}
+
 /** 一行内联名单：[@login](主页) (提交数) · … */
 function renderList(contributors) {
   if (contributors.length === 0) return '暂无贡献者，期待你的第一个 PR。';
@@ -50,19 +57,52 @@ function renderList(contributors) {
     .join(' · ');
 }
 
-const readme = await fs.readFile(README_PATH, 'utf8');
-const blockPattern = new RegExp(`${START}[\\s\\S]*?${END}`, 'g');
-const blocks = readme.match(blockPattern) ?? [];
-if (blocks.length === 0) {
-  throw new Error(`${README_PATH} 里没有找到 ${START} / ${END} 标记区块`);
+/** 头像墙：每个贡献者一个带提示的圆形头像链接 */
+function renderAvatars(contributors) {
+  if (contributors.length === 0) return '';
+  return contributors
+    .map((item) => {
+      const count = item.contributions ?? 0;
+      const commits = `${count} commit${count === 1 ? '' : 's'}`;
+      return (
+        `<a href="${item.html_url}" title="${item.login} · ${commits}">` +
+        `<img src="${avatarUrl(item)}" width="${AVATAR_WIDTH}" height="${AVATAR_WIDTH}" alt="${item.login}" /></a>`
+      );
+    })
+    .join('\n');
 }
 
-const contributors = await fetchContributors();
-const next = readme.replace(blockPattern, `${START}\n${renderList(contributors)}\n${END}`);
+const BLOCKS = [
+  { name: '头像墙', start: '<!-- avatars:start -->', end: '<!-- avatars:end -->', render: renderAvatars },
+  {
+    name: '名单',
+    start: '<!-- contributors:start -->',
+    end: '<!-- contributors:end -->',
+    render: renderList,
+  },
+];
 
+const readme = await fs.readFile(README_PATH, 'utf8');
+const contributors = await fetchContributors();
+let next = readme;
+let touched = 0;
+
+for (const block of BLOCKS) {
+  const pattern = new RegExp(`${block.start}[\\s\\S]*?${block.end}`, 'g');
+  const found = next.match(pattern) ?? [];
+  if (found.length === 0) continue;
+  touched += found.length;
+  next = next.replace(pattern, `${block.start}\n${block.render(contributors)}\n${block.end}`);
+}
+
+if (touched === 0) {
+  throw new Error(
+    `${README_PATH} 里没有找到 ${BLOCKS.map((b) => b.name).join(' / ')} 标记区块`,
+  );
+}
 if (next === readme) {
-  console.log(`贡献者名单无变化（${contributors.length} 位）`);
+  console.log(`贡献者信息无变化（${contributors.length} 位）`);
 } else {
   await fs.writeFile(README_PATH, next, 'utf8');
-  console.log(`已更新 ${blocks.length} 处贡献者名单，共 ${contributors.length} 位贡献者`);
+  console.log(`已更新 ${touched} 处贡献者区块，共 ${contributors.length} 位贡献者`);
 }

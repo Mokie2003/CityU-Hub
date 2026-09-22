@@ -40,19 +40,19 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: 刷新 README 贡献者名单
+      - name: 刷新 README 贡献者头像墙与名单
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/update-contributors.mjs
 
-      - name: 名单有变化就提交并推送
+      - name: 有变化就提交并推送
         run: |
           if git diff --quiet -- README.md; then
-            echo "贡献者名单无变化，跳过提交"
+            echo "贡献者信息无变化，跳过提交"
             exit 0
           fi
           git add README.md
-          git commit -m "chore(contributors): 刷新贡献者名单 [skip-contrib]"
+          git commit -m "chore(contributors): 刷新贡献者头像墙与名单 [skip-contrib]"
           git pull --rebase origin main
           git push origin main
 
