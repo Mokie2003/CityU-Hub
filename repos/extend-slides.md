@@ -2,7 +2,7 @@
 title: extend-slides
 author: lowen
 authorName: 李乐雨
-major: Computer Sciece
+major: Computer Science
 enrollmentYear: 2026
 repoUrl: https://github.com/L01nki1/extend-slides
 homepageUrl: ''
