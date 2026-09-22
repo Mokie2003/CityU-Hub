@@ -160,6 +160,14 @@ npm run build   # 类型检查 + 打包必须通过
 
 **期待在贡献者名单里看到你。**
 
+### 许可证
+
+本项目基于 [MIT License](LICENSE) 开源，版权归 **CityU Hub contributors** 所有。
+
+你可以自由使用、复制、修改、合并、发布、分发、再授权及/或销售本软件的副本，只需在副本或实质性部分中保留上述版权声明与许可声明。本软件按「原样」提供，不附带任何形式的明示或默示担保。
+
+这意味着：**你提交到 `repos/` 的项目条目仍然归你所有**，MIT 只覆盖 CityU Hub 自身的站点与解析器代码。
+
 ---
 
 ## 繁體中文
@@ -293,6 +301,14 @@ npm run build   # 型別檢查 + 打包必須通過
 
 **期待在貢獻者名單裡看到你。**
 
+### 授權條款
+
+本項目基於 [MIT License](LICENSE) 開源，版權歸 **CityU Hub contributors** 所有。
+
+你可以自由使用、複製、修改、合併、發佈、分發、再授權及/或銷售本軟體的副本，只需在副本或實質性部分中保留上述版權聲明與授權聲明。本軟體按「原樣」提供，不附帶任何形式的明示或默示擔保。
+
+這意味著：**你提交到 `repos/` 的項目條目仍然歸你所有**，MIT 只覆蓋 CityU Hub 自身的網站與解析器程式碼。
+
 ---
 
 ## English
@@ -425,6 +441,14 @@ Typos, English translations, UI suggestions — open an issue or send a PR. Thes
 </a>
 
 **We look forward to seeing your name among the contributors.**
+
+### License
+
+Released under the [MIT License](LICENSE), copyright © **CityU Hub contributors**.
+
+You are free to use, copy, modify, merge, publish, distribute, sublicense and/or sell copies of the software, as long as the copyright and permission notices are kept in all copies or substantial portions. The software is provided "as is", without warranty of any kind, express or implied.
+
+In practice: **the project entries you submit under `repos/` remain yours** — MIT covers the CityU Hub site and parser code only.
 
 ---
 
