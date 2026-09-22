@@ -4,9 +4,9 @@
 
 # CityU Hub
 
-**[简体中文](#简体中文) · [繁體中文](#繁體中文) · [English](#english)**
-
 **香港城大开源自助导航 · 香港城市大學學生項目和開源自助檢索平台 · Discover what CityU students are building**
+
+**[简体中文](#简体中文) · [繁體中文](#繁體中文) · [English](#english)**
 
 [![CI](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/ci.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/ci.yml)
 [![Sync & rebuild](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/deploy.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/deploy.yml)
