@@ -1,0 +1,64 @@
+name: Sync main
+
+# 每次推送到 main 后自动做两件事：
+#   1) 用 GitHub contributors 刷新 README 里的贡献者名单；
+#   2) 把 main 同步进 feature，让 feature 始终与 main 一致。
+# 另外每周一凌晨定时刷新一次名单（提交数会随提交增长）。
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 20 * * 0' # 周一 04:00（北京时间）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: main-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: 刷新名单并同步 feature
+    # 机器人自己推的名单提交带 [skip-contrib] 标记，跳过整轮以免自我循环；
+    # 这次推送里的 feature 同步已在上一轮完成。
+    if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip-contrib]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: 配置 git 身份
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: 刷新 README 贡献者名单
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/update-contributors.mjs
+
+      - name: 名单有变化就提交并推送
+        run: |
+          if git diff --quiet -- README.md; then
+            echo "贡献者名单无变化，跳过提交"
+            exit 0
+          fi
+          git add README.md
+          git commit -m "chore(contributors): 刷新贡献者名单 [skip-contrib]"
+          git pull --rebase origin main
+          git push origin main
+
+      - name: 把 main 同步进 feature
+        run: |
+          git fetch origin main feature
+          git checkout -B feature origin/feature
+          git merge --no-edit origin/main
+          git push origin feature
