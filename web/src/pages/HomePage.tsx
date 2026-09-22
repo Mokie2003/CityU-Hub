@@ -135,8 +135,8 @@ export function HomePage() {
     `${data?.total ?? 0} PROJECTS`,
     `${data?.authors.length ?? 0} CONTRIBUTORS`,
     `${data?.categories.length ?? 0} CATEGORIES`,
-    'SYNTAX: author:alice tag:NLP lang:Python category:学习辅助',
-    'ENTER = SEARCH / ESC = CLEAR',
+    'CityU Hub 正式上线，欢迎提交项目',
+    'CityU Hub is officially launched. Welcome to submit your projects.',
   ].join('   ✦   ');
 
   return (
