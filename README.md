@@ -4,16 +4,19 @@
 
 # CityU Hub
 
+**[简体中文](#简体中文) · [繁體中文](#繁體中文) · [English](#english)**
+
 **香港城大开源自助导航 · 香港城市大學學生項目和開源自助檢索平台 · Discover what CityU students are building**
 
 [![CI](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/ci.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/ci.yml)
 [![Sync & rebuild](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/deploy.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/deploy.yml)
 [![GitHub stars](https://img.shields.io/github/stars/Warpshlczy/CityU-Hub?style=flat&logo=github&label=stars&color=f47c94)](https://github.com/Warpshlczy/CityU-Hub/stargazers)
 [![License: MIT](https://img.shields.io/badge/license-MIT-f47c94?style=flat&logo=opensourceinitiative&logoColor=white)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-f47c94?style=flat&logo=github&logoColor=white)](CONTRIBUTING.md)
 
-[![React](https://img.shields.io/badge/react-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev) [![TypeScript](https://img.shields.io/badge/typescript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org) [![Vite](https://img.shields.io/badge/vite-6-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vite.dev) [![Tailwind CSS](https://img.shields.io/badge/tailwindcss-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com) [![React Router](https://img.shields.io/badge/react%20router-7-CA4245?style=flat-square&logo=reactrouter&logoColor=white)](https://reactrouter.com) [![lucide-react](https://img.shields.io/badge/lucide--react-1-F56565?style=flat-square&logo=lucide&logoColor=white)](https://lucide.dev) [![Node.js](https://img.shields.io/badge/node-%E2%89%A520.6-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org) [![marked](https://img.shields.io/badge/marked-15-111111?style=flat-square&logo=markdown&logoColor=white)](https://marked.js.org) [![ajv](https://img.shields.io/badge/ajv-8-23C8D2?style=flat-square)](https://ajv.js.org) [![js-yaml](https://img.shields.io/badge/js--yaml-4-CB171E?style=flat-square&logo=yaml&logoColor=white)](https://github.com/nodeca/js-yaml) [![GitHub Actions](https://img.shields.io/badge/github%20actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/actions)
+[![React](https://img.shields.io/badge/react-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev) [![TypeScript](https://img.shields.io/badge/typescript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org) [![Vite](https://img.shields.io/badge/vite-6-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vite.dev) [![Tailwind CSS](https://img.shields.io/badge/tailwindcss-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com) [![React Router](https://img.shields.io/badge/react%20router-7-CA4245?style=flat-square&logo=reactrouter&logoColor=white)](https://reactrouter.com) [![lucide-react](https://img.shields.io/badge/lucide--react-1-F56565?style=flat-square&logo=lucide&logoColor=white)](https://lucide.dev)
 
-**[简体中文](#简体中文) · [繁體中文](#繁體中文) · [English](#english)**
+[![Node.js](https://img.shields.io/badge/node-%E2%89%A520.6-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org) [![marked](https://img.shields.io/badge/marked-15-111111?style=flat-square&logo=markdown&logoColor=white)](https://marked.js.org) [![ajv](https://img.shields.io/badge/ajv-8-23C8D2?style=flat-square)](https://ajv.js.org) [![js-yaml](https://img.shields.io/badge/js--yaml-4-CB171E?style=flat-square&logo=yaml&logoColor=white)](https://github.com/nodeca/js-yaml) [![GitHub Actions](https://img.shields.io/badge/github%20actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/actions)
 
 </div>
 
@@ -26,6 +29,22 @@
 <a href="https://cityu-hub.bond">
   <img src="https://img.shields.io/badge/%E7%AB%8B%E5%8D%B3%E8%AE%BF%E9%97%AE%E7%BD%91%E7%AB%99-cityu--hub.bond-f47c94?style=for-the-badge&logo=vercel&logoColor=white" alt="立即访问网站 / visit site" />
 </a>
+
+</div>
+
+<div align="center">
+
+<!-- contributors:start -->
+<table border="1" cellspacing="0" cellpadding="14">
+<tr><th align="center">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;▛▀▀▀  CONTRIBUTORS · 贡献者 · 貢獻者  ▀▀▀▜&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th></tr>
+<tr><td align="center"><a href="https://github.com/Warpshlczy" title="Warpshlczy · 30 commits"><img src="https://avatars.githubusercontent.com/u/119655279?v=4&s=240" width="96" height="96" alt="Warpshlczy" /></a>&nbsp;&nbsp;
+<a href="https://github.com/L01nki1" title="L01nki1 · 10 commits"><img src="https://avatars.githubusercontent.com/u/146166781?v=4&s=240" width="96" height="96" alt="L01nki1" /></a>&nbsp;&nbsp;
+<a href="https://github.com/null1024-ws" title="null1024-ws · 1 commit"><img src="https://avatars.githubusercontent.com/u/79917102?v=4&s=240" width="96" height="96" alt="null1024-ws" /></a>&nbsp;&nbsp;</td></tr>
+<tr><td align="center">[@Warpshlczy](https://github.com/Warpshlczy) (30) · [@L01nki1](https://github.com/L01nki1) (10) · [@null1024-ws](https://github.com/null1024-ws) (1)</td></tr>
+</table>
+<!-- contributors:end -->
+
+**[完整统计 · Full stats](https://github.com/Warpshlczy/CityU-Hub/graphs/contributors)** · 贡献者头像墙与名单由 [`main-sync.yml`](.github/workflows/main-sync.yml) 自动刷新
 
 </div>
 
@@ -83,7 +102,7 @@ CityU-Hub/
 │       └── utils/              # 搜索语法解析、格式化、slug
 ├── scripts/
 │   ├── sync-and-build.sh       # 目标机器拉取最新代码并重建站点
-│   └── update-contributors.mjs # 刷新 README 里的贡献者名单
+│   └── update-contributors.mjs # 刷新贡献者面板（头像墙 + 名单）
 └── .github/workflows/          # ci（校验+构建）/ deploy（自托管重建）/ feature-to-main（项目 PR 合入后同步 main）/ main-sync（刷新贡献者名单 + 同步 feature）
 ```
 
@@ -123,18 +142,13 @@ npm test             # 解析器单元测试
 
 ### 一键入口
 
-不想翻文档就直接点，链接已经带好标签与目标分支：
-
-[![Submit a project](https://img.shields.io/badge/submit%20a%20project-PR%20to%20feature-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)
-[![Report a bug](https://img.shields.io/badge/report%20a%20bug-issue-dc2626?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20)
-[![Request a feature](https://img.shields.io/badge/request%20a%20feature-issue-a855f7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-f47c94?style=for-the-badge&logo=github&logoColor=white)](CONTRIBUTING.md)
+不想翻文档就直接点，表格里的徽章已经带好标签与目标分支：
 
 | 想做的事 | 一键唤起 | 说明 |
 | --- | --- | --- |
-| 提交自己的项目 | [新建 `repos/我的项目.md`](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | 打开 GitHub 文件编辑器，没权限会自动 fork，文件建在 `feature` 分支，提交即开 PR |
-| 报告 Bug | [开 Bug Issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20) | 已预填标题 `[Bug]` 与 `bug` 标签 |
-| 提功能建议 / 提问 | [开建议 Issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20) | 已预填标题 `[Feature]` 与 `enhancement` 标签 |
+| 提交自己的项目 | [![Submit a project](https://img.shields.io/badge/submit%20a%20project-PR%20to%20feature-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | 打开 GitHub 文件编辑器，没权限会自动 fork，文件建在 `feature` 分支，提交即开 PR |
+| 报告 Bug | [![Report a bug](https://img.shields.io/badge/report%20a%20bug-issue-dc2626?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20) | 已预填标题 `[Bug]` 与 `bug` 标签 |
+| 提功能建议 / 提问 | [![Request a feature](https://img.shields.io/badge/request%20a%20feature-issue-a855f7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20) | 已预填标题 `[Feature]` 与 `enhancement` 标签 |
 | 看别人提了什么 | [浏览全部 Issue](https://github.com/Warpshlczy/CityU-Hub/issues) | 先搜一下，避免重复 |
 
 ### 分支模型
@@ -193,24 +207,6 @@ npm run build   # 类型检查 + 打包必须通过
 
 发现错别字、想补英文翻译、有更好的界面建议，都可以直接开 issue 或提 PR——这类贡献和代码同等重要。
 
-<!-- avatars:start -->
-<table border="1">
-<tr>
-<td align="center">
-<a href="https://github.com/Warpshlczy" title="Warpshlczy · 30 commits"><img src="https://avatars.githubusercontent.com/u/119655279?v=4&s=160" width="64" height="64" alt="Warpshlczy" /></a>&nbsp;&nbsp;
-<a href="https://github.com/L01nki1" title="L01nki1 · 10 commits"><img src="https://avatars.githubusercontent.com/u/146166781?v=4&s=160" width="64" height="64" alt="L01nki1" /></a>&nbsp;&nbsp;
-<a href="https://github.com/null1024-ws" title="null1024-ws · 1 commit"><img src="https://avatars.githubusercontent.com/u/79917102?v=4&s=160" width="64" height="64" alt="null1024-ws" /></a>&nbsp;&nbsp;
-</td>
-</tr>
-</table>
-<!-- avatars:end -->
-
-**贡献者名单**（[完整统计](https://github.com/Warpshlczy/CityU-Hub/graphs/contributors)，头像墙与名单均由 [main-sync.yml](.github/workflows/main-sync.yml) 自动更新）：
-
-<!-- contributors:start -->
-[@Warpshlczy](https://github.com/Warpshlczy) (30) · [@L01nki1](https://github.com/L01nki1) (10) · [@null1024-ws](https://github.com/null1024-ws) (1)
-<!-- contributors:end -->
-
 **期待在贡献者名单里看到你。**
 
 ### 许可证
@@ -224,8 +220,6 @@ npm run build   # 类型检查 + 打包必须通过
 ### 联系我们
 
 想投稿项目、反馈问题、提建议，或者只是想聊聊？欢迎随时发邮件，我们都会看：
-
-**[contact.cityu-hub@proton.me](mailto:contact.cityu-hub@proton.me)**
 
 [![Email](https://img.shields.io/badge/email-contact.cityu--hub@proton.me-f47c94?style=for-the-badge&logo=protonmail&logoColor=white)](mailto:contact.cityu-hub@proton.me)
 
@@ -284,7 +278,7 @@ CityU-Hub/
 │       └── utils/              # 搜尋語法解析、格式化、slug
 ├── scripts/
 │   ├── sync-and-build.sh       # 目標機器拉取最新程式碼並重建網站
-│   └── update-contributors.mjs # 刷新 README 裡的貢獻者名單
+│   └── update-contributors.mjs # 刷新貢獻者面板（頭像牆 + 名單）
 └── .github/workflows/          # ci（驗證+建構）/ deploy（自架重建）/ feature-to-main（項目 PR 合入後同步 main）/ main-sync（刷新貢獻者名單 + 同步 feature）
 ```
 
@@ -324,18 +318,13 @@ npm test             # 解析器單元測試
 
 ### 一鍵入口
 
-不想翻文件就直接點，連結已帶好標籤與目標分支：
-
-[![Submit a project](https://img.shields.io/badge/submit%20a%20project-PR%20to%20feature-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)
-[![Report a bug](https://img.shields.io/badge/report%20a%20bug-issue-dc2626?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20)
-[![Request a feature](https://img.shields.io/badge/request%20a%20feature-issue-a855f7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-f47c94?style=for-the-badge&logo=github&logoColor=white)](CONTRIBUTING.md)
+不想翻文件就直接點，表格裡的徽章已帶好標籤與目標分支：
 
 | 想做的事 | 一鍵喚起 | 說明 |
 | --- | --- | --- |
-| 提交自己的項目 | [新建 `repos/我的項目.md`](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | 打開 GitHub 檔案編輯器，沒權限會自動 fork，檔案建在 `feature` 分支，提交即開 PR |
-| 報告 Bug | [開 Bug Issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20) | 已預填標題 `[Bug]` 與 `bug` 標籤 |
-| 提功能建議 / 提問 | [開建議 Issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20) | 已預填標題 `[Feature]` 與 `enhancement` 標籤 |
+| 提交自己的項目 | [![Submit a project](https://img.shields.io/badge/submit%20a%20project-PR%20to%20feature-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | 打開 GitHub 檔案編輯器，沒權限會自動 fork，檔案建在 `feature` 分支，提交即開 PR |
+| 報告 Bug | [![Report a bug](https://img.shields.io/badge/report%20a%20bug-issue-dc2626?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20) | 已預填標題 `[Bug]` 與 `bug` 標籤 |
+| 提功能建議 / 提問 | [![Request a feature](https://img.shields.io/badge/request%20a%20feature-issue-a855f7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20) | 已預填標題 `[Feature]` 與 `enhancement` 標籤 |
 | 看別人提了什麼 | [瀏覽全部 Issue](https://github.com/Warpshlczy/CityU-Hub/issues) | 先搜一下，避免重複 |
 
 ### 分支模型
@@ -394,24 +383,6 @@ npm run build   # 型別檢查 + 打包必須通過
 
 發現錯別字、想補英文翻譯、有更好的介面建議，都可以直接開 issue 或提 PR——這類貢獻和程式碼同等重要。
 
-<!-- avatars:start -->
-<table border="1">
-<tr>
-<td align="center">
-<a href="https://github.com/Warpshlczy" title="Warpshlczy · 30 commits"><img src="https://avatars.githubusercontent.com/u/119655279?v=4&s=160" width="64" height="64" alt="Warpshlczy" /></a>&nbsp;&nbsp;
-<a href="https://github.com/L01nki1" title="L01nki1 · 10 commits"><img src="https://avatars.githubusercontent.com/u/146166781?v=4&s=160" width="64" height="64" alt="L01nki1" /></a>&nbsp;&nbsp;
-<a href="https://github.com/null1024-ws" title="null1024-ws · 1 commit"><img src="https://avatars.githubusercontent.com/u/79917102?v=4&s=160" width="64" height="64" alt="null1024-ws" /></a>&nbsp;&nbsp;
-</td>
-</tr>
-</table>
-<!-- avatars:end -->
-
-**貢獻者名單**（[完整統計](https://github.com/Warpshlczy/CityU-Hub/graphs/contributors)，頭像牆與名單均由 [main-sync.yml](.github/workflows/main-sync.yml) 自動更新）：
-
-<!-- contributors:start -->
-[@Warpshlczy](https://github.com/Warpshlczy) (30) · [@L01nki1](https://github.com/L01nki1) (10) · [@null1024-ws](https://github.com/null1024-ws) (1)
-<!-- contributors:end -->
-
 **期待在貢獻者名單裡看到你。**
 
 ### 授權條款
@@ -425,8 +396,6 @@ npm run build   # 型別檢查 + 打包必須通過
 ### 聯絡我們
 
 想投稿項目、回報問題、提建議，或只是想聊聊？歡迎隨時寄信，我們都會看：
-
-**[contact.cityu-hub@proton.me](mailto:contact.cityu-hub@proton.me)**
 
 [![Email](https://img.shields.io/badge/email-contact.cityu--hub@proton.me-f47c94?style=for-the-badge&logo=protonmail&logoColor=white)](mailto:contact.cityu-hub@proton.me)
 
@@ -485,7 +454,7 @@ CityU-Hub/
 │       └── utils/              # Search parser, formatting, slug helpers
 ├── scripts/
 │   ├── sync-and-build.sh       # Pull the latest code on a target machine and rebuild
-│   └── update-contributors.mjs # Refresh the contributor list in the README
+│   └── update-contributors.mjs # Refresh the contributor panel (avatars + list)
 └── .github/workflows/          # ci (validate + build) / deploy (self-hosted rebuild) / feature-to-main (promote a project PR) / main-sync (refresh contributors + sync feature)
 ```
 
@@ -525,18 +494,13 @@ npm test             # parser unit tests
 
 ### One-click entry points
 
-Skip the docs and click straight through — every link already carries the right label and target branch:
-
-[![Submit a project](https://img.shields.io/badge/submit%20a%20project-PR%20to%20feature-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)
-[![Report a bug](https://img.shields.io/badge/report%20a%20bug-issue-dc2626?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20)
-[![Request a feature](https://img.shields.io/badge/request%20a%20feature-issue-a855f7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-f47c94?style=for-the-badge&logo=github&logoColor=white)](CONTRIBUTING.md)
+Skip the docs and click straight through — the badges in the table already carry the right label and target branch:
 
 | What you want | One-click action | Notes |
 | --- | --- | --- |
-| Submit your project | [Create `repos/my-project.md`](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | Opens the GitHub file editor; without write access it forks for you, creates the file on `feature`, and committing opens the PR |
-| Report a bug | [Open a bug issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20) | Title `[Bug]` and the `bug` label are pre-filled |
-| Request a feature / ask a question | [Open a feature issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20) | Title `[Feature]` and the `enhancement` label are pre-filled |
+| Submit your project | [![Submit a project](https://img.shields.io/badge/submit%20a%20project-PR%20to%20feature-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | Opens the GitHub file editor; without write access it forks for you, creates the file on `feature`, and committing opens the PR |
+| Report a bug | [![Report a bug](https://img.shields.io/badge/report%20a%20bug-issue-dc2626?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20) | Title `[Bug]` and the `bug` label are pre-filled |
+| Request a feature / ask a question | [![Request a feature](https://img.shields.io/badge/request%20a%20feature-issue-a855f7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20) | Title `[Feature]` and the `enhancement` label are pre-filled |
 | See what's already reported | [Browse all issues](https://github.com/Warpshlczy/CityU-Hub/issues) | Search first to avoid duplicates |
 
 ### Branch model
@@ -595,24 +559,6 @@ npm run build   # type-check + bundle must succeed
 
 Typos, English translations, UI suggestions — open an issue or send a PR. These contributions matter as much as code.
 
-<!-- avatars:start -->
-<table border="1">
-<tr>
-<td align="center">
-<a href="https://github.com/Warpshlczy" title="Warpshlczy · 30 commits"><img src="https://avatars.githubusercontent.com/u/119655279?v=4&s=160" width="64" height="64" alt="Warpshlczy" /></a>&nbsp;&nbsp;
-<a href="https://github.com/L01nki1" title="L01nki1 · 10 commits"><img src="https://avatars.githubusercontent.com/u/146166781?v=4&s=160" width="64" height="64" alt="L01nki1" /></a>&nbsp;&nbsp;
-<a href="https://github.com/null1024-ws" title="null1024-ws · 1 commit"><img src="https://avatars.githubusercontent.com/u/79917102?v=4&s=160" width="64" height="64" alt="null1024-ws" /></a>&nbsp;&nbsp;
-</td>
-</tr>
-</table>
-<!-- avatars:end -->
-
-**Contributors** ([full stats](https://github.com/Warpshlczy/CityU-Hub/graphs/contributors); both the avatar wall and the list are refreshed automatically by [main-sync.yml](.github/workflows/main-sync.yml)):
-
-<!-- contributors:start -->
-[@Warpshlczy](https://github.com/Warpshlczy) (30) · [@L01nki1](https://github.com/L01nki1) (10) · [@null1024-ws](https://github.com/null1024-ws) (1)
-<!-- contributors:end -->
-
 **We look forward to seeing your name among the contributors.**
 
 ### License
@@ -626,8 +572,6 @@ In practice: **the project entries you submit under `repos/` remain yours** — 
 ### Contact
 
 Want to submit a project, report a problem, suggest an idea, or just say hi? Drop us an email any time — we read everything:
-
-**[contact.cityu-hub@proton.me](mailto:contact.cityu-hub@proton.me)**
 
 [![Email](https://img.shields.io/badge/email-contact.cityu--hub@proton.me-f47c94?style=for-the-badge&logo=protonmail&logoColor=white)](mailto:contact.cityu-hub@proton.me)
 

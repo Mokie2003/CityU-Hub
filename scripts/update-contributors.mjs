@@ -1,23 +1,34 @@
 #!/usr/bin/env node
 /**
- * 刷新 README 里的贡献者头像墙与名单。
+ * 刷新 README 里的贡献者面板（头像墙 + 名单合成的一张全宽表格）。
  *
  * 数据来自 GitHub contributors API（按提交次数排序），写入 README 中所有
- * `<!-- avatars:start -->` … `<!-- avatars:end -->`（头像墙）与
- * `<!-- contributors:start -->` … `<!-- contributors:end -->`（名单）标记区块。
+ * `<!-- contributors:start -->` … `<!-- contributors:end -->` 标记区块。
  * 机器人账号（`xxx[bot]`）会被过滤掉。
  *
+ * 关于「全宽边框」：GitHub 的 markdown 样式是
+ *   table { display: block; width: max-content; max-width: 100%; }
+ * 且会剥掉内联 style，所以 `width="100%"` 无效；这里改为在标题行左右各铺一段
+ * 不可见的 `&emsp;` 占位，让 max-content 超过容器宽度、被 max-width:100% 截住，
+ * 表格即占满整行；行高不写死，随头像数量与文案自动变化。
+ *
  * 用法：
- *   node scripts/update-contributors.mjs            # 用 GITHUB_TOKEN / GH_TOKEN 调用 API
- *   README_PATH=README.md node scripts/update-contributors.mjs
+ *   node scripts/update-contributors.mjs
+ *   README_PATH=README.md GH_TOKEN=xxx node scripts/update-contributors.mjs
  */
 import fs from 'node:fs/promises';
 
 const REPO = process.env.GITHUB_REPOSITORY ?? 'Warpshlczy/CityU-Hub';
 const README_PATH = process.env.README_PATH ?? 'README.md';
+const START = '<!-- contributors:start -->';
+const END = '<!-- contributors:end -->';
 const PER_PAGE = 100;
-const AVATAR_SIZE = 160;
-const AVATAR_WIDTH = 64;
+/** 展示尺寸与取图尺寸（取图放大，高分屏不糊） */
+const AVATAR_WIDTH = 96;
+const AVATAR_FILE_SIZE = 240;
+/** 标题行左右各 80 个 &emsp;，合计约 2500px，必定超过容器宽度 */
+const WIDTH_FILLER = '&emsp;'.repeat(80);
+const PANEL_TITLE = '▛▀▀▀  CONTRIBUTORS · 贡献者 · 貢獻者  ▀▀▀▜';
 
 const token = process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN ?? '';
 
@@ -44,7 +55,7 @@ async function fetchContributors() {
 }
 
 /** 头像地址统一补上尺寸参数 */
-function avatarUrl(item, size = AVATAR_SIZE) {
+function avatarUrl(item, size = AVATAR_FILE_SIZE) {
   const url = item.avatar_url ?? `https://github.com/${item.login}.png`;
   return `${url}${url.includes('?') ? '&' : '?'}s=${size}`;
 }
@@ -57,13 +68,10 @@ function renderList(contributors) {
     .join(' · ');
 }
 
-/**
- * 头像墙：整面墙包一层带边框的 table（GitHub 会过滤内联 style，边框只能靠 table），
- * 头像之间用 &nbsp; 留白，悬停显示「用户名 · 提交数」。
- */
+/** 头像墙：悬停显示「用户名 · 提交数」，点击进个人主页 */
 function renderAvatars(contributors) {
-  if (contributors.length === 0) return '';
-  const avatars = contributors
+  if (contributors.length === 0) return '&nbsp;';
+  return contributors
     .map((item) => {
       const count = item.contributions ?? 0;
       const commits = `${count} commit${count === 1 ? '' : 's'}`;
@@ -73,42 +81,32 @@ function renderAvatars(contributors) {
       );
     })
     .join('\n');
-  return ['<table border="1">', '<tr>', '<td align="center">', avatars, '</td>', '</tr>', '</table>'].join(
-    '\n',
-  );
 }
 
-const BLOCKS = [
-  { name: '头像墙', start: '<!-- avatars:start -->', end: '<!-- avatars:end -->', render: renderAvatars },
-  {
-    name: '名单',
-    start: '<!-- contributors:start -->',
-    end: '<!-- contributors:end -->',
-    render: renderList,
-  },
-];
+/** 一张全宽面板：标题行 / 头像墙 / 名单行（第 2 行会被 GitHub 的斑马纹加上底色） */
+function renderPanel(contributors) {
+  return [
+    '<table border="1" cellspacing="0" cellpadding="14">',
+    `<tr><th align="center">${WIDTH_FILLER}${PANEL_TITLE}${WIDTH_FILLER}</th></tr>`,
+    `<tr><td align="center">${renderAvatars(contributors)}</td></tr>`,
+    `<tr><td align="center">${renderList(contributors)}</td></tr>`,
+    '</table>',
+  ].join('\n');
+}
 
 const readme = await fs.readFile(README_PATH, 'utf8');
+const pattern = new RegExp(`${START}[\\s\\S]*?${END}`, 'g');
+const blocks = readme.match(pattern) ?? [];
+if (blocks.length === 0) {
+  throw new Error(`${README_PATH} 里没有找到 ${START} / ${END} 标记区块`);
+}
+
 const contributors = await fetchContributors();
-let next = readme;
-let touched = 0;
+const next = readme.replace(pattern, `${START}\n${renderPanel(contributors)}\n${END}`);
 
-for (const block of BLOCKS) {
-  const pattern = new RegExp(`${block.start}[\\s\\S]*?${block.end}`, 'g');
-  const found = next.match(pattern) ?? [];
-  if (found.length === 0) continue;
-  touched += found.length;
-  next = next.replace(pattern, `${block.start}\n${block.render(contributors)}\n${block.end}`);
-}
-
-if (touched === 0) {
-  throw new Error(
-    `${README_PATH} 里没有找到 ${BLOCKS.map((b) => b.name).join(' / ')} 标记区块`,
-  );
-}
 if (next === readme) {
-  console.log(`贡献者信息无变化（${contributors.length} 位）`);
+  console.log(`贡献者面板无变化（${contributors.length} 位）`);
 } else {
   await fs.writeFile(README_PATH, next, 'utf8');
-  console.log(`已更新 ${touched} 处贡献者区块，共 ${contributors.length} 位贡献者`);
+  console.log(`已更新 ${blocks.length} 处贡献者面板，共 ${contributors.length} 位贡献者`);
 }
