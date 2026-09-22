@@ -17,7 +17,7 @@ interface HeaderProps {
 export function Header({ searchSlot, onOpenSidebar }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b-[3px] border-line bg-canvas">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-4 gap-y-3 px-4 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-3 gap-y-2.5 px-4 py-2.5 sm:gap-x-4 sm:gap-y-3 sm:px-6 sm:py-3">
         {onOpenSidebar && (
           <button
             type="button"
@@ -29,30 +29,40 @@ export function Header({ searchSlot, onOpenSidebar }: HeaderProps) {
           </button>
         )}
 
-        <Link to="/" className="flex shrink-0 items-center gap-3 focus-visible:outline-none">
+        <Link to="/" className="flex shrink-0 items-center gap-2 focus-visible:outline-none sm:gap-3">
           {/* 原始比例 1972×1188，保持宽高比不裁切 */}
           <img
             src={cityuLogo}
             alt="CityU Hub 标志"
             width={120}
             height={72}
-            className="glow-pulse h-18 w-auto"
+            className="glow-pulse h-11 w-auto sm:h-18"
           />
-          <span className="flex flex-col gap-1.5 leading-none">
-            <span className="pixel text-[16px] font-bold text-ink [text-shadow:2px_2px_0_rgba(244,124,148,0.7)]">
+          <span className="flex flex-col gap-1 leading-none sm:gap-1.5">
+            <span className="pixel text-[13px] font-bold text-ink [text-shadow:2px_2px_0_rgba(244,124,148,0.7)] sm:text-[16px]">
               CITYU&nbsp;HUB
             </span>
-            <span className="mono text-[14px] font-bold text-muted">城大开源自助导航</span>
+            <span className="mono text-[11px] font-bold text-muted sm:text-[14px]">
+              城大开源自助导航
+            </span>
           </span>
         </Link>
 
-        <div className="order-last w-full min-w-0 lg:order-none lg:w-auto lg:flex-1">
-          {searchSlot}
-        </div>
-
-        <div className="ml-auto flex items-center gap-2">
-          <UsefulLinks />
-          <ThemeToggle />
+        {/* 有搜索栏时移动端整行独占第二行，桌面端与搜索栏并排；
+            详情页没有搜索栏，按钮照旧靠右与 logo 同行 */}
+        <div
+          className={[
+            'flex min-w-0 items-center gap-2',
+            searchSlot
+              ? 'order-last w-full lg:order-none lg:w-auto lg:flex-1'
+              : 'ml-auto',
+          ].join(' ')}
+        >
+          {searchSlot && <div className="min-w-0 flex-1">{searchSlot}</div>}
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <UsefulLinks />
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </header>

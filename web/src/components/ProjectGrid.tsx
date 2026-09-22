@@ -19,7 +19,7 @@ export function ProjectGrid({
 }: ProjectGridProps) {
   if (loading) {
     return (
-      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: skeletonCount }, (_, index) => (
           <SkeletonCard key={index} />
         ))}
@@ -32,7 +32,7 @@ export function ProjectGrid({
   }
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
       {projects.map((project, index) => (
         <ProjectCard key={project.id} project={project} index={index} />
       ))}
