@@ -1,8 +1,7 @@
-name: Sync & rebuild
+name: Sync & rebuild (self-hosted)
 
-# 有人推送到 main 时：
-#   1. verify  —— 在 GitHub 托管的 runner 上确认后端、前端都能构建通过
-#   2. sync    —— 由目标机器（本地或服务器上的 self-hosted runner）拉取最新代码并重建前后端
+# 在目标机器（本地电脑或服务器）上拉取最新代码并重建站点，供 38.175.192.15 上的
+# preview / 静态服务使用。Vercel 侧不需要这个工作流，它由 Git 集成自动构建。
 #
 # ── 一次性配置 ────────────────────────────────────────────────────────────────
 # 1) 在目标机器上注册 self-hosted runner（GitHub → Settings → Actions → Runners →
@@ -14,13 +13,12 @@ name: Sync & rebuild
 #      ./svc.sh install && ./svc.sh start   # 注册为开机自启服务
 #
 # 2) 仓库 Settings → Secrets and variables → Actions → Variables 里添加：
-#      ENABLE_SELF_HOSTED = true    # 不设置时只跑构建验证，不会排队等 runner
+#      ENABLE_SELF_HOSTED = true    # 不设置时这个工作流直接跳过，不会排队等 runner
 #      REPO_PATH          = /Users/mac/Documents/CityU-Hub   # 目标机器上的仓库绝对路径
-#                                    # 留空则同步 runner 自己的检出目录
-#      RESTART_CMD        = pm2 restart cityu-hub            # 可选：重建后重启后端服务
+#      RESTART_CMD        = pm2 restart cityu-hub            # 可选：重建后重启服务
 #
-# 3) Secrets 里可选添加：
-#      REBUILD_GITHUB_TOKEN = <PAT>  # 有则后端走在线构建，补齐 stars / 语言 / 描述
+# 3) Secrets 里可选添加（有则走在线解析，补齐 stars / 语言 / 头像）：
+#      REBUILD_GITHUB_TOKEN = <PAT>
 #
 # ── 不想装 runner？用本机定时任务轮询同样可以 ─────────────────────────────────
 #   crontab -e  加入（每 5 分钟检查一次，代码没变时会直接跳过，开销极小）：
@@ -40,46 +38,15 @@ concurrency:
   group: sync-rebuild-${{ github.ref }}
 
 jobs:
-  verify:
-    name: 构建验证（前端 + 后端）
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: 准备 Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-          cache-dependency-path: |
-            back-end/package-lock.json
-            front-end/package-lock.json
-
-      - name: 后端：数据校验 + 离线构建
-        working-directory: back-end
-        run: |
-          npm ci --no-audit --no-fund
-          npm run validate
-          npm run build:offline
-
-      - name: 前端：类型检查 + 构建
-        working-directory: front-end
-        run: |
-          npm ci --no-audit --no-fund
-          npm run build
-
   sync:
     name: 目标机器拉取并重建
-    needs: verify
     if: vars.ENABLE_SELF_HOSTED == 'true'
     runs-on: [self-hosted, cityu-hub]
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
-      - name: 拉取最新代码并重建前后端
+      - name: 拉取最新代码并重建站点
         env:
           REPO_PATH: ${{ vars.REPO_PATH }}
           FORCE: ${{ inputs.force }}

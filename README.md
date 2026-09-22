@@ -1,31 +1,47 @@
 <div align="center">
 
-<img src="front-end/public/cityu.jpg" alt="CityU Hub logo" width="280" />
+<img src="web/public/cityu.jpg" alt="CityU Hub logo" width="280" />
 
 # CityU Hub
 
-**城大开源自助导航 · Discover what CityU students are building**
+**香港城大开源自助导航 · 香港城市大學學生項目和開源自助檢索平台 · Discover what CityU students are building**
 
-[![Build project data](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/build.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/build.yml)
-[![Validate submissions](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/validate.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/validate.yml)
+[![CI](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/ci.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/ci.yml)
 [![Sync & rebuild](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/deploy.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/deploy.yml)
 [![GitHub stars](https://img.shields.io/github/stars/Warpshlczy/CityU-Hub?style=for-the-badge&logo=github&label=stars&color=f47c94)](https://github.com/Warpshlczy/CityU-Hub/stargazers)
+[![License: MIT](https://img.shields.io/badge/license-MIT-f47c94?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
 
-[![Node.js](https://img.shields.io/badge/node-%E2%89%A520.6-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
 [![React](https://img.shields.io/badge/react-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/typescript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/vite-6-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev)
 [![Tailwind CSS](https://img.shields.io/badge/tailwindcss-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![React Router](https://img.shields.io/badge/react%20router-7-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white)](https://reactrouter.com)
+[![lucide-react](https://img.shields.io/badge/lucide--react-1-F56565?style=for-the-badge&logo=lucide&logoColor=white)](https://lucide.dev)
+
+[![Node.js](https://img.shields.io/badge/node-%E2%89%A520.6-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
+[![marked](https://img.shields.io/badge/marked-15-111111?style=for-the-badge&logo=markdown&logoColor=white)](https://marked.js.org)
+[![ajv](https://img.shields.io/badge/ajv-8-23C8D2?style=for-the-badge)](https://ajv.js.org)
+[![js-yaml](https://img.shields.io/badge/js--yaml-4-CB171E?style=for-the-badge&logo=yaml&logoColor=white)](https://github.com/nodeca/js-yaml)
+[![GitHub Actions](https://img.shields.io/badge/github%20actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/actions)
+
+[![Submit a project](https://img.shields.io/badge/submit%20a%20project-PR%20to%20feature-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)
+[![Report a bug](https://img.shields.io/badge/report%20a%20bug-issue-dc2626?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20)
+[![Request a feature](https://img.shields.io/badge/request%20a%20feature-issue-a855f7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-f47c94?style=for-the-badge&logo=github&logoColor=white)](CONTRIBUTING.md)
 
-**[简体中文](#简体中文) · [English](#english)**
+**[简体中文](#简体中文) · [繁體中文](#繁體中文) · [English](#english)**
 
 </div>
 
 <div align="center">
 
-<img src="front-end/public/screenshot.png" alt="CityU Hub 首页截图 / homepage screenshot" width="920" />
+<img src="web/public/screenshot.png" alt="CityU Hub 首页截图 / homepage screenshot" width="920" />
 
 **站点一览 · Homepage at a glance**
+
+<a href="https://cityu-hub.bond">
+  <img src="https://img.shields.io/badge/%E7%AB%8B%E5%8D%B3%E8%AE%BF%E9%97%AE%E7%BD%91%E7%AB%99-cityu--hub.bond-f47c94?style=for-the-badge&logo=vercel&logoColor=white" alt="立即访问网站 / visit site" />
+</a>
 
 </div>
 
@@ -52,13 +68,12 @@ CityU Hub 是一个面向**香港城市大学（CityU）学生开源项目**的�
 | 筛选与排序 | 分类页签、标签 chips、作者榜一键筛选；支持按最近更新 / Star / 名称排序 |
 | 项目详情 | 渲染仓库 README、作者实名与专业年级、Demo 与 GitHub 外链 |
 | 可分享链接 | 搜索词、筛选、分类、排序、主题全部同步到 URL，刷新/分享后状态不丢 |
-| 主题 | 亮 / 暗双主题切换，首屏前注入、无闪烁 |
 | 常用入口 | 右上角 🔗 抽屉内置 AIMS / Canvas / 学校官网 / CityUHK Portal |
 
 ### 技术栈
 
 **前端**：React 19 · TypeScript 5.9 · Vite 6 · Tailwind CSS v4（CSS-first）· React Router 7（HashRouter）· lucide-react
-**后端**：Node.js ≥ 20.6（原生 `node:http`，零框架）· ajv（JSON Schema 校验）· js-yaml（front matter 解析）
+**解析器**：Node.js ≥ 20.6 · marked（Markdown → HTML）· ajv（JSON Schema 校验）· js-yaml（front matter 解析）
 
 ### 项目结构
 
@@ -70,52 +85,88 @@ CityU-Hub/
 │   └── extend-slides.md
 ├── schema/
 │   └── repo.schema.json        # front matter 的 JSON Schema，CI 用它把关
-├── back-end/                   # 索引构建器 + 只读 HTTP API
-│   ├── src/build-index.mjs     # repos/*.md → output/*.json（可加 --offline）
+├── repos-parser/               # 解析器：repos/*.md → web/public/data/*.json
+│   ├── src/build-index.mjs     # 生成列表、聚合与项目详情（含渲染好的 README HTML）
 │   ├── src/validate-repos.mjs  # 按 schema 校验、项目 ID / 仓库地址查重
-│   ├── src/server.mjs          # /health、/projects、/projects/:id（默认 127.0.0.1:3001）
-│   └── output/                 # 构建产物，已 gitignore
-├── front-end/                  # 前端站点
-│   ├── public/data/            # 静态兜底数据（没有后端时也能跑）
+│   └── src/lib/                # front matter、Markdown、GitHub、聚合等纯函数
+├── web/                        # 前端站点（一条 npm 命令完成解析 + 打包）
+│   ├── public/data/            # 解析产物，已 gitignore，每次构建重新生成
 │   └── src/
-│       ├── api/                # 唯一数据出口：接口 / 静态 JSON / GitHub 元数据补齐
+│       ├── api/                # 读静态 JSON，并在运行时用 GitHub 补齐缺失字段
 │       ├── components/         # 卡片、搜索栏、侧栏、筛选与排序等
 │       ├── hooks/              # useProjects、useSearch、useUrlState
 │       ├── pages/              # 首页、项目详情页
 │       └── utils/              # 搜索语法解析、格式化、slug
 ├── scripts/
-│   └── sync-and-build.sh       # 目标机器拉取最新代码并重建前后端
-└── .github/workflows/          # build.yml（构建数据）/ validate.yml（PR 校验）/ deploy.yml（自动同步重建）
+│   └── sync-and-build.sh       # 目标机器拉取最新代码并重建站点
+└── .github/workflows/          # ci.yml（校验 + 构建）/ deploy.yml（自托管机器同步重建）
 ```
+
+`repos-parser` 与 `web` 通过根目录的 **npm workspaces** 串起来，`npm install` 一次装好两边依赖。
 
 ### 数据流
 
 ```text
-repos/*.md ─► npm run validate ─► build-index ─┬─► back-end/output/*.json
-                                               │        │
-                       GitHub API 补 stars /   │        ├─► server.mjs（REST API）
-                       语言 / license / 描述 ───┘        └─► 前端 fetch（缺失字段运行时再补）
+repos/*.md ─► npm run validate ─► repos-parser ─► web/public/data/*.json ─► vite build ─► web/dist
+                                                      ▲
+                                    GitHub API 补 stars / 语言 / 头像（可选）
 ```
 
-- `npm run build` 会调用 GitHub API 补齐动态字段（需要 `GITHUB_TOKEN`，见 `back-end/.env.example`）。
-- `npm run build:offline` 完全不联网，适合本地和 CI；缺的 Star 数、语言由前端运行时补齐并缓存在 localStorage。
+解析器直接产出前端契约的 JSON，没有中间接口层：
+
+- `data/projects.json`：项目列表 + 标签 / 作者 / 分类聚合
+- `data/projects/<id>.json`：单个项目详情，`readmeHtml` 已渲染好，前端直接插入
+
+`npm run build` 离线解析，产物完全可复现；`npm run build:online` 会额外调用 GitHub API 补齐 stars、语言、头像（需要 `GITHUB_TOKEN`，见 `repos-parser/.env.example`），缺失的字段前端也会在运行时补齐并缓存在 localStorage。
 
 ### 本地运行
 
 ```bash
-# 1) 生成数据并启动接口（http://127.0.0.1:3001）
-cd back-end
-npm install
-npm run build:offline        # 有 token 时可用 npm run build
-npm run start
-
-# 2) 另开一个终端启动前端（http://localhost:5173）
-cd front-end
-npm install
-npm run dev
+npm install     # 根目录一次装好 repos-parser 与 web 的依赖
+npm run dev     # 先解析 repos/*.md，再启动 http://localhost:5173
 ```
 
-生产构建走静态数据；要让线上也连后端，构建时设置 `VITE_API_BASE=https://你的接口地址`。
+常用命令：
+
+```bash
+npm run build        # 解析 + 类型检查 + 打包，产物在 web/dist
+npm run build:online # 同上，但联网补齐 stars / 语言 / 头像
+npm run preview      # 本地预览构建产物
+npm run validate     # 校验 repos/*.md 的 front matter、Schema 与重复项
+npm test             # 解析器单元测试
+```
+
+### 一键入口
+
+不想翻文档就直接点，链接已经带好标签与目标分支：
+
+| 想做的事 | 一键唤起 | 说明 |
+| --- | --- | --- |
+| 提交自己的项目 | [新建 `repos/我的项目.md`](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | 打开 GitHub 文件编辑器，没权限会自动 fork，文件建在 `feature` 分支，提交即开 PR |
+| 报告 Bug | [开 Bug Issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20) | 已预填标题 `[Bug]` 与 `bug` 标签 |
+| 提功能建议 / 提问 | [开建议 Issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20) | 已预填标题 `[Feature]` 与 `enhancement` 标签 |
+| 看别人提了什么 | [浏览全部 Issue](https://github.com/Warpshlczy/CityU-Hub/issues) | 先搜一下，避免重复 |
+
+### 分支模型
+
+仓库只有三条长期分支，默认分支是 `main`；旧分支 `master` 已删除，请统一用 `main`：
+
+| 分支 | 用途 | 收哪类 PR |
+| --- | --- | --- |
+| `main` | 稳定发布分支，线上的正式版本以它为准 | 只接受 `feature` / `dev` 的合并，不直接往上提交 |
+| `feature` | 只丢 Markdown 文件：`repos/*.md` | 项目作者的「提交我的项目」PR |
+| `dev` | 网站改动与新功能：`web/`、`repos-parser/`、`scripts/`、工作流、文档 | 前端 / 解析器 / 文档类 PR |
+
+```text
+项目提交 PR ─► feature ─┐
+                        ├─► main ─► 正式发布（自建机器重建）
+网站改动 PR ─► dev ─────┘
+```
+
+- **提项目**：从 `feature` 切分支（例如 `feat/add-my-project`），PR 的目标分支选 **`feature`**。
+- **改网站**：从 `dev` 切分支（例如 `feat/search-syntax`），PR 的目标分支选 **`dev`**。
+- 维护者定期把 `feature`、`dev` 合并回 `main`；**只有合并到 `main` 才会触发正式发布**。
+- PR 一打开就会跑 CI（校验 front matter、单元测试、整站构建），与目标分支无关。
 
 ### 成为贡献者
 
@@ -123,29 +174,28 @@ npm run dev
 
 #### 方式一：提交你的项目（最主要）
 
-1. **Fork** 本仓库并 clone 到本地，从 `main` 建一个分支，例如 `feat/add-my-project`。
+1. **Fork** 本仓库并 clone 到本地，从 `feature` 建一个分支，例如 `feat/add-my-project`。也可以直接点上面的[一键新建项目文件](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)在网页上填。
 2. 复制 `repos/_template.md` 为 `repos/你的项目名.md`，填写 front matter 与正文。
 3. 必填字段：`title`、`author`（GitHub 用户名）、`authorName`（真实姓名）、`major`（专业）、`enrollmentYear`（入学年份，四位数字）、`repoUrl`（必须是公开的 `https://github.com/...` 地址）。可选：`id`、`summary`、`homepageUrl`、`tags`（最多 12 个小写短标签）、`category`、`featured`、`status`（`active` / `hidden` / `archived`）。**schema 不允许出现未定义的字段。**
-4. 正文写在 front matter 之后：你可以在这里自定义想展示的项目简介与功能介绍。如果想使用GitHub项目页上的简介，请在`Features`后面留空。如果想使用项目的README，请将项目介绍留空。程序会自动拉取你的项目。
+4. 正文写在 front matter 之后：开头写项目介绍，`## Features` 段落完全由作者自行决定——写了才展示，**留空或整段不写都不会出现 Features**，也不会用 GitHub 仓库简介去补齐。想让项目页直接展示仓库 README，把项目介绍留空即可。
 5. 本地自检（务必先跑通）：
    ```bash
-   cd back-end
    npm install
-   npm run validate      # front matter 是否符合 schema、ID 与仓库地址是否重复
-   npm test              # 构建器单元测试
-   npm run build:offline # 确认能正常构建出数据
+   npm run validate   # front matter 是否符合 schema、ID 与仓库地址是否重复
+   npm test           # 解析器单元测试
+   npm run build      # 确认能正常解析并构建出站点
    ```
-6. 提交 Pull Request 到 `main`。CI 会自动跑 `validate` 与测试；通过后由维护者 review 合并。合并后构建 workflow 会补齐 stars、语言、license 等动态字段并重新生成 JSON，站点随即更新。
+6. 提交 Pull Request 到 `feature` 分支。CI 会自动跑 `validate`、测试与整站构建；通过后由维护者 review 合并。合并进 `main` 后托管平台会自动重新构建发布，站点随即更新。
 
 > 目录、字段名、枚举值的完整约定见 [`CONTRIBUTING.md`](CONTRIBUTING.md) 与 [`schema/repo.schema.json`](schema/repo.schema.json)。
 
 #### 方式二：改进网站本身
 
-前端 / 后端 / 工作流的 PR 同样欢迎。动手前请先开一个 issue 说清楚你想做什么，避免重复劳动；提交前请确认：
+前端 / 解析器 / 工作流的 PR 同样欢迎，请把 PR 提到 **`dev`** 分支。动手前请先开一个 issue 说清楚你想做什么，避免重复劳动；提交前请确认：
 
 ```bash
-cd front-end && npm run build   # 类型检查 + 打包必须通过
-cd back-end  && npm test        # 后端测试必须通过
+npm test        # 解析器测试必须通过
+npm run build   # 类型检查 + 打包必须通过
 ```
 
 #### 方式三：文档、翻译与反馈
@@ -157,6 +207,186 @@ cd back-end  && npm test        # 后端测试必须通过
 </a>
 
 **期待在贡献者名单里看到你。**
+
+### 许可证
+
+本项目基于 [MIT License](LICENSE) 开源，版权归 **CityU Hub contributors** 所有。
+
+你可以自由使用、复制、修改、合并、发布、分发、再授权及/或销售本软件的副本，只需在副本或实质性部分中保留上述版权声明与许可声明。本软件按「原样」提供，不附带任何形式的明示或默示担保。
+
+这意味着：**你提交到 `repos/` 的项目条目仍然归你所有**，MIT 只覆盖 CityU Hub 自身的站点与解析器代码。
+
+---
+
+## 繁體中文
+
+### 這是什麼
+
+CityU Hub 是一個面向**香港城市大學（CityU）學生開源項目**的展示與檢索網站。同學們把自己寫的小工具、課程項目、研究程式碼提交進來，其他人在同一個頁面就能按**分類 / 標籤 / 語言 / 作者**篩選，搜尋並直接跳到 GitHub 儲存庫。
+
+網站解決的三個問題：
+
+- **散**：校內項目散落在聊天群組、課程群組和個人主頁裡，沒有統一入口。
+- **找不到**：想找「有沒有人做過 NLP 相關的東西」時，沒有任何可檢索的索引。
+- **認不出作者**：看得到儲存庫，卻不知道是哪個主修、哪一屆的同學。
+
+### 網站內容與功能
+
+| 功能 | 說明 |
+| --- | --- |
+| 項目瀏覽 | 卡片流展示項目名、摘要、標籤、語言色塊、Star 數與最近更新時間 |
+| 搜尋語法 | `author:alice`、`tag:NLP`、`lang:Python`、`category:機器學習`，可疊加 `author:alice lang:Python`；不帶冒號的字詞走全文模糊搜尋 |
+| 篩選與排序 | 分類頁籤、標籤 chips、作者榜一鍵篩選；支援按最近更新 / Star / 名稱排序 |
+| 項目詳情 | 渲染儲存庫 README、作者真實姓名與主修年級、Demo 與 GitHub 外部連結 |
+| 可分享連結 | 搜尋詞、篩選、分類、排序、主題全部同步到 URL，重新整理或分享後狀態不丟 |
+| 主題 | 亮 / 暗雙主題切換，首屏前注入、無閃爍 |
+| 常用入口 | 右上角 🔗 抽屜內建 AIMS / Canvas / 學校官網 / CityUHK Portal |
+
+### 技術棧
+
+**前端**：React 19 · TypeScript 5.9 · Vite 6 · Tailwind CSS v4（CSS-first）· React Router 7（HashRouter）· lucide-react
+**解析器**：Node.js ≥ 20.6 · marked（Markdown → HTML）· ajv（JSON Schema 驗證）· js-yaml（front matter 解析）
+
+### 項目結構
+
+```text
+CityU-Hub/
+├── repos/                      # 項目條目：每個項目一個 Markdown（front matter + 正文）
+│   ├── _template.md            # 提交模板，複製它開始寫自己的項目
+│   ├── CityU-Beamer.md
+│   └── extend-slides.md
+├── schema/
+│   └── repo.schema.json        # front matter 的 JSON Schema，CI 用它把關
+├── repos-parser/               # 解析器：repos/*.md → web/public/data/*.json
+│   ├── src/build-index.mjs     # 產生列表、聚合與項目詳情（含渲染好的 README HTML）
+│   ├── src/validate-repos.mjs  # 按 schema 驗證、項目 ID / 儲存庫網址檢查重複
+│   └── src/lib/                # front matter、Markdown、GitHub、聚合等純函式
+├── web/                        # 前端網站（一條 npm 指令完成解析 + 打包）
+│   ├── public/data/            # 解析產物，已 gitignore，每次建構重新產生
+│   └── src/
+│       ├── api/                # 讀靜態 JSON，並在執行時用 GitHub 補齊缺失欄位
+│       ├── components/         # 卡片、搜尋列、側欄、篩選與排序等
+│       ├── hooks/              # useProjects、useSearch、useUrlState
+│       ├── pages/              # 首頁、項目詳情頁
+│       └── utils/              # 搜尋語法解析、格式化、slug
+├── scripts/
+│   └── sync-and-build.sh       # 目標機器拉取最新程式碼並重建網站
+└── .github/workflows/          # ci.yml（驗證 + 建構）/ deploy.yml（自架機器同步重建）
+```
+
+`repos-parser` 與 `web` 透過根目錄的 **npm workspaces** 串起來，`npm install` 一次裝好兩邊依賴。
+
+### 資料流
+
+```text
+repos/*.md ─► npm run validate ─► repos-parser ─► web/public/data/*.json ─► vite build ─► web/dist
+                                                      ▲
+                                    GitHub API 補 stars / 語言 / 頭像（可選）
+```
+
+解析器直接產出前端契約的 JSON，沒有中間介面層：
+
+- `data/projects.json`：項目列表 + 標籤 / 作者 / 分類聚合
+- `data/projects/<id>.json`：單個項目詳情，`readmeHtml` 已渲染好，前端直接插入
+
+`npm run build` 離線解析，產物完全可重現；`npm run build:online` 會額外呼叫 GitHub API 補齊 stars、語言、頭像（需要 `GITHUB_TOKEN`，見 `repos-parser/.env.example`），缺失的欄位前端也會在執行時補齊並快取在 localStorage。
+
+### 本機執行
+
+```bash
+npm install     # 根目錄一次裝好 repos-parser 與 web 的依賴
+npm run dev     # 先解析 repos/*.md，再啟動 http://localhost:5173
+```
+
+常用指令：
+
+```bash
+npm run build        # 解析 + 型別檢查 + 打包，產物在 web/dist
+npm run build:online # 同上，但連網補齊 stars / 語言 / 頭像
+npm run preview      # 本機預覽建構產物
+npm run validate     # 驗證 repos/*.md 的 front matter、Schema 與重複項
+npm test             # 解析器單元測試
+```
+
+### 一鍵入口
+
+不想翻文件就直接點，連結已帶好標籤與目標分支：
+
+| 想做的事 | 一鍵喚起 | 說明 |
+| --- | --- | --- |
+| 提交自己的項目 | [新建 `repos/我的項目.md`](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | 打開 GitHub 檔案編輯器，沒權限會自動 fork，檔案建在 `feature` 分支，提交即開 PR |
+| 報告 Bug | [開 Bug Issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20) | 已預填標題 `[Bug]` 與 `bug` 標籤 |
+| 提功能建議 / 提問 | [開建議 Issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20) | 已預填標題 `[Feature]` 與 `enhancement` 標籤 |
+| 看別人提了什麼 | [瀏覽全部 Issue](https://github.com/Warpshlczy/CityU-Hub/issues) | 先搜一下，避免重複 |
+
+### 分支模型
+
+倉庫只有三條長期分支，預設分支是 `main`；舊分支 `master` 已刪除，請統一使用 `main`：
+
+| 分支 | 用途 | 收哪類 PR |
+| --- | --- | --- |
+| `main` | 穩定發佈分支，線上的正式版本以它為準 | 只接受 `feature` / `dev` 的合併，不直接往上提交 |
+| `feature` | 只丟 Markdown 文件：`repos/*.md` | 項目作者的「提交我的項目」PR |
+| `dev` | 網站改動與新功能：`web/`、`repos-parser/`、`scripts/`、workflow、文件 | 前端 / 解析器 / 文件類 PR |
+
+```text
+項目提交 PR ─► feature ─┐
+                        ├─► main ─► 正式發佈（自架機器重建）
+網站改動 PR ─► dev ─────┘
+```
+
+- **提項目**：從 `feature` 開分支（例如 `feat/add-my-project`），PR 的目標分支選 **`feature`**。
+- **改網站**：從 `dev` 開分支（例如 `feat/search-syntax`），PR 的目標分支選 **`dev`**。
+- 維護者定期把 `feature`、`dev` 合併回 `main`；**只有合併到 `main` 才會觸發正式發佈**。
+- PR 一打開就會跑 CI（驗證 front matter、單元測試、整站建構），與目標分支無關。
+
+### 成為貢獻者
+
+**非常歡迎你參與 CityU Hub！** 無論你是想把自己的項目放上來、修一個前端小 bug、補一段文件，還是只提一個想法，都是這個項目需要的貢獻。
+
+#### 方式一：提交你的項目（最主要）
+
+1. **Fork** 本儲存庫並 clone 到本機，從 `feature` 開一個分支，例如 `feat/add-my-project`。也可以直接點上面的[一鍵新建項目檔案](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)在網頁上填。
+2. 複製 `repos/_template.md` 為 `repos/你的項目名.md`，填寫 front matter 與正文。
+3. 必填欄位：`title`、`author`（GitHub 使用者名稱）、`authorName`（真實姓名）、`major`（主修）、`enrollmentYear`（入學年份，四位數字）、`repoUrl`（必須是公開的 `https://github.com/...` 位址）。可選：`id`、`summary`、`homepageUrl`、`tags`（最多 12 個小寫短標籤）、`category`、`featured`、`status`（`active` / `hidden` / `archived`）。**schema 不允許出現未定義的欄位。**
+4. 正文寫在 front matter 之後：`summary` 用來當卡片摘要，開頭寫項目介紹，`## Features` 段落完全由作者自行決定——寫了才展示，**留空或整段不寫都不會出現 Features**，也不會用 GitHub 儲存庫簡介去補齊；把項目介紹留空則回退到展示儲存庫 README。
+5. 本機自我檢查（務必先跑通）：
+   ```bash
+   npm install
+   npm run validate   # front matter 是否符合 schema、ID 與儲存庫網址是否重複
+   npm test           # 解析器單元測試
+   npm run build      # 確認能正常解析並建構出網站
+   ```
+6. 提交 Pull Request 到 `feature` 分支。CI 會自動跑 `validate`、測試與整站建構；通過後由維護者 review 合併。合併進 `main` 後託管平台會自動重新建構發佈，網站隨即更新。
+
+> 目錄、欄位名稱、列舉值的完整約定見 [`CONTRIBUTING.md`](CONTRIBUTING.md) 與 [`schema/repo.schema.json`](schema/repo.schema.json)。
+
+#### 方式二：改進網站本身
+
+前端 / 解析器 / workflow 的 PR 同樣歡迎，請把 PR 提到 **`dev`** 分支。動手前請先開一個 issue 說清楚你想做什麼，避免重複勞動；提交前請確認：
+
+```bash
+npm test        # 解析器測試必須通過
+npm run build   # 型別檢查 + 打包必須通過
+```
+
+#### 方式三：文件、翻譯與回饋
+
+發現錯別字、想補英文翻譯、有更好的介面建議，都可以直接開 issue 或提 PR——這類貢獻和程式碼同等重要。
+
+<a href="https://github.com/Warpshlczy/CityU-Hub/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Warpshlczy/CityU-Hub" alt="CityU Hub contributors" />
+</a>
+
+**期待在貢獻者名單裡看到你。**
+
+### 授權條款
+
+本項目基於 [MIT License](LICENSE) 開源，版權歸 **CityU Hub contributors** 所有。
+
+你可以自由使用、複製、修改、合併、發佈、分發、再授權及/或銷售本軟體的副本，只需在副本或實質性部分中保留上述版權聲明與授權聲明。本軟體按「原樣」提供，不附帶任何形式的明示或默示擔保。
+
+這意味著：**你提交到 `repos/` 的項目條目仍然歸你所有**，MIT 只覆蓋 CityU Hub 自身的網站與解析器程式碼。
 
 ---
 
@@ -187,7 +417,7 @@ The three problems it solves:
 ### Tech stack
 
 **Front end**: React 19 · TypeScript 5.9 · Vite 6 · Tailwind CSS v4 (CSS-first) · React Router 7 (HashRouter) · lucide-react
-**Back end**: Node.js ≥ 20.6 (native `node:http`, no framework) · ajv (JSON Schema validation) · js-yaml (front matter parsing)
+**Parser**: Node.js ≥ 20.6 · marked (Markdown → HTML) · ajv (JSON Schema validation) · js-yaml (front matter parsing)
 
 ### Project structure
 
@@ -199,52 +429,88 @@ CityU-Hub/
 │   └── extend-slides.md
 ├── schema/
 │   └── repo.schema.json        # JSON Schema for the front matter, enforced by CI
-├── back-end/                   # Index builder + read-only HTTP API
-│   ├── src/build-index.mjs     # repos/*.md → output/*.json (supports --offline)
+├── repos-parser/               # Parser: repos/*.md → web/public/data/*.json
+│   ├── src/build-index.mjs     # Builds the list, aggregates and details (README pre-rendered)
 │   ├── src/validate-repos.mjs  # Schema validation, duplicate id / repoUrl detection
-│   ├── src/server.mjs          # /health, /projects, /projects/:id (127.0.0.1:3001 by default)
-│   └── output/                 # Build artefacts, gitignored
-├── front-end/                  # The website
-│   ├── public/data/            # Static fallback data (works without the API)
+│   └── src/lib/                # Front matter, Markdown, GitHub and aggregation helpers
+├── web/                        # The website (one npm command parses + bundles)
+│   ├── public/data/            # Parser output, gitignored and regenerated on every build
 │   └── src/
-│       ├── api/                # Single data entry: API / static JSON / GitHub metadata
+│       ├── api/                # Reads static JSON, fills gaps from GitHub at runtime
 │       ├── components/         # Cards, search bar, sidebar, filters and sorting
 │       ├── hooks/              # useProjects, useSearch, useUrlState
 │       ├── pages/              # Home, project detail
 │       └── utils/              # Search parser, formatting, slug helpers
 ├── scripts/
 │   └── sync-and-build.sh       # Pull the latest code on a target machine and rebuild
-└── .github/workflows/          # build.yml (data) / validate.yml (PR checks) / deploy.yml (auto sync & rebuild)
+└── .github/workflows/          # ci.yml (validate + build) / deploy.yml (self-hosted sync)
 ```
+
+`repos-parser` and `web` are wired together with **npm workspaces**, so a single `npm install` covers both.
 
 ### Data flow
 
 ```text
-repos/*.md ─► npm run validate ─► build-index ─┬─► back-end/output/*.json
-                                               │        │
-                  GitHub API fills stars /     │        ├─► server.mjs (REST API)
-                  language / license / desc ────┘        └─► front-end fetch (missing fields filled at runtime)
+repos/*.md ─► npm run validate ─► repos-parser ─► web/public/data/*.json ─► vite build ─► web/dist
+                                                      ▲
+                                    GitHub API fills stars / language / avatar (optional)
 ```
 
-- `npm run build` enriches the data through the GitHub API (needs `GITHUB_TOKEN`, see `back-end/.env.example`).
-- `npm run build:offline` never touches the network — ideal for local runs and CI; missing stars / language are filled by the front end at runtime and cached in localStorage.
+The parser emits the front-end contract directly, with no API layer in between:
+
+- `data/projects.json` — project list plus tag / author / category aggregates
+- `data/projects/<id>.json` — one project, with `readmeHtml` already rendered for the detail page
+
+`npm run build` parses offline, so artefacts are fully reproducible. `npm run build:online` additionally calls the GitHub API to fill in stars, language and avatars (needs `GITHUB_TOKEN`, see `repos-parser/.env.example`); anything still missing is filled by the front end at runtime and cached in localStorage.
 
 ### Local development
 
 ```bash
-# 1) Build the data and start the API (http://127.0.0.1:3001)
-cd back-end
-npm install
-npm run build:offline        # use `npm run build` when a token is available
-npm run start
-
-# 2) In another terminal, start the front end (http://localhost:5173)
-cd front-end
-npm install
-npm run dev
+npm install     # installs both workspaces from the repo root
+npm run dev     # parses repos/*.md, then serves http://localhost:5173
 ```
 
-Production builds ship with static data; set `VITE_API_BASE=https://your-api-host` at build time to talk to a backend in production.
+Useful commands:
+
+```bash
+npm run build        # parse + type-check + bundle, output in web/dist
+npm run build:online # same, but fills stars / language / avatars from GitHub
+npm run preview      # preview the production build locally
+npm run validate     # check front matter, schema and duplicate entries in repos/*.md
+npm test             # parser unit tests
+```
+
+### One-click entry points
+
+Skip the docs and click straight through — every link already carries the right label and target branch:
+
+| What you want | One-click action | Notes |
+| --- | --- | --- |
+| Submit your project | [Create `repos/my-project.md`](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | Opens the GitHub file editor; without write access it forks for you, creates the file on `feature`, and committing opens the PR |
+| Report a bug | [Open a bug issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20) | Title `[Bug]` and the `bug` label are pre-filled |
+| Request a feature / ask a question | [Open a feature issue](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20) | Title `[Feature]` and the `enhancement` label are pre-filled |
+| See what's already reported | [Browse all issues](https://github.com/Warpshlczy/CityU-Hub/issues) | Search first to avoid duplicates |
+
+### Branch model
+
+The repository keeps only three long-lived branches; the default branch is `main`, and the old `master` branch has been deleted — use `main` everywhere:
+
+| Branch | Purpose | PRs merged into it |
+| --- | --- | --- |
+| `main` | Stable release branch, the source of truth for production | Only merges from `feature` / `dev`; never commit directly |
+| `feature` | Markdown files only: `repos/*.md` | "Submit my project" PRs from project authors |
+| `dev` | Site changes and new features: `web/`, `repos-parser/`, `scripts/`, workflows, docs | Front end / parser / docs PRs |
+
+```text
+project submission PR ─► feature ─┐
+                                  ├─► main ─► production release (self-hosted rebuild)
+site change PR ────────► dev ─────┘
+```
+
+- **Submitting a project**: branch off `feature` (e.g. `feat/add-my-project`) and target the PR at **`feature`**.
+- **Changing the site**: branch off `dev` (e.g. `feat/search-syntax`) and target the PR at **`dev`**.
+- Maintainers merge `feature` and `dev` back into `main` on a regular basis; **only a merge into `main` triggers a production release**.
+- CI (front matter validation, unit tests, full site build) runs as soon as a PR is opened, regardless of the target branch.
 
 ### Become a contributor
 
@@ -252,29 +518,28 @@ Production builds ship with static data; set `VITE_API_BASE=https://your-api-hos
 
 #### Option 1: Submit your project (the main path)
 
-1. **Fork** this repository, clone it, and branch off `main`, e.g. `feat/add-my-project`.
+1. **Fork** this repository, clone it, and branch off `feature`, e.g. `feat/add-my-project`. You can also use the [one-click new project file](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) link and fill it in right in the browser.
 2. Copy `repos/_template.md` to `repos/your-project.md` and fill in the front matter and the body.
 3. Required fields: `title`, `author` (GitHub username), `authorName`, `major`, `enrollmentYear` (four digits), `repoUrl` (must be a public `https://github.com/...` URL). Optional: `id`, `summary`, `homepageUrl`, `tags` (max 12 short lowercase tags), `category`, `featured`, `status` (`active` / `hidden` / `archived`). **The schema rejects any undefined field.**
-4. Put your description after the front matter: with `summary` set it is used as the card text; leave the body empty to fall back to your repository README.
+4. Put your description after the front matter: `summary` becomes the card text. The `## Features` section is entirely up to you — write it and it renders, **leave it empty or omit it and no Features block appears**, and the repository description is never used as a substitute. Leave the intro empty to fall back to your repository README.
 5. Verify locally before opening the PR:
    ```bash
-   cd back-end
    npm install
-   npm run validate      # schema conformance, duplicate id / repoUrl
-   npm test              # builder unit tests
-   npm run build:offline # make sure the data builds
+   npm run validate   # schema conformance, duplicate id / repoUrl
+   npm test           # parser unit tests
+   npm run build      # make sure the site parses and builds
    ```
-6. Open a Pull Request against `main`. CI runs `validate` plus the test suite; a maintainer reviews and merges. Once merged, the build workflow refreshes stars, language, license and other dynamic fields, regenerates the JSON, and the site updates.
+6. Open a Pull Request against `feature`. CI runs `validate`, the test suite and a full site build; a maintainer reviews and merges. Once the change reaches `main`, the hosting platform rebuilds and publishes automatically, and the site updates.
 
 > Full conventions for files, field names and enum values live in [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`schema/repo.schema.json`](schema/repo.schema.json).
 
 #### Option 2: Improve the site itself
 
-PRs for the front end, back end and workflows are welcome. Please open an issue first so we can avoid duplicated effort, and make sure these pass:
+PRs for the front end, the parser and the workflows are welcome — target the **`dev`** branch. Please open an issue first so we can avoid duplicated effort, and make sure these pass:
 
 ```bash
-cd front-end && npm run build   # type-check + bundle must succeed
-cd back-end  && npm test        # backend tests must succeed
+npm test        # parser tests must succeed
+npm run build   # type-check + bundle must succeed
 ```
 
 #### Option 3: Docs, translation and feedback
@@ -286,6 +551,14 @@ Typos, English translations, UI suggestions — open an issue or send a PR. Thes
 </a>
 
 **We look forward to seeing your name among the contributors.**
+
+### License
+
+Released under the [MIT License](LICENSE), copyright © **CityU Hub contributors**.
+
+You are free to use, copy, modify, merge, publish, distribute, sublicense and/or sell copies of the software, as long as the copyright and permission notices are kept in all copies or substantial portions. The software is provided "as is", without warranty of any kind, express or implied.
+
+In practice: **the project entries you submit under `repos/` remain yours** — MIT covers the CityU Hub site and parser code only.
 
 ---
 

@@ -1,0 +1,58 @@
+{
+  "id": "inscripoem-cityu-beamer",
+  "title": "cityu-beamer",
+  "summary": "A reusable Beamer theme based on the January 2025 City University of Hong Kong PowerPoint template. This is a community adaptation, not an officially endorsed university template.",
+  "description": "Beamer template for CIty University of Hong Kong (Unofficial)",
+  "repoUrl": "https://github.com/inscripoem/cityu-beamer",
+  "homepageUrl": "",
+  "coverImage": "",
+  "author": "Brandon",
+  "authorAvatar": "https://avatars.githubusercontent.com/u/78681968?v=4",
+  "authorName": "cxb",
+  "major": "Computer Science",
+  "enrollmentYear": 2026,
+  "source": "github",
+  "tags": [
+    "slides",
+    "tex"
+  ],
+  "category": "学习辅助",
+  "language": "TeX",
+  "stars": 28,
+  "forks": 3,
+  "readmeFile": "CityU-Beamer.md",
+  "readmeTitle": "A reusable Beamer theme based on the January 2025 City University of Hong Kong PowerPoint template. This is a community ",
+  "readmeHtmlUrl": "https://github.com/inscripoem/cityu-beamer/blob/main/README.md",
+  "readmeFetchedAt": null,
+  "pushedAt": "2026-09-12T05:28:18Z",
+  "license": "MIT",
+  "archived": false,
+  "featured": false,
+  "status": "active",
+  "createdAt": "2026-09-21T08:46:43.184Z",
+  "updatedAt": "2026-09-21T08:46:43.184Z",
+  "sourceFile": "repos/CityU-Beamer.md",
+  "readmeUrl": "/data/projects/inscripoem-cityu-beamer.json",
+  "content": "A reusable Beamer theme based on the January 2025 City University of Hong Kong PowerPoint template. This is a community adaptation, not an officially endorsed university template.\n\n## Features\n\n- 1111\n- 2222",
+  "analysis": {
+    "title": "A reusable Beamer theme based on the January 2025 City University of Hong Kong PowerPoint template. This is a community ",
+    "summary": "A reusable Beamer theme based on the January 2025 City University of Hong Kong PowerPoint template. This is a community adaptation, not an officially endorsed university template.",
+    "headings": [
+      {
+        "level": 2,
+        "text": "Features",
+        "slug": "features"
+      }
+    ],
+    "images": [],
+    "firstImage": null,
+    "hasBadges": false,
+    "hasCodeBlock": false,
+    "stats": {
+      "charCount": 173,
+      "wordCount": 30,
+      "cjkCount": 0,
+      "readingMinutes": 1
+    }
+  }
+}

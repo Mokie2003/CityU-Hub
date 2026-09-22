@@ -1,0 +1,67 @@
+{
+  "id": "l01nki1-extend-slides",
+  "title": "extend-slides",
+  "summary": "- become a neko maid - do some lovely jobs",
+  "description": "把课程课件/讲义/录音转写扩展成可独立复习的中文讲解文档，解决平时学习/期末复习难题",
+  "repoUrl": "https://github.com/L01nki1/extend-slides",
+  "homepageUrl": "",
+  "coverImage": "",
+  "author": "lllllllly",
+  "authorAvatar": "https://avatars.githubusercontent.com/u/146166781?v=4",
+  "authorName": "噜噜啦",
+  "major": "Computer Sciece",
+  "enrollmentYear": 2026,
+  "source": "github",
+  "tags": [
+    "skills",
+    "agent-skills",
+    "ai-agent",
+    "chinese",
+    "claude-skill",
+    "copilot-skill",
+    "education",
+    "obsidian",
+    "pptx",
+    "study-notes",
+    "python"
+  ],
+  "category": "学习辅助",
+  "language": "Python",
+  "stars": 5,
+  "forks": 0,
+  "readmeFile": "extend-slides.md",
+  "readmeTitle": "hello this is nekonya! nice to meet you!",
+  "readmeHtmlUrl": "https://github.com/L01nki1/extend-slides/blob/main/README.md",
+  "readmeFetchedAt": null,
+  "pushedAt": "2026-09-18T17:04:59Z",
+  "license": "MIT",
+  "archived": false,
+  "featured": false,
+  "status": "active",
+  "createdAt": "2026-09-21T08:46:43.539Z",
+  "updatedAt": "2026-09-21T08:46:43.539Z",
+  "sourceFile": "repos/extend-slides.md",
+  "readmeUrl": "/data/projects/l01nki1-extend-slides.json",
+  "content": "hello this is nekonya! nice to meet you!\n\n## Features\n\n- become a neko maid\n- do some lovely jobs",
+  "analysis": {
+    "title": "hello this is nekonya! nice to meet you!",
+    "summary": "- become a neko maid - do some lovely jobs",
+    "headings": [
+      {
+        "level": 2,
+        "text": "Features",
+        "slug": "features"
+      }
+    ],
+    "images": [],
+    "firstImage": null,
+    "hasBadges": false,
+    "hasCodeBlock": false,
+    "stats": {
+      "charCount": 76,
+      "wordCount": 17,
+      "cjkCount": 0,
+      "readingMinutes": 1
+    }
+  }
+}
