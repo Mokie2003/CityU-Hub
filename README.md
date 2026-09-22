@@ -43,7 +43,7 @@
   <img src="https://img.shields.io/badge/%E7%AB%8B%E5%8D%B3%E8%AE%BF%E9%97%AE%E7%BD%91%E7%AB%99-cityu--hub.vercel.app-f47c94?style=for-the-badge&logo=vercel&logoColor=white" alt="立即访问网站 / visit site" />
 </a>
 
-**立即访问网站 · Visit site → [cityu-hub.vercel.app](https://cityu-hub.vercel.app)**
+**立即访问网站 · Visit site **
 
 </div>
 
