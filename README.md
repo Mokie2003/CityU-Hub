@@ -1,13 +1,12 @@
 <div align="center">
 
-<img src="front-end/public/cityu.jpg" alt="CityU Hub logo" width="280" />
+<img src="web/public/cityu.jpg" alt="CityU Hub logo" width="280" />
 
 # CityU Hub
 
 **香港城大开源自助导航 · 香港城市大學學生項目和開源自助檢索平台 · Discover what CityU students are building**
 
-[![Build project data](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/build.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/build.yml)
-[![Validate submissions](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/validate.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/validate.yml)
+[![CI](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/ci.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/ci.yml)
 [![Sync & rebuild](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/deploy.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/deploy.yml)
 [![GitHub stars](https://img.shields.io/github/stars/Warpshlczy/CityU-Hub?style=for-the-badge&logo=github&label=stars&color=f47c94)](https://github.com/Warpshlczy/CityU-Hub/stargazers)
 
@@ -23,7 +22,7 @@
 
 <div align="center">
 
-<img src="front-end/public/screenshot.png" alt="CityU Hub 首页截图 / homepage screenshot" width="920" />
+<img src="web/public/screenshot.png" alt="CityU Hub 首页截图 / homepage screenshot" width="920" />
 
 **站点一览 · Homepage at a glance**
 
@@ -58,7 +57,7 @@ CityU Hub 是一个面向**香港城市大学（CityU）学生开源项目**的�
 ### 技术栈
 
 **前端**：React 19 · TypeScript 5.9 · Vite 6 · Tailwind CSS v4（CSS-first）· React Router 7（HashRouter）· lucide-react
-**后端**：Node.js ≥ 20.6（原生 `node:http`，零框架）· ajv（JSON Schema 校验）· js-yaml（front matter 解析）
+**解析器**：Node.js ≥ 20.6 · marked（Markdown → HTML）· ajv（JSON Schema 校验）· js-yaml（front matter 解析）
 
 ### 项目结构
 
@@ -70,52 +69,82 @@ CityU-Hub/
 │   └── extend-slides.md
 ├── schema/
 │   └── repo.schema.json        # front matter 的 JSON Schema，CI 用它把关
-├── back-end/                   # 索引构建器 + 只读 HTTP API
-│   ├── src/build-index.mjs     # repos/*.md → output/*.json（可加 --offline）
+├── repos-parser/               # 解析器：repos/*.md → web/public/data/*.json
+│   ├── src/build-index.mjs     # 生成列表、聚合与项目详情（含渲染好的 README HTML）
 │   ├── src/validate-repos.mjs  # 按 schema 校验、项目 ID / 仓库地址查重
-│   ├── src/server.mjs          # /health、/projects、/projects/:id（默认 127.0.0.1:3001）
-│   └── output/                 # 构建产物，已 gitignore
-├── front-end/                  # 前端站点
-│   ├── public/data/            # 静态兜底数据（没有后端时也能跑）
+│   └── src/lib/                # front matter、Markdown、GitHub、聚合等纯函数
+├── web/                        # 前端站点（一条 npm 命令完成解析 + 打包）
+│   ├── public/data/            # 解析产物，已 gitignore，每次构建重新生成
 │   └── src/
-│       ├── api/                # 唯一数据出口：接口 / 静态 JSON / GitHub 元数据补齐
+│       ├── api/                # 读静态 JSON，并在运行时用 GitHub 补齐缺失字段
 │       ├── components/         # 卡片、搜索栏、侧栏、筛选与排序等
 │       ├── hooks/              # useProjects、useSearch、useUrlState
 │       ├── pages/              # 首页、项目详情页
 │       └── utils/              # 搜索语法解析、格式化、slug
 ├── scripts/
-│   └── sync-and-build.sh       # 目标机器拉取最新代码并重建前后端
-└── .github/workflows/          # build.yml（构建数据）/ validate.yml（PR 校验）/ deploy.yml（自动同步重建）
+│   └── sync-and-build.sh       # 目标机器拉取最新代码并重建站点
+├── vercel.json                 # Vercel 部署配置（构建命令 / 输出目录 / 关闭框架预设）
+└── .github/workflows/          # ci.yml（校验 + 构建）/ deploy.yml（自托管机器同步重建）
 ```
+
+`repos-parser` 与 `web` 通过根目录的 **npm workspaces** 串起来，`npm install` 一次装好两边依赖。
 
 ### 数据流
 
 ```text
-repos/*.md ─► npm run validate ─► build-index ─┬─► back-end/output/*.json
-                                               │        │
-                       GitHub API 补 stars /   │        ├─► server.mjs（REST API）
-                       语言 / license / 描述 ───┘        └─► 前端 fetch（缺失字段运行时再补）
+repos/*.md ─► npm run validate ─► repos-parser ─► web/public/data/*.json ─► vite build ─► web/dist
+                                                      ▲
+                                    GitHub API 补 stars / 语言 / 头像（可选）
 ```
 
-- `npm run build` 会调用 GitHub API 补齐动态字段（需要 `GITHUB_TOKEN`，见 `back-end/.env.example`）。
-- `npm run build:offline` 完全不联网，适合本地和 CI；缺的 Star 数、语言由前端运行时补齐并缓存在 localStorage。
+解析器直接产出前端契约的 JSON，没有中间接口层：
+
+- `data/projects.json`：项目列表 + 标签 / 作者 / 分类聚合
+- `data/projects/<id>.json`：单个项目详情，`readmeHtml` 已渲染好，前端直接插入
+
+`npm run build` 离线解析，产物完全可复现；`npm run build:online` 会额外调用 GitHub API 补齐 stars、语言、头像（需要 `GITHUB_TOKEN`，见 `repos-parser/.env.example`），缺失的字段前端也会在运行时补齐并缓存在 localStorage。
 
 ### 本地运行
 
 ```bash
-# 1) 生成数据并启动接口（http://127.0.0.1:3001）
-cd back-end
-npm install
-npm run build:offline        # 有 token 时可用 npm run build
-npm run start
-
-# 2) 另开一个终端启动前端（http://localhost:5173）
-cd front-end
-npm install
-npm run dev
+npm install     # 根目录一次装好 repos-parser 与 web 的依赖
+npm run dev     # 先解析 repos/*.md，再启动 http://localhost:5173
 ```
 
-生产构建走静态数据；要让线上也连后端，构建时设置 `VITE_API_BASE=https://你的接口地址`。
+常用命令：
+
+```bash
+npm run build        # 解析 + 类型检查 + 打包，产物在 web/dist
+npm run build:online # 同上，但联网补齐 stars / 语言 / 头像
+npm run preview      # 本地预览构建产物
+npm run validate     # 校验 repos/*.md 的 front matter、Schema 与重复项
+npm test             # 解析器单元测试
+```
+
+### 一键部署到 Vercel
+
+整站是纯静态产物，Vercel 的 Git 集成会在每次 push 后自动拉取代码、重新解析 `repos/*.md` 并重新发布，不需要任何手动步骤。
+
+**首次导入**：Vercel Dashboard → Add New → Project → Import 本仓库，然后按下面这张表确认设置：
+
+| 设置项 | 值 | 说明 |
+| --- | --- | --- |
+| Root Directory | **留空（仓库根目录）** | 必须留空，npm workspaces 要从根目录统一安装依赖 |
+| Framework Preset | Other | [`vercel.json`](vercel.json) 已用 `"framework": null` 固定，避免被识别成 Vite 后去根目录找 `dist` |
+| Build Command | `npm run build` | 已由 `vercel.json` 声明，无需手填 |
+| Output Directory | `web/dist` | 已由 `vercel.json` 声明，无需手填 |
+| Node.js Version | 24.x | 来自根 [`package.json`](package.json) 的 `engines.node` |
+
+其余保持默认，点 Deploy 即可。构建过程等价于本机的这两条命令：
+
+```bash
+npm install    # 根目录一次装好 repos-parser 与 web 的依赖
+npm run build  # 解析 repos/*.md → 类型检查 → 打包到 web/dist
+```
+
+想用静态数据补齐 stars / 语言 / 头像，在 Vercel 项目的环境变量里加一个 `GITHUB_TOKEN`，并把构建命令改成 `npm run build:online`。
+
+> `scripts/sync-and-build.sh` 与 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) 是给自建服务器（38.175.192.15）用的：由自托管 runner 或 crontab 轮询拉取最新代码并重建，与 Vercel 互不影响。
 
 ### 成为贡献者
 
@@ -126,26 +155,25 @@ npm run dev
 1. **Fork** 本仓库并 clone 到本地，从 `main` 建一个分支，例如 `feat/add-my-project`。
 2. 复制 `repos/_template.md` 为 `repos/你的项目名.md`，填写 front matter 与正文。
 3. 必填字段：`title`、`author`（GitHub 用户名）、`authorName`（真实姓名）、`major`（专业）、`enrollmentYear`（入学年份，四位数字）、`repoUrl`（必须是公开的 `https://github.com/...` 地址）。可选：`id`、`summary`、`homepageUrl`、`tags`（最多 12 个小写短标签）、`category`、`featured`、`status`（`active` / `hidden` / `archived`）。**schema 不允许出现未定义的字段。**
-4. 正文写在 front matter 之后：你可以在这里自定义想展示的项目简介与功能介绍。如果想使用GitHub项目页上的简介，请在`Features`后面留空。如果想使用项目的README，请将项目介绍留空。程序会自动拉取你的项目。
+4. 正文写在 front matter 之后：你可以在这里自定义想展示的项目简介与功能介绍。如果想使用 GitHub 项目页上的简介，请在 `Features` 后面留空；如果想使用项目的 README，请将项目介绍留空。程序会自动拉取。
 5. 本地自检（务必先跑通）：
    ```bash
-   cd back-end
    npm install
-   npm run validate      # front matter 是否符合 schema、ID 与仓库地址是否重复
-   npm test              # 构建器单元测试
-   npm run build:offline # 确认能正常构建出数据
+   npm run validate   # front matter 是否符合 schema、ID 与仓库地址是否重复
+   npm test           # 解析器单元测试
+   npm run build      # 确认能正常解析并构建出站点
    ```
-6. 提交 Pull Request 到 `main`。CI 会自动跑 `validate` 与测试；通过后由维护者 review 合并。合并后构建 workflow 会补齐 stars、语言、license 等动态字段并重新生成 JSON，站点随即更新。
+6. 提交 Pull Request 到 `main`。CI 会自动跑 `validate`、测试与整站构建；通过后由维护者 review 合并。合并后托管平台会自动重新构建发布，站点随即更新。
 
 > 目录、字段名、枚举值的完整约定见 [`CONTRIBUTING.md`](CONTRIBUTING.md) 与 [`schema/repo.schema.json`](schema/repo.schema.json)。
 
 #### 方式二：改进网站本身
 
-前端 / 后端 / 工作流的 PR 同样欢迎。动手前请先开一个 issue 说清楚你想做什么，避免重复劳动；提交前请确认：
+前端 / 解析器 / 工作流的 PR 同样欢迎。动手前请先开一个 issue 说清楚你想做什么，避免重复劳动；提交前请确认：
 
 ```bash
-cd front-end && npm run build   # 类型检查 + 打包必须通过
-cd back-end  && npm test        # 后端测试必须通过
+npm test        # 解析器测试必须通过
+npm run build   # 类型检查 + 打包必须通过
 ```
 
 #### 方式三：文档、翻译与反馈
@@ -187,7 +215,7 @@ CityU Hub 是一個面向**香港城市大學（CityU）學生開源項目**的�
 ### 技術棧
 
 **前端**：React 19 · TypeScript 5.9 · Vite 6 · Tailwind CSS v4（CSS-first）· React Router 7（HashRouter）· lucide-react
-**後端**：Node.js ≥ 20.6（原生 `node:http`，零框架）· ajv（JSON Schema 驗證）· js-yaml（front matter 解析）
+**解析器**：Node.js ≥ 20.6 · marked（Markdown → HTML）· ajv（JSON Schema 驗證）· js-yaml（front matter 解析）
 
 ### 項目結構
 
@@ -199,52 +227,82 @@ CityU-Hub/
 │   └── extend-slides.md
 ├── schema/
 │   └── repo.schema.json        # front matter 的 JSON Schema，CI 用它把關
-├── back-end/                   # 索引建構器 + 唯讀 HTTP API
-│   ├── src/build-index.mjs     # repos/*.md → output/*.json（可加 --offline）
+├── repos-parser/               # 解析器：repos/*.md → web/public/data/*.json
+│   ├── src/build-index.mjs     # 產生列表、聚合與項目詳情（含渲染好的 README HTML）
 │   ├── src/validate-repos.mjs  # 按 schema 驗證、項目 ID / 儲存庫網址檢查重複
-│   ├── src/server.mjs          # /health、/projects、/projects/:id（預設 127.0.0.1:3001）
-│   └── output/                 # 建構產物，已 gitignore
-├── front-end/                  # 前端網站
-│   ├── public/data/            # 靜態備援資料（沒有後端時也能執行）
+│   └── src/lib/                # front matter、Markdown、GitHub、聚合等純函式
+├── web/                        # 前端網站（一條 npm 指令完成解析 + 打包）
+│   ├── public/data/            # 解析產物，已 gitignore，每次建構重新產生
 │   └── src/
-│       ├── api/                # 唯一資料出口：介面 / 靜態 JSON / GitHub 中繼資料補齊
+│       ├── api/                # 讀靜態 JSON，並在執行時用 GitHub 補齊缺失欄位
 │       ├── components/         # 卡片、搜尋列、側欄、篩選與排序等
 │       ├── hooks/              # useProjects、useSearch、useUrlState
 │       ├── pages/              # 首頁、項目詳情頁
 │       └── utils/              # 搜尋語法解析、格式化、slug
 ├── scripts/
-│   └── sync-and-build.sh       # 目標機器拉取最新程式碼並重建前後端
-└── .github/workflows/          # build.yml（建構資料）/ validate.yml（PR 驗證）/ deploy.yml（自動同步重建）
+│   └── sync-and-build.sh       # 目標機器拉取最新程式碼並重建網站
+├── vercel.json                 # Vercel 部署設定（建構指令 / 輸出目錄 / 關閉框架預設）
+└── .github/workflows/          # ci.yml（驗證 + 建構）/ deploy.yml（自架機器同步重建）
 ```
+
+`repos-parser` 與 `web` 透過根目錄的 **npm workspaces** 串起來，`npm install` 一次裝好兩邊依賴。
 
 ### 資料流
 
 ```text
-repos/*.md ─► npm run validate ─► build-index ─┬─► back-end/output/*.json
-                                               │        │
-                       GitHub API 補 stars /   │        ├─► server.mjs（REST API）
-                       語言 / license / 描述 ───┘        └─► 前端 fetch（缺失欄位執行時再補）
+repos/*.md ─► npm run validate ─► repos-parser ─► web/public/data/*.json ─► vite build ─► web/dist
+                                                      ▲
+                                    GitHub API 補 stars / 語言 / 頭像（可選）
 ```
 
-- `npm run build` 會呼叫 GitHub API 補齊動態欄位（需要 `GITHUB_TOKEN`，見 `back-end/.env.example`）。
-- `npm run build:offline` 完全不連網，適合本機與 CI；缺的 Star 數、語言由前端執行時補齊並快取在 localStorage。
+解析器直接產出前端契約的 JSON，沒有中間介面層：
+
+- `data/projects.json`：項目列表 + 標籤 / 作者 / 分類聚合
+- `data/projects/<id>.json`：單個項目詳情，`readmeHtml` 已渲染好，前端直接插入
+
+`npm run build` 離線解析，產物完全可重現；`npm run build:online` 會額外呼叫 GitHub API 補齊 stars、語言、頭像（需要 `GITHUB_TOKEN`，見 `repos-parser/.env.example`），缺失的欄位前端也會在執行時補齊並快取在 localStorage。
 
 ### 本機執行
 
 ```bash
-# 1) 產生資料並啟動介面（http://127.0.0.1:3001）
-cd back-end
-npm install
-npm run build:offline        # 有 token 時可用 npm run build
-npm run start
-
-# 2) 另開一個終端機啟動前端（http://localhost:5173）
-cd front-end
-npm install
-npm run dev
+npm install     # 根目錄一次裝好 repos-parser 與 web 的依賴
+npm run dev     # 先解析 repos/*.md，再啟動 http://localhost:5173
 ```
 
-正式建置走靜態資料；要讓線上環境也連後端，建置時設定 `VITE_API_BASE=https://你的介面位址`。
+常用指令：
+
+```bash
+npm run build        # 解析 + 型別檢查 + 打包，產物在 web/dist
+npm run build:online # 同上，但連網補齊 stars / 語言 / 頭像
+npm run preview      # 本機預覽建構產物
+npm run validate     # 驗證 repos/*.md 的 front matter、Schema 與重複項
+npm test             # 解析器單元測試
+```
+
+### 一鍵部署到 Vercel
+
+整站是純靜態產物，Vercel 的 Git 整合會在每次 push 後自動拉取程式碼、重新解析 `repos/*.md` 並重新發佈，不需要任何手動步驟。
+
+**首次匯入**：Vercel Dashboard → Add New → Project → Import 本儲存庫，然後按下面這張表確認設定：
+
+| 設定項 | 值 | 說明 |
+| --- | --- | --- |
+| Root Directory | **留空（儲存庫根目錄）** | 必須留空，npm workspaces 要從根目錄統一安裝依賴 |
+| Framework Preset | Other | [`vercel.json`](vercel.json) 已用 `"framework": null` 固定，避免被識別成 Vite 後去根目錄找 `dist` |
+| Build Command | `npm run build` | 已由 `vercel.json` 宣告，無需手填 |
+| Output Directory | `web/dist` | 已由 `vercel.json` 宣告，無需手填 |
+| Node.js Version | 24.x | 來自根 [`package.json`](package.json) 的 `engines.node` |
+
+其餘保持預設，點 Deploy 即可。建構過程等於本機這兩條指令：
+
+```bash
+npm install    # 根目錄一次裝好 repos-parser 與 web 的依賴
+npm run build  # 解析 repos/*.md → 型別檢查 → 打包到 web/dist
+```
+
+想用靜態資料補齊 stars / 語言 / 頭像，在 Vercel 專案的環境變數裡加一個 `GITHUB_TOKEN`，並把建構指令改成 `npm run build:online`。
+
+> `scripts/sync-and-build.sh` 與 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) 是給自架伺服器（38.175.192.15）用的：由自託管 runner 或 crontab 輪詢拉取最新程式碼並重建，與 Vercel 互不影響。
 
 ### 成為貢獻者
 
@@ -258,23 +316,22 @@ npm run dev
 4. 正文寫在 front matter 之後：填了 `summary` 就用摘要，正文留空則回退到展示你儲存庫的 README。
 5. 本機自我檢查（務必先跑通）：
    ```bash
-   cd back-end
    npm install
-   npm run validate      # front matter 是否符合 schema、ID 與儲存庫網址是否重複
-   npm test              # 建構器單元測試
-   npm run build:offline # 確認能正常建構出資料
+   npm run validate   # front matter 是否符合 schema、ID 與儲存庫網址是否重複
+   npm test           # 解析器單元測試
+   npm run build      # 確認能正常解析並建構出網站
    ```
-6. 提交 Pull Request 到 `main`。CI 會自動跑 `validate` 與測試；通過後由維護者 review 合併。合併後建構 workflow 會補齊 stars、語言、license 等動態欄位並重新產生 JSON，網站隨即更新。
+6. 提交 Pull Request 到 `main`。CI 會自動跑 `validate`、測試與整站建構；通過後由維護者 review 合併。合併後託管平台會自動重新建構發佈，網站隨即更新。
 
 > 目錄、欄位名稱、列舉值的完整約定見 [`CONTRIBUTING.md`](CONTRIBUTING.md) 與 [`schema/repo.schema.json`](schema/repo.schema.json)。
 
 #### 方式二：改進網站本身
 
-前端 / 後端 / workflow 的 PR 同樣歡迎。動手前請先開一個 issue 說清楚你想做什麼，避免重複勞動；提交前請確認：
+前端 / 解析器 / workflow 的 PR 同樣歡迎。動手前請先開一個 issue 說清楚你想做什麼，避免重複勞動；提交前請確認：
 
 ```bash
-cd front-end && npm run build   # 型別檢查 + 打包必須通過
-cd back-end  && npm test        # 後端測試必須通過
+npm test        # 解析器測試必須通過
+npm run build   # 型別檢查 + 打包必須通過
 ```
 
 #### 方式三：文件、翻譯與回饋
@@ -316,7 +373,7 @@ The three problems it solves:
 ### Tech stack
 
 **Front end**: React 19 · TypeScript 5.9 · Vite 6 · Tailwind CSS v4 (CSS-first) · React Router 7 (HashRouter) · lucide-react
-**Back end**: Node.js ≥ 20.6 (native `node:http`, no framework) · ajv (JSON Schema validation) · js-yaml (front matter parsing)
+**Parser**: Node.js ≥ 20.6 · marked (Markdown → HTML) · ajv (JSON Schema validation) · js-yaml (front matter parsing)
 
 ### Project structure
 
@@ -328,52 +385,82 @@ CityU-Hub/
 │   └── extend-slides.md
 ├── schema/
 │   └── repo.schema.json        # JSON Schema for the front matter, enforced by CI
-├── back-end/                   # Index builder + read-only HTTP API
-│   ├── src/build-index.mjs     # repos/*.md → output/*.json (supports --offline)
+├── repos-parser/               # Parser: repos/*.md → web/public/data/*.json
+│   ├── src/build-index.mjs     # Builds the list, aggregates and details (README pre-rendered)
 │   ├── src/validate-repos.mjs  # Schema validation, duplicate id / repoUrl detection
-│   ├── src/server.mjs          # /health, /projects, /projects/:id (127.0.0.1:3001 by default)
-│   └── output/                 # Build artefacts, gitignored
-├── front-end/                  # The website
-│   ├── public/data/            # Static fallback data (works without the API)
+│   └── src/lib/                # Front matter, Markdown, GitHub and aggregation helpers
+├── web/                        # The website (one npm command parses + bundles)
+│   ├── public/data/            # Parser output, gitignored and regenerated on every build
 │   └── src/
-│       ├── api/                # Single data entry: API / static JSON / GitHub metadata
+│       ├── api/                # Reads static JSON, fills gaps from GitHub at runtime
 │       ├── components/         # Cards, search bar, sidebar, filters and sorting
 │       ├── hooks/              # useProjects, useSearch, useUrlState
 │       ├── pages/              # Home, project detail
 │       └── utils/              # Search parser, formatting, slug helpers
 ├── scripts/
 │   └── sync-and-build.sh       # Pull the latest code on a target machine and rebuild
-└── .github/workflows/          # build.yml (data) / validate.yml (PR checks) / deploy.yml (auto sync & rebuild)
+├── vercel.json                 # Vercel deployment config (build / output dir / framework preset off)
+└── .github/workflows/          # ci.yml (validate + build) / deploy.yml (self-hosted sync)
 ```
+
+`repos-parser` and `web` are wired together with **npm workspaces**, so a single `npm install` covers both.
 
 ### Data flow
 
 ```text
-repos/*.md ─► npm run validate ─► build-index ─┬─► back-end/output/*.json
-                                               │        │
-                  GitHub API fills stars /     │        ├─► server.mjs (REST API)
-                  language / license / desc ────┘        └─► front-end fetch (missing fields filled at runtime)
+repos/*.md ─► npm run validate ─► repos-parser ─► web/public/data/*.json ─► vite build ─► web/dist
+                                                      ▲
+                                    GitHub API fills stars / language / avatar (optional)
 ```
 
-- `npm run build` enriches the data through the GitHub API (needs `GITHUB_TOKEN`, see `back-end/.env.example`).
-- `npm run build:offline` never touches the network — ideal for local runs and CI; missing stars / language are filled by the front end at runtime and cached in localStorage.
+The parser emits the front-end contract directly, with no API layer in between:
+
+- `data/projects.json` — project list plus tag / author / category aggregates
+- `data/projects/<id>.json` — one project, with `readmeHtml` already rendered for the detail page
+
+`npm run build` parses offline, so artefacts are fully reproducible. `npm run build:online` additionally calls the GitHub API to fill in stars, language and avatars (needs `GITHUB_TOKEN`, see `repos-parser/.env.example`); anything still missing is filled by the front end at runtime and cached in localStorage.
 
 ### Local development
 
 ```bash
-# 1) Build the data and start the API (http://127.0.0.1:3001)
-cd back-end
-npm install
-npm run build:offline        # use `npm run build` when a token is available
-npm run start
-
-# 2) In another terminal, start the front end (http://localhost:5173)
-cd front-end
-npm install
-npm run dev
+npm install     # installs both workspaces from the repo root
+npm run dev     # parses repos/*.md, then serves http://localhost:5173
 ```
 
-Production builds ship with static data; set `VITE_API_BASE=https://your-api-host` at build time to talk to a backend in production.
+Useful commands:
+
+```bash
+npm run build        # parse + type-check + bundle, output in web/dist
+npm run build:online # same, but fills stars / language / avatars from GitHub
+npm run preview      # preview the production build locally
+npm run validate     # check front matter, schema and duplicate entries in repos/*.md
+npm test             # parser unit tests
+```
+
+### One-command deployment to Vercel
+
+The whole site is static, and Vercel's Git integration pulls the latest code, re-parses `repos/*.md` and republishes on every push — nothing manual.
+
+**First import**: Vercel Dashboard → Add New → Project → Import this repository, then confirm the settings below:
+
+| Setting | Value | Notes |
+| --- | --- | --- |
+| Root Directory | **leave empty (repo root)** | Required — npm workspaces must install from the repo root |
+| Framework Preset | Other | Pinned by `"framework": null` in [`vercel.json`](vercel.json), so Vercel does not treat this as Vite and look for `dist` at the root |
+| Build Command | `npm run build` | Already declared in `vercel.json` |
+| Output Directory | `web/dist` | Already declared in `vercel.json` |
+| Node.js Version | 24.x | Taken from `engines.node` in the root [`package.json`](package.json) |
+
+Leave everything else at its default and press Deploy. The build is equivalent to these two local commands:
+
+```bash
+npm install    # installs both repos-parser and web from the repo root
+npm run build  # parses repos/*.md → type-check → bundles into web/dist
+```
+
+To bake stars / language / avatars into the static data, add a `GITHUB_TOKEN` environment variable to the Vercel project and switch the build command to `npm run build:online`.
+
+> `scripts/sync-and-build.sh` and [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) cover the self-hosted route (38.175.192.15): a self-hosted runner or a crontab poll pulls the latest code and rebuilds, independently of Vercel.
 
 ### Become a contributor
 
@@ -387,23 +474,22 @@ Production builds ship with static data; set `VITE_API_BASE=https://your-api-hos
 4. Put your description after the front matter: with `summary` set it is used as the card text; leave the body empty to fall back to your repository README.
 5. Verify locally before opening the PR:
    ```bash
-   cd back-end
    npm install
-   npm run validate      # schema conformance, duplicate id / repoUrl
-   npm test              # builder unit tests
-   npm run build:offline # make sure the data builds
+   npm run validate   # schema conformance, duplicate id / repoUrl
+   npm test           # parser unit tests
+   npm run build      # make sure the site parses and builds
    ```
-6. Open a Pull Request against `main`. CI runs `validate` plus the test suite; a maintainer reviews and merges. Once merged, the build workflow refreshes stars, language, license and other dynamic fields, regenerates the JSON, and the site updates.
+6. Open a Pull Request against `main`. CI runs `validate`, the test suite and a full site build; a maintainer reviews and merges. Once merged, the hosting platform rebuilds and publishes automatically, and the site updates.
 
 > Full conventions for files, field names and enum values live in [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`schema/repo.schema.json`](schema/repo.schema.json).
 
 #### Option 2: Improve the site itself
 
-PRs for the front end, back end and workflows are welcome. Please open an issue first so we can avoid duplicated effort, and make sure these pass:
+PRs for the front end, the parser and the workflows are welcome. Please open an issue first so we can avoid duplicated effort, and make sure these pass:
 
 ```bash
-cd front-end && npm run build   # type-check + bundle must succeed
-cd back-end  && npm test        # backend tests must succeed
+npm test        # parser tests must succeed
+npm run build   # type-check + bundle must succeed
 ```
 
 #### Option 3: Docs, translation and feedback

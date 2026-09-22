@@ -1,0 +1,46 @@
+name: CI
+
+# 每次 PR 与推送到 main 都跑一遍：校验 repos/*.md、跑解析器测试、构建整站。
+# 站点本身由 Vercel 的 Git 集成在推送后自动构建发布，
+# 这个工作流负责在合并前拦住坏数据与坏构建。
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: 校验 + 构建
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 准备 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci --no-audit --no-fund
+
+      - name: 校验 repos/*.md
+        run: npm run validate
+
+      - name: 解析器单元测试
+        run: npm test
+
+      - name: 构建站点（解析 Markdown + 类型检查 + 打包）
+        run: npm run build
+
+      - name: 检查构建产物
+        run: |
+          test -f web/dist/index.html
+          test -f web/dist/data/projects.json

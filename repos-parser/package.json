@@ -1,0 +1,29 @@
+{
+  "name": "cityu-hub-repos-parser",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CityU-Hub 仓库文档解析器：repos/*.md → web/public/data/*.json",
+  "type": "module",
+  "engines": {
+    "node": ">=20.6.0"
+  },
+  "scripts": {
+    "validate": "node src/validate-repos.mjs",
+    "build": "node src/build-index.mjs",
+    "build:offline": "node src/build-index.mjs --offline",
+    "test": "node --test"
+  },
+  "keywords": [
+    "cityu",
+    "hub",
+    "readme",
+    "showcase"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "js-yaml": "^4.1.0",
+    "marked": "^15.0.0"
+  }
+}
