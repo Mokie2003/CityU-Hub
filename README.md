@@ -8,26 +8,10 @@
 
 [![CI](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/ci.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/ci.yml)
 [![Sync & rebuild](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/deploy.yml/badge.svg)](https://github.com/Warpshlczy/CityU-Hub/actions/workflows/deploy.yml)
-[![GitHub stars](https://img.shields.io/github/stars/Warpshlczy/CityU-Hub?style=for-the-badge&logo=github&label=stars&color=f47c94)](https://github.com/Warpshlczy/CityU-Hub/stargazers)
-[![License: MIT](https://img.shields.io/badge/license-MIT-f47c94?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/Warpshlczy/CityU-Hub?style=flat&logo=github&label=stars&color=f47c94)](https://github.com/Warpshlczy/CityU-Hub/stargazers)
+[![License: MIT](https://img.shields.io/badge/license-MIT-f47c94?style=flat&logo=opensourceinitiative&logoColor=white)](LICENSE)
 
-[![React](https://img.shields.io/badge/react-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/typescript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Vite](https://img.shields.io/badge/vite-6-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev)
-[![Tailwind CSS](https://img.shields.io/badge/tailwindcss-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![React Router](https://img.shields.io/badge/react%20router-7-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white)](https://reactrouter.com)
-[![lucide-react](https://img.shields.io/badge/lucide--react-1-F56565?style=for-the-badge&logo=lucide&logoColor=white)](https://lucide.dev)
-
-[![Node.js](https://img.shields.io/badge/node-%E2%89%A520.6-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
-[![marked](https://img.shields.io/badge/marked-15-111111?style=for-the-badge&logo=markdown&logoColor=white)](https://marked.js.org)
-[![ajv](https://img.shields.io/badge/ajv-8-23C8D2?style=for-the-badge)](https://ajv.js.org)
-[![js-yaml](https://img.shields.io/badge/js--yaml-4-CB171E?style=for-the-badge&logo=yaml&logoColor=white)](https://github.com/nodeca/js-yaml)
-[![GitHub Actions](https://img.shields.io/badge/github%20actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/actions)
-
-[![Submit a project](https://img.shields.io/badge/submit%20a%20project-PR%20to%20feature-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)
-[![Report a bug](https://img.shields.io/badge/report%20a%20bug-issue-dc2626?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20)
-[![Request a feature](https://img.shields.io/badge/request%20a%20feature-issue-a855f7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-f47c94?style=for-the-badge&logo=github&logoColor=white)](CONTRIBUTING.md)
+[![React](https://img.shields.io/badge/react-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev) [![TypeScript](https://img.shields.io/badge/typescript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org) [![Vite](https://img.shields.io/badge/vite-6-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vite.dev) [![Tailwind CSS](https://img.shields.io/badge/tailwindcss-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com) [![React Router](https://img.shields.io/badge/react%20router-7-CA4245?style=flat-square&logo=reactrouter&logoColor=white)](https://reactrouter.com) [![lucide-react](https://img.shields.io/badge/lucide--react-1-F56565?style=flat-square&logo=lucide&logoColor=white)](https://lucide.dev) [![Node.js](https://img.shields.io/badge/node-%E2%89%A520.6-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org) [![marked](https://img.shields.io/badge/marked-15-111111?style=flat-square&logo=markdown&logoColor=white)](https://marked.js.org) [![ajv](https://img.shields.io/badge/ajv-8-23C8D2?style=flat-square)](https://ajv.js.org) [![js-yaml](https://img.shields.io/badge/js--yaml-4-CB171E?style=flat-square&logo=yaml&logoColor=white)](https://github.com/nodeca/js-yaml) [![GitHub Actions](https://img.shields.io/badge/github%20actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/actions)
 
 **[简体中文](#简体中文) · [繁體中文](#繁體中文) · [English](#english)**
 
@@ -98,8 +82,9 @@ CityU-Hub/
 │       ├── pages/              # 首页、项目详情页
 │       └── utils/              # 搜索语法解析、格式化、slug
 ├── scripts/
-│   └── sync-and-build.sh       # 目标机器拉取最新代码并重建站点
-└── .github/workflows/          # ci.yml（校验 + 构建）/ deploy.yml（自托管机器同步重建）
+│   ├── sync-and-build.sh       # 目标机器拉取最新代码并重建站点
+│   └── update-contributors.mjs # 刷新 README 里的贡献者名单
+└── .github/workflows/          # ci（校验+构建）/ deploy（自托管重建）/ feature-to-main（项目 PR 合入后同步 main）/ main-sync（刷新贡献者名单 + 同步 feature）
 ```
 
 `repos-parser` 与 `web` 通过根目录的 **npm workspaces** 串起来，`npm install` 一次装好两边依赖。
@@ -140,6 +125,11 @@ npm test             # 解析器单元测试
 
 不想翻文档就直接点，链接已经带好标签与目标分支：
 
+[![Submit a project](https://img.shields.io/badge/submit%20a%20project-PR%20to%20feature-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)
+[![Report a bug](https://img.shields.io/badge/report%20a%20bug-issue-dc2626?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20)
+[![Request a feature](https://img.shields.io/badge/request%20a%20feature-issue-a855f7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-f47c94?style=for-the-badge&logo=github&logoColor=white)](CONTRIBUTING.md)
+
 | 想做的事 | 一键唤起 | 说明 |
 | --- | --- | --- |
 | 提交自己的项目 | [新建 `repos/我的项目.md`](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | 打开 GitHub 文件编辑器，没权限会自动 fork，文件建在 `feature` 分支，提交即开 PR |
@@ -165,7 +155,8 @@ npm test             # 解析器单元测试
 
 - **提项目**：从 `feature` 切分支（例如 `feat/add-my-project`），PR 的目标分支选 **`feature`**。
 - **改网站**：从 `dev` 切分支（例如 `feat/search-syntax`），PR 的目标分支选 **`dev`**。
-- 维护者定期把 `feature`、`dev` 合并回 `main`；**只有合并到 `main` 才会触发正式发布**。
+- `feature` 上的项目 PR 合并后，由 [`feature-to-main.yml`](.github/workflows/feature-to-main.yml) 自动合入 `main`；`dev` 由维护者定期合并回 `main`。**只有合并到 `main` 才会触发正式发布**。
+- `main` 每次推送后由 [`main-sync.yml`](.github/workflows/main-sync.yml) 自动同步回 `feature`，并刷新下面的贡献者名单。
 - PR 一打开就会跑 CI（校验 front matter、单元测试、整站构建），与目标分支无关。
 
 ### 成为贡献者
@@ -205,6 +196,12 @@ npm run build   # 类型检查 + 打包必须通过
 <a href="https://github.com/Warpshlczy/CityU-Hub/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Warpshlczy/CityU-Hub" alt="CityU Hub contributors" />
 </a>
+
+**贡献者名单**（按提交次数排序，由 [main-sync.yml](.github/workflows/main-sync.yml) 自动更新）：
+
+<!-- contributors:start -->
+[@Warpshlczy](https://github.com/Warpshlczy) (30) · [@L01nki1](https://github.com/L01nki1) (10) · [@null1024-ws](https://github.com/null1024-ws) (1)
+<!-- contributors:end -->
 
 **期待在贡献者名单里看到你。**
 
@@ -278,8 +275,9 @@ CityU-Hub/
 │       ├── pages/              # 首頁、項目詳情頁
 │       └── utils/              # 搜尋語法解析、格式化、slug
 ├── scripts/
-│   └── sync-and-build.sh       # 目標機器拉取最新程式碼並重建網站
-└── .github/workflows/          # ci.yml（驗證 + 建構）/ deploy.yml（自架機器同步重建）
+│   ├── sync-and-build.sh       # 目標機器拉取最新程式碼並重建網站
+│   └── update-contributors.mjs # 刷新 README 裡的貢獻者名單
+└── .github/workflows/          # ci（驗證+建構）/ deploy（自架重建）/ feature-to-main（項目 PR 合入後同步 main）/ main-sync（刷新貢獻者名單 + 同步 feature）
 ```
 
 `repos-parser` 與 `web` 透過根目錄的 **npm workspaces** 串起來，`npm install` 一次裝好兩邊依賴。
@@ -320,6 +318,11 @@ npm test             # 解析器單元測試
 
 不想翻文件就直接點，連結已帶好標籤與目標分支：
 
+[![Submit a project](https://img.shields.io/badge/submit%20a%20project-PR%20to%20feature-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)
+[![Report a bug](https://img.shields.io/badge/report%20a%20bug-issue-dc2626?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20)
+[![Request a feature](https://img.shields.io/badge/request%20a%20feature-issue-a855f7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-f47c94?style=for-the-badge&logo=github&logoColor=white)](CONTRIBUTING.md)
+
 | 想做的事 | 一鍵喚起 | 說明 |
 | --- | --- | --- |
 | 提交自己的項目 | [新建 `repos/我的項目.md`](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | 打開 GitHub 檔案編輯器，沒權限會自動 fork，檔案建在 `feature` 分支，提交即開 PR |
@@ -345,7 +348,8 @@ npm test             # 解析器單元測試
 
 - **提項目**：從 `feature` 開分支（例如 `feat/add-my-project`），PR 的目標分支選 **`feature`**。
 - **改網站**：從 `dev` 開分支（例如 `feat/search-syntax`），PR 的目標分支選 **`dev`**。
-- 維護者定期把 `feature`、`dev` 合併回 `main`；**只有合併到 `main` 才會觸發正式發佈**。
+- `feature` 上的項目 PR 合併後，由 [`feature-to-main.yml`](.github/workflows/feature-to-main.yml) 自動合入 `main`；`dev` 由維護者定期合併回 `main`。**只有合併到 `main` 才會觸發正式發佈**。
+- `main` 每次推送後由 [`main-sync.yml`](.github/workflows/main-sync.yml) 自動同步回 `feature`，並刷新下面的貢獻者名單。
 - PR 一打開就會跑 CI（驗證 front matter、單元測試、整站建構），與目標分支無關。
 
 ### 成為貢獻者
@@ -385,6 +389,12 @@ npm run build   # 型別檢查 + 打包必須通過
 <a href="https://github.com/Warpshlczy/CityU-Hub/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Warpshlczy/CityU-Hub" alt="CityU Hub contributors" />
 </a>
+
+**貢獻者名單**（按提交次數排序，由 [main-sync.yml](.github/workflows/main-sync.yml) 自動更新）：
+
+<!-- contributors:start -->
+[@Warpshlczy](https://github.com/Warpshlczy) (30) · [@L01nki1](https://github.com/L01nki1) (10) · [@null1024-ws](https://github.com/null1024-ws) (1)
+<!-- contributors:end -->
 
 **期待在貢獻者名單裡看到你。**
 
@@ -458,8 +468,9 @@ CityU-Hub/
 │       ├── pages/              # Home, project detail
 │       └── utils/              # Search parser, formatting, slug helpers
 ├── scripts/
-│   └── sync-and-build.sh       # Pull the latest code on a target machine and rebuild
-└── .github/workflows/          # ci.yml (validate + build) / deploy.yml (self-hosted sync)
+│   ├── sync-and-build.sh       # Pull the latest code on a target machine and rebuild
+│   └── update-contributors.mjs # Refresh the contributor list in the README
+└── .github/workflows/          # ci (validate + build) / deploy (self-hosted rebuild) / feature-to-main (promote a project PR) / main-sync (refresh contributors + sync feature)
 ```
 
 `repos-parser` and `web` are wired together with **npm workspaces**, so a single `npm install` covers both.
@@ -500,6 +511,11 @@ npm test             # parser unit tests
 
 Skip the docs and click straight through — every link already carries the right label and target branch:
 
+[![Submit a project](https://img.shields.io/badge/submit%20a%20project-PR%20to%20feature-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md)
+[![Report a bug](https://img.shields.io/badge/report%20a%20bug-issue-dc2626?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=bug&title=%5BBug%5D%20)
+[![Request a feature](https://img.shields.io/badge/request%20a%20feature-issue-a855f7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warpshlczy/CityU-Hub/issues/new?labels=enhancement&title=%5BFeature%5D%20)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-f47c94?style=for-the-badge&logo=github&logoColor=white)](CONTRIBUTING.md)
+
 | What you want | One-click action | Notes |
 | --- | --- | --- |
 | Submit your project | [Create `repos/my-project.md`](https://github.com/Warpshlczy/CityU-Hub/new/feature?filename=repos/my-project.md) | Opens the GitHub file editor; without write access it forks for you, creates the file on `feature`, and committing opens the PR |
@@ -525,7 +541,8 @@ site change PR ────────► dev ─────┘
 
 - **Submitting a project**: branch off `feature` (e.g. `feat/add-my-project`) and target the PR at **`feature`**.
 - **Changing the site**: branch off `dev` (e.g. `feat/search-syntax`) and target the PR at **`dev`**.
-- Maintainers merge `feature` and `dev` back into `main` on a regular basis; **only a merge into `main` triggers a production release**.
+- Merging a project PR into `feature` promotes it to `main` automatically via [`feature-to-main.yml`](.github/workflows/feature-to-main.yml); `dev` is merged back into `main` by maintainers. **Only a merge into `main` triggers a production release**.
+- Every push to `main` is synced back into `feature` by [`main-sync.yml`](.github/workflows/main-sync.yml), which also refreshes the contributor list below.
 - CI (front matter validation, unit tests, full site build) runs as soon as a PR is opened, regardless of the target branch.
 
 ### Become a contributor
@@ -565,6 +582,12 @@ Typos, English translations, UI suggestions — open an issue or send a PR. Thes
 <a href="https://github.com/Warpshlczy/CityU-Hub/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Warpshlczy/CityU-Hub" alt="CityU Hub contributors" />
 </a>
+
+**Contributors** (sorted by commit count, refreshed automatically by [main-sync.yml](.github/workflows/main-sync.yml)):
+
+<!-- contributors:start -->
+[@Warpshlczy](https://github.com/Warpshlczy) (30) · [@L01nki1](https://github.com/L01nki1) (10) · [@null1024-ws](https://github.com/null1024-ws) (1)
+<!-- contributors:end -->
 
 **We look forward to seeing your name among the contributors.**
 
