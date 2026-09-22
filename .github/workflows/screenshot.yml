@@ -4,6 +4,10 @@ name: Screenshot
 # 并在 README 的 <!-- screenshot:start --> 区块里标注截图时间与截图者
 # （固定写 github-actions[bot]，与提交者一致）。
 # 截图只是资源替换，不需要再跑一遍构建，所以提交时不带 [skip ci]。
+#
+# 提交策略：先把工作区对齐到 fetch 到的最新 origin/main，再生成截图与标注。
+# 这样提交基线永远等于远端 HEAD，push 一定是快进，不会出现 rebase 冲突
+# ——截图是二进制文件，一旦需要 rebase 就无法自动合并。
 on:
   push:
     branches: [main]
@@ -27,6 +31,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -44,18 +49,38 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: 抓取站点首页截图
+      - name: 抓取截图并在最新远端基线上提交
         env:
           SITE_URL: https://cityu-hub.bond/
-        run: node scripts/update-screenshot.mjs
-
-      - name: 有变化就提交并推送
         run: |
-          if git diff --quiet -- web/public/screenshot.png README.md; then
-            echo "截图无变化，跳过提交"
-            exit 0
-          fi
-          git add web/public/screenshot.png README.md
-          git commit -m "chore(screenshot): 更新站点首页截图 [skip-shot]"
-          git pull --rebase origin main
-          git push origin main
+          set -euo pipefail
+
+          # 生成期间远端可能又有提交，push 会被拒；此时重新对齐基线再生成一次。
+          # 每轮都从 origin/main 重新开始，因此不会累积出需要 rebase 的本地提交。
+          for attempt in 1 2 3; do
+            echo "=== 第 ${attempt} 次尝试 ==="
+
+            git fetch origin main
+            git reset --hard origin/main
+
+            node scripts/update-screenshot.mjs
+
+            if git diff --quiet -- web/public/screenshot.png README.md; then
+              echo "截图与标注都没有变化，跳过提交"
+              exit 0
+            fi
+
+            git add web/public/screenshot.png README.md
+            git commit -m "chore(screenshot): 更新站点首页截图 [skip-shot]"
+
+            if git push origin main; then
+              echo "已推送到 main"
+              exit 0
+            fi
+
+            echo "推送被拒：远端在生成期间有了新提交，重新对齐后重试"
+            sleep 5
+          done
+
+          echo "连续 3 次推送失败，放弃" >&2
+          exit 1
