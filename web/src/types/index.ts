@@ -24,11 +24,15 @@ export interface Project {
   githubUrl: string;
   demoUrl: string | null;
   stars: number;
+  /** 近 7 天新增的 star；没有 token 时构建期拿不到，为 0 */
+  starsGained7d?: number;
   forks: number;
   language: string;
   license: string;
   createdAt: string;
   updatedAt: string;
+  /** 被本站收录的日期（YYYY-MM-DD），由构建产物沿承 */
+  addedAt?: string;
   /** 详情页按需加载，列表接口返回的数据中不包含该字段 */
   readmeHtml?: string;
 }

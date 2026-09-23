@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { TriangleAlert, X } from 'lucide-react';
+import { fetchStats, type SiteStats } from '../api/stats';
 import { Header } from '../components/Header';
+import { ContributorWall } from '../components/ContributorWall';
 import { EmptyState } from '../components/EmptyState';
 import { GitHubIcon } from '../components/GitHubIcon';
 import { ProjectGrid } from '../components/ProjectGrid';
@@ -15,6 +18,7 @@ import type { AuthorItem, SortKey } from '../types';
 import { avatarUrl } from '../utils/avatar';
 import { formatDateTime } from '../utils/formatNumber';
 import { parseQuery } from '../utils/searchParser';
+import { setRouteMeta } from '../utils/seo';
 
 const SORT_OPTIONS: Array<{ value: SortKey; label: string }> = [
   { value: 'updated', label: '最近更新' },
@@ -109,6 +113,39 @@ export function HomePage() {
   const activeAuthor = parseQuery(query).qualifiers.author[0];
   const hasFilter = Boolean(query || tagsParam || category);
 
+  // 站内统计只用于热力值，拿不到（本地开发 / 未配 Redis）就退化为只用构建期数据
+  const [stats, setStats] = useState<SiteStats | null>(null);
+
+  useEffect(() => {
+    const ids = (data?.projects ?? []).map((project) => project.id);
+    if (ids.length === 0) return;
+    let alive = true;
+    void fetchStats(ids).then((result) => {
+      if (alive) setStats(result);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [data]);
+
+  /** 近 7 天被收录的项目 */
+  const newest = useMemo(() => {
+    const since = Date.now() - 7 * 86_400_000;
+    return (data?.projects ?? [])
+      .filter((project) => project.addedAt && Date.parse(`${project.addedAt}T00:00:00Z`) >= since)
+      .sort((a, b) => (b.addedAt ?? '').localeCompare(a.addedAt ?? ''))
+      .slice(0, 6);
+  }, [data]);
+
+  useEffect(() => {
+    const total = data?.total ?? 0;
+    setRouteMeta({
+      title: 'CityU Hub · 城大开源自助导航',
+      description: `香港城市大学（CityU）学生开源项目导航：已收录 ${total} 个项目，支持按作者、专业、标签、语言与分类检索，一键直达 GitHub 仓库。`,
+      path: '/',
+    });
+  }, [data?.total]);
+
   useEffect(() => {
     if (!drawerOpen) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -200,6 +237,28 @@ export function HomePage() {
           <StatCell label="AUTHORS" value={data?.authors.length ?? 0} />
         </div>
 
+        {newest.length > 0 && (
+          <section className="panel-brutal mt-6 p-4">
+            <h2 className="pixel flex items-center gap-2 text-[9px] text-muted">
+              <span className="size-3 shrink-0 bg-accent" />
+              本周新增 · {newest.length}
+            </h2>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {newest.map((project) => (
+                <li key={project.id}>
+                  <Link
+                    to={`/project/${project.id}`}
+                    className="chip-brutal flex items-center gap-2 px-2.5 py-1.5"
+                  >
+                    <span className="mono text-[11px] text-ink">{project.name}</span>
+                    <span className="mono text-[10px] text-muted">@{project.author}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         <div className="mt-6 flex gap-8">
           <aside className="hidden w-60 shrink-0 lg:block">
             <div className="sticky top-28">{sidebar}</div>
@@ -257,11 +316,20 @@ export function HomePage() {
                 onAction={reload}
               />
             ) : (
-              <ProjectGrid projects={results} loading={loading} onReset={resetAll} />
+              <ProjectGrid
+                projects={results}
+                loading={loading}
+                onReset={resetAll}
+                stats={stats}
+              />
             )}
           </section>
         </div>
       </main>
+
+      <section className="mx-auto w-full max-w-7xl px-4 pb-8 sm:px-6">
+        <ContributorWall authors={authorList} />
+      </section>
 
       <footer className="border-t-[3px] border-line bg-surface">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-6 sm:px-6">
@@ -270,12 +338,13 @@ export function HomePage() {
             href={REPO_URL}
             target="_blank"
             rel="noreferrer noopener"
-            aria-label="本站 GitHub 仓库"
-            title="本站 GitHub 仓库"
+            aria-label="本站 GitHub 仓库（欢迎 Star）"
+            title="本站 GitHub 仓库，欢迎 Star 支持"
             className="chip-brutal flex items-center gap-2 px-2.5 py-1"
           >
             <GitHubIcon className="size-3.5" />
             <span className="mono text-[11px]">Warpshlczy/CityU-Hub</span>
+            <span className="pixel text-[8px] text-brand">★ STAR</span>
           </a>
           <span className="mono text-[11px] text-muted">{data?.total ?? 0} PROJECTS</span>
           <span className="mono text-[11px] text-muted">

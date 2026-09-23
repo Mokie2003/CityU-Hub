@@ -34,13 +34,16 @@ jobs:
       - name: 校验 repos/*.md
         run: npm run validate
 
-      - name: 解析器单元测试
+      - name: 单元测试（解析器 + /api 函数）
         run: npm test
 
-      - name: 构建站点（解析 Markdown + 类型检查 + 打包）
+      - name: 构建站点（解析 Markdown + 类型检查 + 打包 + 预渲染）
         run: npm run build
 
       - name: 检查构建产物
         run: |
           test -f web/dist/index.html
           test -f web/dist/data/projects.json
+          # SEO 产物：没跑预渲染就说明 sitemap / 爬虫可读内容会缺失
+          test -f web/dist/sitemap.xml
+          test -f web/dist/robots.txt

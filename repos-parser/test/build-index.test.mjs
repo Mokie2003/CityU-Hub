@@ -140,6 +140,7 @@ test('buildIndex 不补齐 Features：留空或不写都不展示，也不使用
           defaultBranch: 'main',
         }),
         fetchReadme: async () => '# Remote Project\n\n来自 GitHub README 的项目介绍。',
+        fetchStarsGained: async () => 0,
       },
     });
 

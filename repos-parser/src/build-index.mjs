@@ -45,6 +45,24 @@ function toDate(value, fallback) {
 }
 
 /**
+ * 读取上一次构建的列表产物，取出各项目已有的 addedAt。
+ * 「被本站收录的日期」只有我们自己的产物知道，所以每次构建都要把它沿承下来，
+ * 否则每天重新构建都会把老项目算成今天新增。读不到（首次构建）就返回空表。
+ */
+async function readPreviousAddedAt(outputPath) {
+  try {
+    const raw = await fs.readFile(path.join(outputPath, 'projects.json'), 'utf8');
+    const parsed = JSON.parse(raw);
+    const entries = (parsed.projects ?? [])
+      .map((project) => [project.id, project.addedAt])
+      .filter(([, addedAt]) => typeof addedAt === 'string' && addedAt);
+    return new Map(entries);
+  } catch {
+    return new Map();
+  }
+}
+
+/**
  * 把一个 repos/<id>.md 解析成前端契约（web/src/types/index.ts 里的 Project）。
  * 卡片简介由两段组成：`about`（GitHub 仓库 About，仓库没写就是空）与 `description`
  * （本文件正文 Features 之前的介绍摘要）；正文没写介绍时联网构建会回退到 GitHub README。
@@ -53,7 +71,7 @@ function toDate(value, fallback) {
  * 联网补齐失败（限流 / 404 / 断网）只告警不抛出：单个仓库拿不到数据不该让整站构建
  * 失败，缺的字段由 md 内容与前端运行时兜底。
  */
-async function buildProject(meta, content, fileName, github, useOffline, fileDate) {
+async function buildProject(meta, content, fileName, github, useOffline, fileDate, resolveAddedAt) {
   const ref = parseRepoUrl(meta.repoUrl);
   if (!ref) throw new Error(`${fileName}: repoUrl 不是可识别的 GitHub 仓库地址`);
 
@@ -63,6 +81,16 @@ async function buildProject(meta, content, fileName, github, useOffline, fileDat
       githubMeta = await github.fetchRepoMeta(ref);
     } catch (error) {
       console.warn(`[build-index] ${fileName}: 获取仓库信息失败，跳过联网补齐 —— ${error.message}`);
+    }
+  }
+
+  // 近 7 天涨星：判断「最近是不是有人关注」，需要 token 才有 starred_at
+  let starsGained7d = 0;
+  if (!useOffline && githubMeta) {
+    try {
+      starsGained7d = (await github.fetchStarsGained(ref)) ?? 0;
+    } catch (error) {
+      console.warn(`[build-index] ${fileName}: 读取近 7 天涨星失败 —— ${error.message}`);
     }
   }
 
@@ -89,8 +117,10 @@ async function buildProject(meta, content, fileName, github, useOffline, fileDat
     ]),
   ].slice(0, 12);
 
+  const id = meta.id || slugify(`${ref.owner}-${ref.repo}`);
+
   return {
-    id: meta.id || slugify(`${ref.owner}-${ref.repo}`),
+    id,
     name: meta.title || analysis.title || githubMeta?.repo || ref.repo,
     author: meta.author || githubMeta?.owner || ref.owner,
     authorName: meta.authorName,
@@ -105,11 +135,14 @@ async function buildProject(meta, content, fileName, github, useOffline, fileDat
     githubUrl: ref.repoUrl,
     demoUrl: meta.homepageUrl || githubMeta?.homepageUrl || null,
     stars: githubMeta?.stars ?? 0,
+    starsGained7d,
     forks: githubMeta?.forks ?? 0,
     language: githubMeta?.language ?? '',
     license: githubMeta?.license ?? '',
     createdAt: toDate(githubMeta?.createdAt, fileDate),
     updatedAt: toDate(githubMeta?.pushedAt, fileDate),
+    /** 被本站收录的日期；GitHub 上没有这个概念，靠上一次的产物沿承 */
+    addedAt: resolveAddedAt(id),
     status: meta.status,
     readmeHtml: renderReadmeHtml(enrichedContent),
   };
@@ -135,6 +168,9 @@ export async function buildIndex({ inputDir = reposDir, outputPath = outputDir, 
   const projects = [];
   const ids = new Map();
   const repoUrls = new Map();
+  // 上一次的产物：把 addedAt 沿承下来（GitHub 上没有「什么时候被本站收录」这个信息）
+  const previousAddedAt = await readPreviousAddedAt(outputPath);
+  const today = new Date().toISOString().slice(0, 10);
 
   for (const fileName of files) {
     const filePath = path.join(inputDir, fileName);
@@ -142,7 +178,15 @@ export async function buildIndex({ inputDir = reposDir, outputPath = outputDir, 
     const { meta, body } = parseFrontmatterDocument(source, fileName);
     // 离线构建拿不到 GitHub 的 pushed_at，用文档自身的时间兜底
     const fileDate = (await fs.stat(filePath)).mtime.toISOString().slice(0, 10);
-    const project = await buildProject(meta, body, fileName, github, useOffline, fileDate);
+    const project = await buildProject(
+      meta,
+      body,
+      fileName,
+      github,
+      useOffline,
+      fileDate,
+      (projectId) => previousAddedAt.get(projectId) ?? today,
+    );
 
     const repoKey = canonicalRepoUrl(project.githubUrl);
     if (ids.has(project.id)) throw new Error(`${fileName}: id 与 ${ids.get(project.id)} 重复`);

@@ -7,7 +7,7 @@
   "scripts": {
     "parse": "node ../repos-parser/src/build-index.mjs --offline",
     "parse:online": "node ../repos-parser/src/build-index.mjs",
-    "compile": "tsc -b && vite build",
+    "compile": "tsc -b && vite build && node ../scripts/prerender.mjs",
     "dev": "npm run parse && vite",
     "build": "npm run parse && npm run compile",
     "build:online": "npm run parse:online && npm run compile",

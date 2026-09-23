@@ -1,9 +1,12 @@
 import { memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Clock, Star } from 'lucide-react';
+import type { ProjectStats } from '../api/stats';
+import { trackProjectEvent } from '../api/stats';
 import type { Project } from '../types';
 import { avatarUrl } from '../utils/avatar';
 import { formatNumber, formatRelativeTime } from '../utils/formatNumber';
+import { computeHeat, HEAT_LABELS } from '../utils/heat';
 import { languageColor } from '../utils/language';
 import { GitHubIcon } from './GitHubIcon';
 import { TagChips } from './TagChips';
@@ -12,14 +15,22 @@ interface ProjectCardProps {
   project: Project;
   /** 用于 stagger 入场动画与像素编号 [01] */
   index: number;
+  /** 该项目的站内统计；拿不到时热力值只用构建期数据算 */
+  stats?: ProjectStats;
 }
 
 /** 卡片内容：作者 → 项目名 → 简介（仓库 About + 项目介绍，不含 Features）→ 标签 → 语言/star/更新时间 */
-export const ProjectCard = memo(function ProjectCard({ project, index }: ProjectCardProps) {
+export const ProjectCard = memo(function ProjectCard({
+  project,
+  index,
+  stats,
+}: ProjectCardProps) {
   const navigate = useNavigate();
   const detailUrl = `/project/${project.id}`;
   const delay = Math.min(index * 40, 400);
   const avatar = avatarUrl(project.authorAvatar, project.repo);
+  const heat = computeHeat({ ...project, stats });
+  const heatTitle = `热度 ${HEAT_LABELS[heat.level]}`;
 
   return (
     <article
@@ -67,7 +78,10 @@ export const ProjectCard = memo(function ProjectCard({ project, index }: Project
             DEMO
           </span>
         )}
-        <span className="pixel ml-auto shrink-0 text-[10px] text-muted">
+        <span className="pixel ml-auto shrink-0 text-[10px] text-brand" title={heatTitle}>
+          {'🔥'.repeat(heat.level)}
+        </span>
+        <span className="pixel shrink-0 text-[10px] text-muted">
           [{String(index + 1).padStart(2, '0')}]
         </span>
       </div>
@@ -112,11 +126,16 @@ export const ProjectCard = memo(function ProjectCard({ project, index }: Project
           href={project.githubUrl}
           target="_blank"
           rel="noreferrer noopener"
-          onClick={(event) => event.stopPropagation()}
-          aria-label={`打开 ${project.name} 的 GitHub 仓库`}
-          className="ml-auto grid size-7 place-items-center border-2 border-line text-muted transition-colors hover:border-accent hover:text-accent"
+          onClick={(event) => {
+            event.stopPropagation();
+            trackProjectEvent('click', project.id);
+          }}
+          aria-label={`去 GitHub 为 ${project.name} 点 Star`}
+          title="去 GitHub 点 Star 支持作者"
+          className="ml-auto flex items-center gap-1.5 border-2 border-line px-2 py-1 transition-colors hover:border-brand hover:text-brand"
         >
           <GitHubIcon className="size-3.5" />
+          <span className="pixel text-[8px]">STAR</span>
         </a>
       </div>
     </article>

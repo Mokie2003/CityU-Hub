@@ -53,12 +53,12 @@ export function parseRepoUrl(input) {
 }
 
 export function createGithubClient(config, { fetchImpl = globalThis.fetch } = {}) {
-  async function request(url) {
+  async function request(url, accept = 'application/vnd.github+json') {
     try {
       return await fetchImpl(url, {
         headers: {
           'User-Agent': config.userAgent,
-          Accept: 'application/vnd.github+json',
+          Accept: accept,
           'X-GitHub-Api-Version': '2022-11-28',
           ...(config.githubToken ? { Authorization: `Bearer ${config.githubToken}` } : {}),
         },
@@ -108,6 +108,24 @@ export function createGithubClient(config, { fetchImpl = globalThis.fetch } = {}
       const data = await response.json();
       if (typeof data.content !== 'string') return '';
       return Buffer.from(data.content.replace(/\s/g, ''), 'base64').toString('utf8');
+    },
+
+    /**
+     * 近 N 天新增的 star 数，用来判断「最近是不是有人在关注」。
+     *
+     * 需要带 starred_at 的媒体类型，而该媒体类型要求认证，所以没有 token 时返回 null。
+     * 只取第一页（最多 100 个）：仓库超过 100 star 时这个值是下限，够本站这些小项目用了。
+     */
+    async fetchStarsGained(ref, days = 7) {
+      const url = `https://api.github.com/repos/${ref.owner}/${ref.repo}/stargazers?per_page=100`;
+      const response = await request(url, 'application/vnd.github.star+json');
+      if (!response.ok) return null;
+
+      const data = await response.json();
+      if (!Array.isArray(data)) return null;
+
+      const since = Date.now() - days * 86_400_000;
+      return data.filter((item) => item?.starred_at && Date.parse(item.starred_at) >= since).length;
     },
   };
 }

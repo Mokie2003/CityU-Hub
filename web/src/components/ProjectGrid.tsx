@@ -1,3 +1,4 @@
+import type { SiteStats } from '../api/stats';
 import type { Project } from '../types';
 import { EmptyState } from './EmptyState';
 import { ProjectCard } from './ProjectCard';
@@ -8,6 +9,8 @@ interface ProjectGridProps {
   loading?: boolean;
   skeletonCount?: number;
   onReset?: () => void;
+  /** 站点统计，用于算卡片的热力等级；拿不到时为 null */
+  stats?: SiteStats | null;
 }
 
 /** 响应式网格：≥1280px 三列 / ≥640px 两列 / 移动端一列 */
@@ -16,6 +19,7 @@ export function ProjectGrid({
   loading = false,
   skeletonCount = 6,
   onReset,
+  stats = null,
 }: ProjectGridProps) {
   if (loading) {
     return (
@@ -34,7 +38,12 @@ export function ProjectGrid({
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
       {projects.map((project, index) => (
-        <ProjectCard key={project.id} project={project} index={index} />
+        <ProjectCard
+          key={project.id}
+          project={project}
+          index={index}
+          stats={stats?.projects[project.id]}
+        />
       ))}
     </div>
   );

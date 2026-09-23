@@ -3,5 +3,11 @@
   "framework": null,
   "installCommand": "npm ci --no-audit --no-fund",
   "buildCommand": "npm run build:online",
-  "outputDirectory": "web/dist"
+  "outputDirectory": "web/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }

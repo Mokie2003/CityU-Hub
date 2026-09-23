@@ -99,9 +99,13 @@ CityU-Hub/
 │       ├── hooks/              # useProjects、useSearch、useUrlState
 │       ├── pages/              # 首页、项目详情页
 │       └── utils/              # 搜索语法解析、格式化、slug
+├── api/                        # Vercel 函数：track（埋点）/ stats（读聚合），统计用
+├── lib/                        # 函数与脚本共用的工具（Upstash REST 客户端）
 ├── scripts/
+│   ├── prerender.mjs           # 构建后产出静态页、sitemap.xml、robots.txt 与徽章 SVG
 │   ├── sync-and-build.sh       # 目标机器拉取最新代码并重建站点
 │   └── update-contributors.mjs # 刷新贡献者面板（头像墙 + 名单）
+├── tests/                      # 用内存版 Redis 直接跑 /api 函数的测试
 └── .github/workflows/          # ci（校验+构建）/ deploy（自托管重建）/ feature-to-main（项目 PR 合入后同步 main）/ main-sync（刷新贡献者名单 + 同步 feature）
 ```
 
@@ -122,6 +126,10 @@ repos/*.md ─► npm run validate ─► repos-parser ─► web/public/data/*.
 
 `npm run build` 离线解析，产物完全可复现；`npm run build:online` 会额外调用 GitHub API 补齐 stars、语言与仓库 About（需要 `GITHUB_TOKEN`，见 `repos-parser/.env.example`）。**线上 Vercel 构建用的就是 `build:online`**，请在 Vercel 项目的环境变量里配 `GITHUB_TOKEN`；没配或 token 失效时构建不会失败，但这三项会留空，由前端运行时补（头像不依赖接口，直接用 `github.com/<用户名>.png`）。
 
+打包完成后 `scripts/prerender.mjs` 还会为每个路由生成一份带 Meta 与 JSON-LD 的静态 HTML，并产出 `sitemap.xml`、`robots.txt` 与 `badge/<id>.svg` 徽章 —— 搜索引擎拿到的就是渲染好的内容，不依赖 JS。
+
+站内统计（全站 UV、卡片浏览与外链点击）走 `api/track` 与 `api/stats` 两个函数，数据放在 Upstash Redis，前端据此计算卡片热力值。在 Vercel 环境变量里配 `KV_REST_API_URL` / `KV_REST_API_TOKEN`（Upstash 集成默认注入这两个名字，也兼容 `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`）。**没配时埋点静默失效**，页面照常渲染，热力值只按 GitHub 数据计算。
+
 ### 本地运行
 
 ```bash
@@ -136,7 +144,7 @@ npm run build        # 解析 + 类型检查 + 打包，产物在 web/dist
 npm run build:online # 同上，但联网补齐 stars / 语言 / 头像
 npm run preview      # 本地预览构建产物
 npm run validate     # 校验 repos/*.md 的 front matter、Schema 与重复项
-npm test             # 解析器单元测试
+npm test             # 解析器与 /api 函数测试
 ```
 
 ### 一键入口
@@ -186,7 +194,7 @@ npm test             # 解析器单元测试
    ```bash
    npm install
    npm run validate   # front matter 是否符合 schema、ID 与仓库地址是否重复
-   npm test           # 解析器单元测试
+   npm test           # 解析器与 /api 函数测试
    npm run build      # 确认能正常解析并构建出站点
    ```
 6. 提交 Pull Request 到 `feature` 分支。CI 会自动跑 `validate`、测试与整站构建；通过后由维护者 review 合并。合并进 `main` 后托管平台会自动重新构建发布，站点随即更新。
@@ -198,7 +206,7 @@ npm test             # 解析器单元测试
 前端 / 解析器 / 工作流的 PR 同样欢迎，请把 PR 提到 **`dev`** 分支。动手前请先开一个 issue 说清楚你想做什么，避免重复劳动；提交前请确认：
 
 ```bash
-npm test        # 解析器测试必须通过
+npm test        # 测试（解析器 + /api 函数）必须通过
 npm run build   # 类型检查 + 打包必须通过
 ```
 
@@ -275,9 +283,13 @@ CityU-Hub/
 │       ├── hooks/              # useProjects、useSearch、useUrlState
 │       ├── pages/              # 首頁、項目詳情頁
 │       └── utils/              # 搜尋語法解析、格式化、slug
+├── api/                        # Vercel 函式：track（埋點）/ stats（讀聚合），統計用
+├── lib/                        # 函式與腳本共用的工具（Upstash REST 客戶端）
 ├── scripts/
+│   ├── prerender.mjs           # 建構後產出靜態頁、sitemap.xml、robots.txt 與徽章 SVG
 │   ├── sync-and-build.sh       # 目標機器拉取最新程式碼並重建網站
 │   └── update-contributors.mjs # 刷新貢獻者面板（頭像牆 + 名單）
+├── tests/                      # 用記憶體版 Redis 直接跑 /api 函式的測試
 └── .github/workflows/          # ci（驗證+建構）/ deploy（自架重建）/ feature-to-main（項目 PR 合入後同步 main）/ main-sync（刷新貢獻者名單 + 同步 feature）
 ```
 
@@ -298,6 +310,10 @@ repos/*.md ─► npm run validate ─► repos-parser ─► web/public/data/*.
 
 `npm run build` 離線解析，產物完全可重現；`npm run build:online` 會額外呼叫 GitHub API 補齊 stars、語言與倉庫 About（需要 `GITHUB_TOKEN`，見 `repos-parser/.env.example`）。**線上 Vercel 建構用的就是 `build:online`**，請在 Vercel 專案的環境變數裡設定 `GITHUB_TOKEN`；未設定或 token 失效時建構不會失敗，但這三項會留空，由前端執行時補（頭像不依賴 API，直接用 `github.com/<使用者名稱>.png`）。
 
+打包完成後 `scripts/prerender.mjs` 還會為每個路由產生一份帶 Meta 與 JSON-LD 的靜態 HTML，並產出 `sitemap.xml`、`robots.txt` 與 `badge/<id>.svg` 徽章 —— 搜尋引擎拿到的是已渲染的內容，不依賴 JS。
+
+站內統計（全站 UV、卡片瀏覽與外連點擊）走 `api/track` 與 `api/stats` 兩個函式，資料放在 Upstash Redis，前端據此計算卡片熱力值。在 Vercel 環境變數裡設定 `KV_REST_API_URL` / `KV_REST_API_TOKEN`（Upstash 整合預設注入這兩個名字，也相容 `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`）。**未設定時埋點靜默失效**，頁面照常渲染，熱力值只按 GitHub 資料計算。
+
 ### 本機執行
 
 ```bash
@@ -312,7 +328,7 @@ npm run build        # 解析 + 型別檢查 + 打包，產物在 web/dist
 npm run build:online # 同上，但連網補齊 stars / 語言 / 頭像
 npm run preview      # 本機預覽建構產物
 npm run validate     # 驗證 repos/*.md 的 front matter、Schema 與重複項
-npm test             # 解析器單元測試
+npm test             # 解析器與 /api 函式測試
 ```
 
 ### 一鍵入口
@@ -362,7 +378,7 @@ npm test             # 解析器單元測試
    ```bash
    npm install
    npm run validate   # front matter 是否符合 schema、ID 與儲存庫網址是否重複
-   npm test           # 解析器單元測試
+   npm test           # 解析器與 /api 函式測試
    npm run build      # 確認能正常解析並建構出網站
    ```
 6. 提交 Pull Request 到 `feature` 分支。CI 會自動跑 `validate`、測試與整站建構；通過後由維護者 review 合併。合併進 `main` 後託管平台會自動重新建構發佈，網站隨即更新。
@@ -374,7 +390,7 @@ npm test             # 解析器單元測試
 前端 / 解析器 / workflow 的 PR 同樣歡迎，請把 PR 提到 **`dev`** 分支。動手前請先開一個 issue 說清楚你想做什麼，避免重複勞動；提交前請確認：
 
 ```bash
-npm test        # 解析器測試必須通過
+npm test        # 測試（解析器 + /api 函式）必須通過
 npm run build   # 型別檢查 + 打包必須通過
 ```
 
@@ -451,9 +467,13 @@ CityU-Hub/
 │       ├── hooks/              # useProjects, useSearch, useUrlState
 │       ├── pages/              # Home, project detail
 │       └── utils/              # Search parser, formatting, slug helpers
+├── api/                        # Vercel functions: track (beacon) / stats (read), for analytics
+├── lib/                        # Helpers shared by functions and scripts (Upstash REST client)
 ├── scripts/
+│   ├── prerender.mjs           # After the build: static pages, sitemap.xml, robots.txt, badge SVGs
 │   ├── sync-and-build.sh       # Pull the latest code on a target machine and rebuild
 │   └── update-contributors.mjs # Refresh the contributor panel (avatars + list)
+├── tests/                      # Runs the /api functions against an in-memory Redis
 └── .github/workflows/          # ci (validate + build) / deploy (self-hosted rebuild) / feature-to-main (promote a project PR) / main-sync (refresh contributors + sync feature)
 ```
 
@@ -474,6 +494,10 @@ The parser emits the front-end contract directly, with no API layer in between:
 
 `npm run build` parses offline, so artefacts are fully reproducible. `npm run build:online` additionally calls the GitHub API to fill in stars, language and the repository About (needs `GITHUB_TOKEN`, see `repos-parser/.env.example`). **The production build on Vercel uses `build:online`**, so set `GITHUB_TOKEN` in the Vercel project's environment variables. A missing or expired token will not fail the build — those three fields are just left empty and filled by the front end at runtime (avatars never hit the API: they use `github.com/<username>.png`).
 
+After bundling, `scripts/prerender.mjs` writes a static HTML snapshot per route with Meta tags and JSON-LD, plus `sitemap.xml`, `robots.txt` and the `badge/<id>.svg` badges — crawlers get rendered content without running JS.
+
+Site analytics (total UV, card views, outbound clicks) run through the `api/track` and `api/stats` functions with data kept in Upstash Redis; the front end turns that into each card's heat score. Set `KV_REST_API_URL` / `KV_REST_API_TOKEN` in the Vercel environment variables (the Upstash integration injects those two names by default; `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` also work). **Without them the beacons fail silently**, pages render as usual, and heat scores fall back to GitHub data only.
+
 ### Local development
 
 ```bash
@@ -488,7 +512,7 @@ npm run build        # parse + type-check + bundle, output in web/dist
 npm run build:online # same, but fills stars / language / avatars from GitHub
 npm run preview      # preview the production build locally
 npm run validate     # check front matter, schema and duplicate entries in repos/*.md
-npm test             # parser unit tests
+npm test             # parser + /api function tests
 ```
 
 ### One-click entry points
@@ -538,7 +562,7 @@ site change PR ────────► dev ─────┘
    ```bash
    npm install
    npm run validate   # schema conformance, duplicate id / repoUrl
-   npm test           # parser unit tests
+   npm test           # parser + /api function tests
    npm run build      # make sure the site parses and builds
    ```
 6. Open a Pull Request against `feature`. CI runs `validate`, the test suite and a full site build; a maintainer reviews and merges. Once the change reaches `main`, the hosting platform rebuilds and publishes automatically, and the site updates.
@@ -550,7 +574,7 @@ site change PR ────────► dev ─────┘
 PRs for the front end, the parser and the workflows are welcome — target the **`dev`** branch. Please open an issue first so we can avoid duplicated effort, and make sure these pass:
 
 ```bash
-npm test        # parser tests must succeed
+npm test        # all tests (parser + /api functions) must succeed
 npm run build   # type-check + bundle must succeed
 ```
 

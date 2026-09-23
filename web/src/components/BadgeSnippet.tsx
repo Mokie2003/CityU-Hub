@@ -1,0 +1,45 @@
+import { useState } from 'react';
+import { Check, Copy } from 'lucide-react';
+import { SITE_ORIGIN } from '../utils/seo';
+
+/**
+ * 给作者贴到自己仓库 README 的徽章片段。
+ * 对作者是「已被收录」的标记，对站点是一条指向项目页的反向链接。
+ */
+export function BadgeSnippet({ id }: { id: string }) {
+  const [copied, setCopied] = useState(false);
+  const snippet = `[![CityU Hub](${SITE_ORIGIN}/badge/${id}.svg)](${SITE_ORIGIN}/project/${id})`;
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(snippet);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // 剪贴板不可用（非 https / 未授权）时不报错，用户可以手动选中复制
+    }
+  };
+
+  return (
+    <section className="panel-brutal mt-6 p-6">
+      <h2 className="pixel flex items-center gap-3 text-[10px] text-muted">
+        <span className="size-3 bg-accent" />
+        项目作者：贴个徽章
+      </h2>
+      <p className="mono mt-3 text-[12px] leading-6 text-muted">
+        把下面这段放进你的仓库 README，既标注这个项目已被 CityU Hub 收录，也能给它带来一条外链。
+      </p>
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        {/* 用相对路径加载，本地预览也能看到；复制出去的片段用绝对地址 */}
+        <img src={`/badge/${id}.svg`} alt="CityU Hub 收录徽章" height={20} className="h-5 w-auto" />
+        <code className="mono min-w-0 flex-1 overflow-x-auto border-2 border-line px-2 py-1.5 text-[11px] whitespace-nowrap">
+          {snippet}
+        </code>
+        <button type="button" onClick={copy} className="btn-brutal btn-brutal-secondary">
+          {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+          {copied ? '已复制' : '复制'}
+        </button>
+      </div>
+    </section>
+  );
+}

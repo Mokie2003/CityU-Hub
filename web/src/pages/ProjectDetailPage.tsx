@@ -1,15 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, ExternalLink, GitFork, Scale, Star } from 'lucide-react';
+import { fetchStats, trackProjectEvent, type SiteStats } from '../api/stats';
+import { BadgeSnippet } from '../components/BadgeSnippet';
 import { EmptyState } from '../components/EmptyState';
 import { GitHubIcon } from '../components/GitHubIcon';
 import { Header } from '../components/Header';
+import { HeatPanel } from '../components/HeatPanel';
+import { RelatedProjects } from '../components/RelatedProjects';
 import { SkeletonCard } from '../components/SkeletonCard';
 import { TagChips } from '../components/TagChips';
 import { useProject } from '../hooks/useProjects';
 import { avatarUrl } from '../utils/avatar';
 import { formatNumber, formatRelativeTime } from '../utils/formatNumber';
 import { languageColor } from '../utils/language';
+import { setRouteMeta } from '../utils/seo';
 
 export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -18,10 +23,15 @@ export function ProjectDetailPage() {
 
   useEffect(() => {
     if (!project) return;
-    document.title = `${project.name} · CityU Hub`;
-    return () => {
-      document.title = 'CityU Hub';
-    };
+    setRouteMeta({
+      title: `${project.name} · CityU Hub`,
+      description: (
+        project.about ||
+        project.description ||
+        `${project.name} —— 城大开源项目，作者 ${project.authorName || project.author}`
+      ).slice(0, 150),
+      path: `/project/${project.id}`,
+    });
   }, [project]);
 
   const goBack = () => {
@@ -30,6 +40,22 @@ export function ProjectDetailPage() {
   };
 
   const avatar = avatarUrl(project?.authorAvatar, project?.repo);
+
+  // 站内统计：浏览埋点 + 该项目的聚合数据（用于热力拆解）
+  const [stats, setStats] = useState<SiteStats | null>(null);
+
+  useEffect(() => {
+    if (!project) return;
+    trackProjectEvent('view', project.id);
+
+    let alive = true;
+    void fetchStats([project.id]).then((result) => {
+      if (alive) setStats(result);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [project]);
 
   return (
     <div className="relative z-10 flex min-h-screen flex-col">
@@ -142,10 +168,21 @@ export function ProjectDetailPage() {
                   href={project.githubUrl}
                   target="_blank"
                   rel="noreferrer noopener"
+                  onClick={() => trackProjectEvent('click', project.id)}
                   className="btn-brutal btn-brutal-primary"
                 >
+                  <Star className="size-4" />
+                  去 GitHub 点 Star
+                </a>
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  onClick={() => trackProjectEvent('click', project.id)}
+                  className="btn-brutal btn-brutal-secondary"
+                >
                   <GitHubIcon className="size-4" />
-                  GITHUB
+                  查看仓库
                 </a>
                 {project.demoUrl && (
                   <a
@@ -159,6 +196,10 @@ export function ProjectDetailPage() {
                   </a>
                 )}
               </div>
+
+              <p className="mono mt-3 max-w-2xl text-[11px] leading-5 text-muted">
+                如果这个项目对你有帮助，去仓库点一下 ⭐ Star —— 这是对作者最直接的鼓励，也能让更多同学搜到它。
+              </p>
 
               <dl className="mono mt-6 grid grid-cols-2 gap-x-4 gap-y-3 border-t-[3px] border-line pt-4 text-[12px] text-muted sm:grid-cols-3">
                 <div className="flex items-center gap-2">
@@ -217,6 +258,12 @@ export function ProjectDetailPage() {
                 }}
               />
             </section>
+
+            <HeatPanel project={project} stats={stats?.projects[project.id]} />
+
+            <RelatedProjects current={project} />
+
+            <BadgeSnippet id={project.id} />
           </>
         )}
       </main>
