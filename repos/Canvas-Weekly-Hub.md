@@ -8,12 +8,12 @@ repoUrl: https://github.com/Famalhaut04/canvas-weekly-hub
 homepageUrl: 'https://famalhaut04.github.io/canvas-weekly-hub/web/'
 tags:
   - canvas
-  - 提醒
-  - 看板
-  - 自动化
-  - 日历
+  - reminder
+  - kanban
+  - automation
+  - calendar
   - github-pages
-category: 学习辅助
+category: study-assistant
 featured: false
 status: active
 ---
