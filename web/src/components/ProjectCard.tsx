@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Clock, Star } from 'lucide-react';
 import type { Project } from '../types';
+import { avatarUrl } from '../utils/avatar';
 import { formatNumber, formatRelativeTime } from '../utils/formatNumber';
 import { languageColor } from '../utils/language';
 import { GitHubIcon } from './GitHubIcon';
@@ -18,6 +19,7 @@ export const ProjectCard = memo(function ProjectCard({ project, index }: Project
   const navigate = useNavigate();
   const detailUrl = `/project/${project.id}`;
   const delay = Math.min(index * 40, 400);
+  const avatar = avatarUrl(project.authorAvatar, project.repo);
 
   return (
     <article
@@ -26,9 +28,9 @@ export const ProjectCard = memo(function ProjectCard({ project, index }: Project
       className="card-brutal cursor-target animate-fade-in-up group flex flex-col p-5"
     >
       <div className="flex items-center gap-2">
-        {project.authorAvatar ? (
+        {avatar ? (
           <img
-            src={project.authorAvatar}
+            src={avatar}
             alt={`${project.author} 的头像`}
             loading="lazy"
             width={24}
@@ -36,7 +38,7 @@ export const ProjectCard = memo(function ProjectCard({ project, index }: Project
             className="size-6 border-2 border-line bg-elevated object-cover"
           />
         ) : (
-          // 后端离线构建时没有头像，用 GitHub 用户名首字母占位
+          // 拿不到头像时用 GitHub 用户名首字母占位
           <span className="pixel grid size-6 shrink-0 place-items-center border-2 border-line bg-elevated text-[7px] text-ink uppercase">
             {project.author.slice(0, 1)}
           </span>

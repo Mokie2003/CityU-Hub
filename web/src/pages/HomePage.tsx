@@ -12,6 +12,7 @@ import { useProjects } from '../hooks/useProjects';
 import { useSearch } from '../hooks/useSearch';
 import { useUrlState } from '../hooks/useUrlState';
 import type { AuthorItem, SortKey } from '../types';
+import { avatarUrl } from '../utils/avatar';
 import { formatDateTime } from '../utils/formatNumber';
 import { parseQuery } from '../utils/searchParser';
 
@@ -99,7 +100,7 @@ export function HomePage() {
       const sample = projects.find((project) => project.author === item.name);
       return {
         ...item,
-        avatar: sample?.authorAvatar ?? '',
+        avatar: avatarUrl(sample?.authorAvatar, sample?.repo),
         realName: sample?.authorName ?? '',
       };
     });

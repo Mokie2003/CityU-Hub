@@ -7,6 +7,7 @@ import { Header } from '../components/Header';
 import { SkeletonCard } from '../components/SkeletonCard';
 import { TagChips } from '../components/TagChips';
 import { useProject } from '../hooks/useProjects';
+import { avatarUrl } from '../utils/avatar';
 import { formatNumber, formatRelativeTime } from '../utils/formatNumber';
 import { languageColor } from '../utils/language';
 
@@ -27,6 +28,8 @@ export function ProjectDetailPage() {
     if (window.history.length > 1) navigate(-1);
     else navigate('/');
   };
+
+  const avatar = avatarUrl(project?.authorAvatar, project?.repo);
 
   return (
     <div className="relative z-10 flex min-h-screen flex-col">
@@ -59,9 +62,9 @@ export function ProjectDetailPage() {
           <>
             <article className="panel-brutal mt-6 p-6">
               <div className="flex items-center gap-2">
-                {project.authorAvatar ? (
+                {avatar ? (
                   <img
-                    src={project.authorAvatar}
+                    src={avatar}
                     alt={`${project.authorName || project.author} 的头像`}
                     loading="lazy"
                     width={28}
