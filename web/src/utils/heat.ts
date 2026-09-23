@@ -1,7 +1,7 @@
 import type { ProjectStats } from '../api/stats';
 
 // 六维加权（stars/growth/views/clicks/forks/freshness），各维先归一化到 0–1 再乘权重求和，满分 100。
-// 只对外暴露等级：分数是拍脑袋定的权重算出来的，展示精确值容易被当成客观指标。
+// 权重是拍脑袋定的，分数拿来排序和分级够用，别当成客观指标。
 const WEIGHTS = {
   stars: 35,
   growth: 25,
@@ -23,7 +23,15 @@ export interface HeatDimensions {
 export interface HeatResult {
   score: number;
   level: 1 | 2 | 3;
-  parts: Array<{ key: keyof HeatDimensions; label: string; ratio: number; points: number }>;
+  // raw 是真实数量，points 是乘权重后的得分；对外一律展示 raw，
+  // 否则 28 个 star 会显示成 26，看着像统计错了
+  parts: Array<{
+    key: keyof HeatDimensions;
+    label: string;
+    ratio: number;
+    points: number;
+    raw: number;
+  }>;
 }
 
 const LABELS: Record<keyof HeatDimensions, string> = {
@@ -67,11 +75,21 @@ export function computeHeat(input: HeatInput, now = Date.now()): HeatResult {
     freshness: Math.max(0, 1 - days / 90),
   };
 
+  const rawValues: HeatDimensions = {
+    stars: input.stars,
+    growth: input.starsGained7d ?? 0,
+    views: input.stats?.views ?? 0,
+    clicks: input.stats?.clicks ?? 0,
+    forks: input.forks,
+    freshness: days,
+  };
+
   const parts = (Object.keys(WEIGHTS) as Array<keyof HeatDimensions>).map((key) => ({
     key,
     label: LABELS[key],
     ratio: dimensions[key],
     points: dimensions[key] * WEIGHTS[key],
+    raw: rawValues[key],
   }));
 
   const score = Math.round(parts.reduce((sum, part) => sum + part.points, 0) * 10) / 10;
