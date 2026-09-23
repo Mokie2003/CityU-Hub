@@ -17,7 +17,7 @@ export function SubmitProject() {
         className="chip-brutal flex h-11 shrink-0 items-center gap-2 px-3 text-[9px]"
       >
         <Plus className="size-4 text-brand" />
-        <span className="pixel hidden sm:inline">Submit</span>
+        <span className="pixel hidden sm:inline">SUBMIT</span>
       </button>
 
       {open && <SubmitDialog onClose={() => setOpen(false)} />}
