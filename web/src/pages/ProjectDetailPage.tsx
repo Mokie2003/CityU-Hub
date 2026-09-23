@@ -175,7 +175,7 @@ export function ProjectDetailPage() {
                   Star on GitHub
                 </a>
                 <a
-                  href={project.githubUrl}
+                  href={`${project.githubUrl}?tab=readme-ov-file#readme`}
                   target="_blank"
                   rel="noreferrer noopener"
                   onClick={() => trackProjectEvent('click', project.id)}
@@ -189,7 +189,7 @@ export function ProjectDetailPage() {
                     href={project.demoUrl}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="btn-brutal btn-brutal-secondary"
+                    className="btn-brutal btn-brutal-plasma"
                   >
                     <ExternalLink className="size-4" />
                     DEMO

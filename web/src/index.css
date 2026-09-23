@@ -175,7 +175,7 @@ body::after {
 
 /* 渐变沿边框流动：两层背景撑边框，第一层铺内部、第二层只在边框区横向循环，
    位置走满一个背景图宽度所以循环处不跳变 */
-@keyframes rainbow-border {
+@keyframes border-flow {
   from {
     background-position: 0 0, 0% 50%;
   }
@@ -193,7 +193,7 @@ body::after {
   background-clip: padding-box, border-box;
   background-size: 100% 100%, 200% 100%;
   background-repeat: no-repeat, repeat-x;
-  animation: rainbow-border 3s linear infinite;
+  animation: border-flow 3s linear infinite;
   box-shadow: 0 0 18px var(--glow-brand);
 }
 
@@ -202,6 +202,27 @@ body::after {
   background-image: linear-gradient(var(--c-canvas), var(--c-canvas)),
     linear-gradient(90deg, #f47c94, #a855f7, #38bdf8, #f47c94);
   color: #f47c94;
+  box-shadow: 4px 4px 0 var(--c-shadow), 0 0 24px var(--glow-accent);
+}
+
+/* DEMO 按钮：同样的流动边框，换成紫色；收尾回到起始紫，循环处不跳变 */
+.btn-brutal-plasma {
+  border: 3px solid transparent;
+  color: var(--c-ink);
+  background-image: linear-gradient(var(--c-surface), var(--c-surface)),
+    linear-gradient(90deg, #7c3aed, #c084fc, #d8b4fe, #c084fc, #7c3aed);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-size: 100% 100%, 200% 100%;
+  background-repeat: no-repeat, repeat-x;
+  animation: border-flow 3s linear infinite;
+}
+
+.btn-brutal-plasma:hover {
+  border-color: transparent;
+  background-image: linear-gradient(var(--c-canvas), var(--c-canvas)),
+    linear-gradient(90deg, #7c3aed, #c084fc, #d8b4fe, #c084fc, #7c3aed);
+  color: #a855f7;
   box-shadow: 4px 4px 0 var(--c-shadow), 0 0 24px var(--glow-accent);
 }
 
@@ -481,7 +502,8 @@ body::after {
   .heat-flame,
   .dialog-backdrop-in,
   .dialog-panel-in,
-  .btn-brutal-rainbow {
+  .btn-brutal-rainbow,
+  .btn-brutal-plasma {
     animation: none;
   }
 }
