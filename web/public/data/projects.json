@@ -1,7 +1,36 @@
 {
-  "generatedAt": "2026-09-22T19:22:00.815Z",
-  "total": 3,
+  "generatedAt": "2026-09-23T10:09:39.488Z",
+  "total": 4,
   "projects": [
+    {
+      "id": "famalhaut04-canvas-weekly-hub",
+      "name": "Canvas Weekly Hub（城大 Canvas 课程助手）",
+      "author": "Famalhaut04",
+      "authorName": "Fomal",
+      "major": "Computer Science",
+      "enrollmentYear": 2026,
+      "authorAvatar": "",
+      "repo": "Famalhaut04/canvas-weekly-hub",
+      "about": "",
+      "description": "为香港城市大学学生打造的全自动 Canvas 课程动态助手：定时抓取全部课程的作业、截止时间、提交状态、新上传课件与公告，汇总为一个属于你自己的课程看板网站，并提供日历订阅与微信每日提醒。",
+      "tags": [
+        "canvas",
+        "reminder",
+        "kanban",
+        "automation",
+        "calendar",
+        "github-pages"
+      ],
+      "category": "学习辅助",
+      "githubUrl": "https://github.com/Famalhaut04/canvas-weekly-hub",
+      "demoUrl": "https://famalhaut04.github.io/canvas-weekly-hub/web/",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "license": "",
+      "createdAt": "2026-09-23",
+      "updatedAt": "2026-09-23"
+    },
     {
       "id": "inscripoem-cityu-beamer",
       "name": "cityu-beamer",
@@ -23,8 +52,8 @@
       "forks": 0,
       "language": "",
       "license": "",
-      "createdAt": "2026-09-22",
-      "updatedAt": "2026-09-22"
+      "createdAt": "2026-09-23",
+      "updatedAt": "2026-09-23"
     },
     {
       "id": "null1024-ws-cityu-cs-guide",
@@ -101,6 +130,18 @@
       "count": 1
     },
     {
+      "name": "automation",
+      "count": 1
+    },
+    {
+      "name": "calendar",
+      "count": 1
+    },
+    {
+      "name": "canvas",
+      "count": 1
+    },
+    {
       "name": "claude-skill",
       "count": 1
     },
@@ -117,6 +158,14 @@
       "count": 1
     },
     {
+      "name": "github-pages",
+      "count": 1
+    },
+    {
+      "name": "kanban",
+      "count": 1
+    },
+    {
       "name": "msc-cs",
       "count": 1
     },
@@ -130,6 +179,10 @@
     },
     {
       "name": "python",
+      "count": 1
+    },
+    {
+      "name": "reminder",
       "count": 1
     },
     {
@@ -155,6 +208,10 @@
       "count": 1
     },
     {
+      "name": "Famalhaut04",
+      "count": 1
+    },
+    {
       "name": "lowen",
       "count": 1
     }
@@ -162,7 +219,7 @@
   "categories": [
     {
       "name": "学习辅助",
-      "count": 3
+      "count": 4
     }
   ]
 }
