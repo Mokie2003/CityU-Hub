@@ -13,7 +13,7 @@ tags:
   - automation
   - calendar
   - github-pages
-category: study-assistant
+category: 学习辅助
 featured: false
 status: active
 ---

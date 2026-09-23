@@ -17,5 +17,3 @@ A reusable Beamer theme based on the January 2025 City University of Hong Kong P
 
 ## Features
 
-- 1111
-- 2222

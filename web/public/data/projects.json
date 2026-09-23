@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-22T17:59:59.594Z",
+  "generatedAt": "2026-09-22T19:22:00.815Z",
   "total": 3,
   "projects": [
     {
@@ -9,53 +9,47 @@
       "authorName": "cxb",
       "major": "Computer Science",
       "enrollmentYear": 2026,
-      "authorAvatar": "https://avatars.githubusercontent.com/u/78681968?v=4",
+      "authorAvatar": "",
       "repo": "inscripoem/cityu-beamer",
-      "about": "Beamer template for CIty University of Hong Kong (Unofficial)",
+      "about": "",
       "description": "A reusable Beamer theme based on the January 2025 City University of Hong Kong PowerPoint template. This is a community adaptation, not an officially endorsed university template.",
       "tags": [
-        "slides",
-        "tex"
+        "slides"
       ],
       "category": "学习辅助",
       "githubUrl": "https://github.com/inscripoem/cityu-beamer",
       "demoUrl": null,
-      "stars": 28,
-      "forks": 3,
-      "language": "TeX",
-      "license": "MIT",
-      "createdAt": "2026-09-09",
-      "updatedAt": "2026-09-12"
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "license": "",
+      "createdAt": "2026-09-22",
+      "updatedAt": "2026-09-22"
     },
     {
       "id": "null1024-ws-cityu-cs-guide",
       "name": "CityU-CS-Guide",
-      "author": "null1024-ws",
-      "authorName": "B1ad3",
+      "author": "B1ad3",
+      "authorName": "null1024-ws",
       "major": "Computer Science",
       "enrollmentYear": 2026,
-      "authorAvatar": "https://avatars.githubusercontent.com/u/79917102?v=4",
+      "authorAvatar": "",
       "repo": "null1024-ws/CityU-CS-Guide",
-      "about": "Course guide for MSc Computer Science at CityU HK ",
+      "about": "",
       "description": "香港城市大学 MSc CS 选课参考。汇总小红书帖子与评论区里的课程评价，按课号整理难度、给分、作业量、回放与考勤，并标出来源之间的一致程度，方便对照官方课纲选课。",
       "tags": [
         "msc-cs",
         "course",
-        "review",
-        "cityucs",
-        "cityuhk",
-        "cityuniversityofhongkong",
-        "course-selection",
-        "python"
+        "review"
       ],
       "category": "学习辅助",
       "githubUrl": "https://github.com/null1024-ws/CityU-CS-Guide",
       "demoUrl": "https://null1024-ws.github.io/CityU-CS-Guide/",
-      "stars": 15,
-      "forks": 3,
-      "language": "Python",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
       "license": "",
-      "createdAt": "2026-07-24",
+      "createdAt": "2026-09-22",
       "updatedAt": "2026-09-22"
     },
     {
@@ -65,9 +59,9 @@
       "authorName": "李乐雨",
       "major": "Computer Science",
       "enrollmentYear": 2026,
-      "authorAvatar": "https://avatars.githubusercontent.com/u/146166781?v=4",
+      "authorAvatar": "",
       "repo": "L01nki1/extend-slides",
-      "about": "把课程课件/讲义/录音转写扩展成可独立复习的中文讲解文档，解决平时学习/期末复习难题",
+      "about": "",
       "description": "一个帮助同学将教授【过于简略的课件】转换为【可系统地、全方位地学习的知识手册】的skill，同时为了尽最大可能还原课堂内容，此skill并不会重构知识结构，而会保留原有的课件脉络，只增添智能讲解。为了适配不同的学科，这里有四个模式可使用，分别对应计算证明类/例题导向类/应用类/理论推理类的课程。",
       "tags": [
         "skills",
@@ -80,25 +74,20 @@
         "copilot-skill",
         "claude-skill",
         "obsidian",
-        "python",
-        "chinese"
+        "python"
       ],
       "category": "学习辅助",
       "githubUrl": "https://github.com/L01nki1/extend-slides",
       "demoUrl": null,
-      "stars": 5,
+      "stars": 0,
       "forks": 0,
-      "language": "Python",
-      "license": "MIT",
-      "createdAt": "2026-09-18",
+      "language": "",
+      "license": "",
+      "createdAt": "2026-09-22",
       "updatedAt": "2026-09-22"
     }
   ],
   "tags": [
-    {
-      "name": "python",
-      "count": 2
-    },
     {
       "name": "slides",
       "count": 2
@@ -112,22 +101,6 @@
       "count": 1
     },
     {
-      "name": "chinese",
-      "count": 1
-    },
-    {
-      "name": "cityucs",
-      "count": 1
-    },
-    {
-      "name": "cityuhk",
-      "count": 1
-    },
-    {
-      "name": "cityuniversityofhongkong",
-      "count": 1
-    },
-    {
       "name": "claude-skill",
       "count": 1
     },
@@ -137,10 +110,6 @@
     },
     {
       "name": "course",
-      "count": 1
-    },
-    {
-      "name": "course-selection",
       "count": 1
     },
     {
@@ -160,6 +129,10 @@
       "count": 1
     },
     {
+      "name": "python",
+      "count": 1
+    },
+    {
       "name": "review",
       "count": 1
     },
@@ -170,23 +143,19 @@
     {
       "name": "study-notes",
       "count": 1
-    },
-    {
-      "name": "tex",
-      "count": 1
     }
   ],
   "authors": [
+    {
+      "name": "B1ad3",
+      "count": 1
+    },
     {
       "name": "Brandon",
       "count": 1
     },
     {
       "name": "lowen",
-      "count": 1
-    },
-    {
-      "name": "null1024-ws",
       "count": 1
     }
   ],
