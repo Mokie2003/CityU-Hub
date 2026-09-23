@@ -355,6 +355,36 @@ body::after {
   animation: glow-pulse 3s step-end infinite;
 }
 
+/* 弹窗入场：背景淡入 + 面板略微上移放大。
+   这里的缓动刻意不用像素风的 step-end —— 模糊的跳动感在弹窗上会显得生硬 */
+@keyframes dialog-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-panel-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.dialog-backdrop-in {
+  animation: dialog-backdrop-in 0.22s ease-out both;
+}
+
+.dialog-panel-in {
+  animation: dialog-panel-in 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @keyframes flicker-bar {
   0%,
   100% {
@@ -375,7 +405,9 @@ body::after {
   .animate-border-flicker,
   .glitch,
   .glow-pulse,
-  .animate-flicker {
+  .animate-flicker,
+  .dialog-backdrop-in,
+  .dialog-panel-in {
     animation: none;
   }
 }
