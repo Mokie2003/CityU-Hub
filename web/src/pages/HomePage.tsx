@@ -132,6 +132,9 @@ export function HomePage() {
         ...item,
         avatar: avatarUrl(sample?.authorAvatar, sample?.repo),
         realName: sample?.authorName ?? '',
+        // 头像取的是仓库 owner，主页也得跟着走 owner：front matter 里的 author
+        // 允许是昵称，拿它拼 github.com/<author> 会跳到不相干的账号
+        githubUser: sample?.repo.split('/')[0] ?? '',
       };
     });
   }, [data]);

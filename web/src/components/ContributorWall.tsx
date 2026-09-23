@@ -20,39 +20,42 @@ export function ContributorWall({ authors }: { authors: AuthorItem[] }) {
       </p>
 
       <ul className="mt-4 flex flex-wrap gap-2.5">
-        {authors.map((author) => (
-          <li key={author.name}>
-            <a
-              href={`https://github.com/${author.name}`}
-              target="_blank"
-              rel="noreferrer noopener"
-              title={`${author.name} 的 GitHub 主页`}
-              className="flex items-center gap-2 border-2 border-line px-2 py-1.5 transition-colors hover:border-brand hover:text-brand"
-            >
-              {author.avatar ? (
-                <img
-                  src={author.avatar}
-                  alt=""
-                  loading="lazy"
-                  width={24}
-                  height={24}
-                  className="size-6 shrink-0 border-2 border-line bg-elevated object-cover"
-                />
-              ) : (
-                <span className="pixel grid size-6 shrink-0 place-items-center border-2 border-line bg-elevated text-[7px] text-ink uppercase">
-                  {author.name.slice(0, 1)}
-                </span>
-              )}
-              <span className="flex min-w-0 flex-col leading-tight">
-                <span className="mono truncate text-[11px] text-ink">{author.name}</span>
-                {author.realName && author.realName !== author.name && (
-                  <span className="mono truncate text-[10px] text-muted">{author.realName}</span>
+        {authors.map((author) => {
+          const githubUser = author.githubUser || author.name;
+          return (
+            <li key={author.name}>
+              <a
+                href={`https://github.com/${encodeURIComponent(githubUser)}`}
+                target="_blank"
+                rel="noreferrer noopener"
+                title={`@${githubUser} 的 GitHub 主页`}
+                className="flex items-center gap-2 border-2 border-line px-2 py-1.5 transition-colors hover:border-brand hover:text-brand"
+              >
+                {author.avatar ? (
+                  <img
+                    src={author.avatar}
+                    alt=""
+                    loading="lazy"
+                    width={24}
+                    height={24}
+                    className="size-6 shrink-0 border-2 border-line bg-elevated object-cover"
+                  />
+                ) : (
+                  <span className="pixel grid size-6 shrink-0 place-items-center border-2 border-line bg-elevated text-[7px] text-ink uppercase">
+                    {author.name.slice(0, 1)}
+                  </span>
                 )}
-              </span>
-              <span className="mono shrink-0 text-[10px] text-muted">[{author.count}]</span>
-            </a>
-          </li>
-        ))}
+                <span className="flex min-w-0 flex-col leading-tight">
+                  <span className="mono truncate text-[11px] text-ink">{author.name}</span>
+                  {author.realName && author.realName !== author.name && (
+                    <span className="mono truncate text-[10px] text-muted">{author.realName}</span>
+                  )}
+                </span>
+                <span className="mono shrink-0 text-[10px] text-muted">[{author.count}]</span>
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

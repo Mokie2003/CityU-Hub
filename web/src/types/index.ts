@@ -46,6 +46,8 @@ export interface CountItem {
 export interface AuthorItem extends CountItem {
   avatar?: string;
   realName?: string;
+  /** 主页要跳的 GitHub 账号：取自仓库 owner，比 front matter 里的 author 可靠 */
+  githubUser?: string;
 }
 
 export interface ProjectsResponse {
