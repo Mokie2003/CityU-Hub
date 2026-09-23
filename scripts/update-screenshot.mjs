@@ -33,6 +33,12 @@ const VIEWPORT = { width: 1440, height: 900 };
 const DEVICE_SCALE_FACTOR = 2;
 /** 卡片有 stagger 淡入（最多 400ms 延迟 + 动画时长），多等一会再拍 */
 const SETTLE_MS = 1500;
+/**
+ * 首访欢迎弹窗的「不再提示」标记。截图用的是全新浏览器上下文，localStorage 是空的，
+ * 不预置的话会拍到欢迎弹窗而不是主站。这个键与 web/src/components/WelcomeDialog.tsx
+ * 里的 DISMISS_KEY 必须一致，改名时两处同步。
+ */
+const WELCOME_DISMISS_KEY = 'cityu-hub:welcome-dismissed';
 
 /** 北京时间，形如 2026-09-23 10:35 */
 function formatCapturedAt(date) {
@@ -90,6 +96,15 @@ try {
   });
   const page = await context.newPage();
   page.setDefaultTimeout(60_000);
+
+  // 首访会弹出欢迎弹窗，预置标记让页面直接进入「已看过」状态，截到的就是主站本身
+  await context.addInitScript((key) => {
+    try {
+      window.localStorage.setItem(key, '1');
+    } catch {
+      /* 存不进去也不影响截图 */
+    }
+  }, WELCOME_DISMISS_KEY);
 
   console.log(`打开 ${SITE_URL}`);
   const response = await page.goto(SITE_URL, { waitUntil: 'load' });

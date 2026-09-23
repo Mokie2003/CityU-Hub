@@ -7,6 +7,7 @@ import { ProjectGrid } from '../components/ProjectGrid';
 import { SearchBar } from '../components/SearchBar';
 import { Sidebar } from '../components/Sidebar';
 import { TagChips } from '../components/TagChips';
+import { WelcomeDialog } from '../components/WelcomeDialog';
 import { REPO_URL } from '../constants/repo';
 import { useProjects } from '../hooks/useProjects';
 import { useSearch } from '../hooks/useSearch';
@@ -310,6 +311,9 @@ export function HomePage() {
           </div>
         </div>
       )}
+
+      {/* 首次访问弹出，勾选「不再提示」后不再出现 */}
+      <WelcomeDialog />
     </div>
   );
 }

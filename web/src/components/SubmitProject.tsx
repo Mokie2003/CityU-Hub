@@ -11,13 +11,13 @@ export function SubmitProject() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label="我也要提交项目"
+        aria-label="Submit"
         aria-expanded={open}
         title="我也要提交项目"
         className="chip-brutal flex h-11 shrink-0 items-center gap-2 px-3 text-[9px]"
       >
         <Plus className="size-4 text-brand" />
-        <span className="pixel hidden sm:inline">我也要提交项目</span>
+        <span className="pixel hidden sm:inline">Submit</span>
       </button>
 
       {open && <SubmitDialog onClose={() => setOpen(false)} />}
