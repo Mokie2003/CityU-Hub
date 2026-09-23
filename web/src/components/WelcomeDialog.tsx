@@ -124,7 +124,7 @@ export function WelcomeDialog() {
           <button
             type="button"
             onClick={() => setSubmitting(true)}
-            className="btn-brutal btn-brutal-primary w-full sm:w-auto"
+            className="btn-brutal btn-brutal-rainbow w-full sm:w-auto"
           >
             <HeartHandshake className="size-4" />
             我也要提交项目

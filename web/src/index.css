@@ -183,6 +183,39 @@ body::after {
   box-shadow: 4px 4px 0 var(--c-shadow), 0 0 22px var(--glow-accent);
 }
 
+/* 彩色高亮主按钮：粉 → 紫 → 青的渐变沿边框流动，配同色辉光。
+   用两层背景做边框——第一层铺满内部（padding-box），第二层只在 3px 边框区露出
+   （border-box）并横向循环；background-position 走满一整个背景图宽度，循环无跳变 */
+@keyframes rainbow-border {
+  from {
+    background-position: 0 0, 0% 50%;
+  }
+  to {
+    background-position: 0 0, -200% 50%;
+  }
+}
+
+.btn-brutal-rainbow {
+  border: 3px solid transparent;
+  color: var(--on-brand);
+  background-image: linear-gradient(#f47c94, #f47c94),
+    linear-gradient(90deg, #f47c94, #a855f7, #38bdf8, #f47c94);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-size: 100% 100%, 200% 100%;
+  background-repeat: no-repeat, repeat-x;
+  animation: rainbow-border 3s linear infinite;
+  box-shadow: 0 0 18px var(--glow-brand);
+}
+
+.btn-brutal-rainbow:hover {
+  border-color: transparent;
+  background-image: linear-gradient(var(--c-canvas), var(--c-canvas)),
+    linear-gradient(90deg, #f47c94, #a855f7, #38bdf8, #f47c94);
+  color: #f47c94;
+  box-shadow: 4px 4px 0 var(--c-shadow), 0 0 24px var(--glow-accent);
+}
+
 /* 标签 chip：方形 + 2px 边框，hover 变粉紫并辉光 */
 .chip-brutal {
   display: inline-flex;
@@ -407,7 +440,8 @@ body::after {
   .glow-pulse,
   .animate-flicker,
   .dialog-backdrop-in,
-  .dialog-panel-in {
+  .dialog-panel-in,
+  .btn-brutal-rainbow {
     animation: none;
   }
 }
