@@ -1,6 +1,7 @@
 import type { ProjectStats } from '../api/stats';
 import type { Project } from '../types';
 import { computeHeat, HEAT_LABELS } from '../utils/heat';
+import { HeatFlames } from './HeatFlames';
 
 /**
  * 详情页的热度拆解。
@@ -17,7 +18,7 @@ export function HeatPanel({ project, stats }: { project: Project; stats?: Projec
       </h2>
 
       <div className="mt-3 flex items-baseline gap-3">
-        <span className="text-lg leading-none">{'🔥'.repeat(heat.level)}</span>
+        <HeatFlames level={heat.level} className="text-lg" />
         <span className="pixel text-[10px] text-ink">{HEAT_LABELS[heat.level]}</span>
       </div>
 

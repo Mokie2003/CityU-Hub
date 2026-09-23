@@ -6,9 +6,10 @@ import { trackProjectEvent } from '../api/stats';
 import type { Project } from '../types';
 import { avatarUrl } from '../utils/avatar';
 import { formatNumber, formatRelativeTime } from '../utils/formatNumber';
-import { computeHeat, HEAT_LABELS } from '../utils/heat';
+import { computeHeat } from '../utils/heat';
 import { languageColor } from '../utils/language';
 import { GitHubIcon } from './GitHubIcon';
+import { HeatFlames } from './HeatFlames';
 import { TagChips } from './TagChips';
 
 interface ProjectCardProps {
@@ -30,7 +31,6 @@ export const ProjectCard = memo(function ProjectCard({
   const delay = Math.min(index * 40, 400);
   const avatar = avatarUrl(project.authorAvatar, project.repo);
   const heat = computeHeat({ ...project, stats });
-  const heatTitle = `热度 ${HEAT_LABELS[heat.level]}`;
 
   return (
     <article
@@ -78,9 +78,7 @@ export const ProjectCard = memo(function ProjectCard({
             DEMO
           </span>
         )}
-        <span className="pixel ml-auto shrink-0 text-[10px] text-brand" title={heatTitle}>
-          {'🔥'.repeat(heat.level)}
-        </span>
+        <HeatFlames level={heat.level} className="ml-auto shrink-0 text-[10px]" />
         <span className="pixel shrink-0 text-[10px] text-muted">
           [{String(index + 1).padStart(2, '0')}]
         </span>

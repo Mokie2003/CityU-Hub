@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, ExternalLink, GitFork, Scale, Star } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, ExternalLink, Eye, GitFork, Scale, Star } from 'lucide-react';
 import { fetchStats, trackProjectEvent, type SiteStats } from '../api/stats';
 import { BadgeSnippet } from '../components/BadgeSnippet';
 import { EmptyState } from '../components/EmptyState';
@@ -172,7 +172,7 @@ export function ProjectDetailPage() {
                   className="btn-brutal btn-brutal-primary"
                 >
                   <Star className="size-4" />
-                  去 GitHub 点 Star
+                  Star on GitHub
                 </a>
                 <a
                   href={project.githubUrl}
@@ -237,6 +237,14 @@ export function ProjectDetailPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="border-2 border-line px-2 py-0.5">{project.category}</span>
+                </div>
+                {/* 该项目的站内浏览量：要配了 Upstash 才有值 */}
+                <div className="flex items-center gap-2">
+                  <Eye className="size-3.5" />
+                  <dt className="sr-only">站内浏览</dt>
+                  <dd className="tabular-nums">
+                    浏览 {formatNumber(stats?.projects[project.id]?.views ?? 0)} 次
+                  </dd>
                 </div>
               </dl>
 

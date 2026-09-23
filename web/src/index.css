@@ -432,6 +432,63 @@ body::after {
   animation: flicker-bar 1.2s step-end infinite;
 }
 
+/* ---------- 热度火苗 ---------- */
+/* 轻微跳动 + 冷暖交替的辉光。这里用平滑缓动而不是 step-end：
+   火焰本来是连续的，跳到会像坏掉的灯 */
+@keyframes flame-flicker {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 3px rgba(244, 124, 148, 0.85));
+  }
+  35% {
+    transform: translateY(-1.5px) scale(1.12);
+    filter: drop-shadow(0 0 6px rgba(244, 124, 148, 1));
+  }
+  70% {
+    transform: translateY(0.5px) scale(0.94);
+    filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.9));
+  }
+}
+
+@keyframes flame-flicker-hot {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 5px rgba(244, 124, 148, 1));
+  }
+  35% {
+    transform: translateY(-2.5px) scale(1.2);
+    filter: drop-shadow(0 0 11px rgba(244, 124, 148, 1));
+  }
+  70% {
+    transform: translateY(1px) scale(0.9);
+    filter: drop-shadow(0 0 8px rgba(168, 85, 247, 1));
+  }
+}
+
+.heat-flames {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  line-height: 1;
+}
+
+.heat-flame {
+  animation: flame-flicker 1.7s ease-in-out infinite;
+  will-change: transform, filter;
+}
+
+/* 越热烧得越快、辉光越强 */
+.heat-flames[data-level='2'] .heat-flame {
+  animation-duration: 1.3s;
+}
+
+.heat-flames[data-level='3'] .heat-flame {
+  animation-name: flame-flicker-hot;
+  animation-duration: 0.95s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in-up,
   .marquee-track,
@@ -439,6 +496,7 @@ body::after {
   .glitch,
   .glow-pulse,
   .animate-flicker,
+  .heat-flame,
   .dialog-backdrop-in,
   .dialog-panel-in,
   .btn-brutal-rainbow {

@@ -17,10 +17,12 @@ import { useUrlState } from '../hooks/useUrlState';
 import type { AuthorItem, SortKey } from '../types';
 import { avatarUrl } from '../utils/avatar';
 import { formatDateTime } from '../utils/formatNumber';
+import { computeHeat } from '../utils/heat';
 import { parseQuery } from '../utils/searchParser';
 import { setRouteMeta } from '../utils/seo';
 
 const SORT_OPTIONS: Array<{ value: SortKey; label: string }> = [
+  { value: 'heat', label: '热度最高' },
   { value: 'updated', label: '最近更新' },
   { value: 'stars', label: 'Star 最多' },
   { value: 'name', label: '名称排序' },
@@ -78,6 +80,30 @@ export function HomePage() {
     patchParams({ q: '', tags: '', category: '' });
   }, [patchParams]);
 
+  // 站内统计只用于热力值与访问量，拿不到（本地开发 / 未配 Redis）就退化为只用构建期数据
+  const [stats, setStats] = useState<SiteStats | null>(null);
+
+  useEffect(() => {
+    const ids = (data?.projects ?? []).map((project) => project.id);
+    if (ids.length === 0) return;
+    let alive = true;
+    void fetchStats(ids).then((result) => {
+      if (alive) setStats(result);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [data]);
+
+  // 按热度排序要等统计到位，所以热力值在这里一次算好，交给 useSearch
+  const heatScores = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const project of data?.projects ?? []) {
+      map.set(project.id, computeHeat({ ...project, stats: stats?.projects[project.id] }).score);
+    }
+    return map;
+  }, [data, stats]);
+
   // 分类 / 标签筛选（useMemo 缓存，搜索在 useSearch 内基于结果再做过滤）
   const scoped = useMemo(() => {
     const projects = data?.projects ?? [];
@@ -95,7 +121,7 @@ export function HomePage() {
     });
   }, [data, category, selectedTags]);
 
-  const results = useSearch(scoped, query, sort);
+  const results = useSearch(scoped, query, sort, heatScores);
 
   // 作者榜：聚合数据只有用户名与计数，头像 / 实名从项目里补
   const authorList = useMemo<AuthorItem[]>(() => {
@@ -112,21 +138,6 @@ export function HomePage() {
 
   const activeAuthor = parseQuery(query).qualifiers.author[0];
   const hasFilter = Boolean(query || tagsParam || category);
-
-  // 站内统计只用于热力值，拿不到（本地开发 / 未配 Redis）就退化为只用构建期数据
-  const [stats, setStats] = useState<SiteStats | null>(null);
-
-  useEffect(() => {
-    const ids = (data?.projects ?? []).map((project) => project.id);
-    if (ids.length === 0) return;
-    let alive = true;
-    void fetchStats(ids).then((result) => {
-      if (alive) setStats(result);
-    });
-    return () => {
-      alive = false;
-    };
-  }, [data]);
 
   /** 近 7 天被收录的项目 */
   const newest = useMemo(() => {
@@ -230,11 +241,13 @@ export function HomePage() {
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6">
         {/* 共享边框数据条 */}
-        <div className="grid grid-cols-2 gap-[3px] border-[3px] border-line bg-line sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-[3px] border-[3px] border-line bg-line sm:grid-cols-5">
           <StatCell label="PROJECTS" value={data?.total ?? 0} />
           <StatCell label="CATEGORIES" value={data?.categories.length ?? 0} />
           <StatCell label="TAGS" value={data?.tags.length ?? 0} />
           <StatCell label="AUTHORS" value={data?.authors.length ?? 0} />
+          {/* 独立访客数：要配了 Upstash 才有值，拿不到时给 0 */}
+          <StatCell label="VISITS" value={stats?.uv ?? 0} />
         </div>
 
         {newest.length > 0 && (

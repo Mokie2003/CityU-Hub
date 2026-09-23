@@ -58,4 +58,4 @@ export interface ProjectsResponse {
 }
 
 /** 搜索接口的排序方式 */
-export type SortKey = 'stars' | 'updated' | 'name';
+export type SortKey = 'heat' | 'stars' | 'updated' | 'name';

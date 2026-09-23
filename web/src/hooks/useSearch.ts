@@ -64,8 +64,16 @@ function termScore(project: Project, term: string): number {
   return WEIGHT.none;
 }
 
-function compareBy(sort: SortKey, a: Project, b: Project): number {
+function compareBy(
+  sort: SortKey,
+  a: Project,
+  b: Project,
+  heatScores?: Map<string, number>,
+): number {
   switch (sort) {
+    case 'heat':
+      // 热力值由调用方算好（要等站内统计到位），拿不到时退回按 star 排
+      return (heatScores?.get(b.id) ?? 0) - (heatScores?.get(a.id) ?? 0) || b.stars - a.stars;
     case 'stars':
       return b.stars - a.stars;
     case 'name':
@@ -80,7 +88,13 @@ function compareBy(sort: SortKey, a: Project, b: Project): number {
  * 先按限定符过滤，再对自由文本做多字段模糊匹配，最后按匹配度 + 排序方式排序。
  * `xx:xx xx:xx` 同时匹配；只有 `xx` 时按全文模糊匹配。
  */
-export function useSearch(projects: Project[], query: string, sort: SortKey = 'updated'): Project[] {
+export function useSearch(
+  projects: Project[],
+  query: string,
+  sort: SortKey = 'updated',
+  /** 项目 id → 热力值，按热度排序时用 */
+  heatScores?: Map<string, number>,
+): Project[] {
   return useMemo(() => {
     const { qualifiers, terms } = parseQuery(query);
 
@@ -104,8 +118,8 @@ export function useSearch(projects: Project[], query: string, sort: SortKey = 'u
       scored.push({ project, score });
     }
 
-    scored.sort((a, b) => b.score - a.score || compareBy(sort, a.project, b.project));
+    scored.sort((a, b) => b.score - a.score || compareBy(sort, a.project, b.project, heatScores));
 
     return scored.map((item) => item.project);
-  }, [projects, query, sort]);
+  }, [projects, query, sort, heatScores]);
 }
