@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { TargetCursor } from './components/TargetCursor';
 import { PixelPet } from './components/PixelPet';
+import { WelcomeDialog } from './components/WelcomeDialog';
 import { HomePage } from './pages/HomePage';
 import { ProjectDetailPage } from './pages/ProjectDetailPage';
 
@@ -27,6 +28,8 @@ export default function App() {
         <Route path="/project/:id" element={<ProjectDetailPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      {/* 首访欢迎弹窗放在路由之外：直接落在详情页（分享链接）时也要能弹出来 */}
+      <WelcomeDialog />
     </HashRouter>
   );
 }
