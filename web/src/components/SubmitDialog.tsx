@@ -162,17 +162,13 @@ export function SubmitDialog({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 sm:items-center">
-      <div
-        className="dialog-backdrop-in absolute inset-0 bg-black/70"
-        onClick={onClose}
-        aria-hidden
-      />
+      <div className="animate-backdrop-in absolute inset-0 bg-black/70" onClick={onClose} aria-hidden />
 
       <div
         role="dialog"
         aria-modal="true"
         aria-label="提交项目"
-        className="dialog-panel-in panel-brutal relative my-4 w-full max-w-2xl p-5"
+        className="panel-brutal animate-dialog-pop relative my-4 w-full max-w-2xl p-5"
       >
         <div className="flex items-start justify-between gap-3">
           <div>

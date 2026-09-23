@@ -8,12 +8,8 @@ import { SubmitDialog } from './SubmitDialog';
  */
 const DISMISS_KEY = 'cityu-hub:welcome-dismissed';
 
-/**
- * 透明底 logo：public/cityu.jpg 是带白底的不透明图，直接放进弹窗会看到一块白方块。
- * public/cityu-logo.png 是它的抠图版（洪水填充抠掉与边缘连通的近白像素，
- * 缎带内部的白色 CityU 字样不受影响），用 CSS 没法把白底去掉，所以单独存一份。
- */
-const cityuLogo = `${import.meta.env.BASE_URL}cityu-logo.png`;
+/** logo 与站点图标共用 public/cityu.jpg */
+const cityuLogo = `${import.meta.env.BASE_URL}cityu.jpg`;
 
 /** 成为贡献者的好处 */
 const BENEFITS: Array<{ emoji: string; title: string; detail: string }> = [
@@ -74,31 +70,28 @@ export function WelcomeDialog() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 sm:items-center">
-      <div
-        className="dialog-backdrop-in absolute inset-0 bg-black/70"
-        onClick={close}
-        aria-hidden
-      />
+      <div className="animate-backdrop-in absolute inset-0 bg-black/70" onClick={close} aria-hidden />
 
       <div
         role="dialog"
         aria-modal="true"
         aria-label="欢迎来到 CityU Hub"
-        className="dialog-panel-in panel-brutal relative my-4 w-full max-w-xl p-5 sm:p-6"
+        className="panel-brutal animate-dialog-pop relative my-4 w-full max-w-xl p-5 sm:p-6"
       >
-        <div className="flex items-center gap-4">
+        {/* logo 居中放大、不加边框与辉光，文字压在下方并调小 */}
+        <div className="flex flex-col items-center gap-3 text-center">
           <img
             src={cityuLogo}
             alt="CityU Hub 标志"
-            width={402}
-            height={264}
-            className="h-12 w-auto shrink-0 sm:h-16"
+            width={120}
+            height={72}
+            className="h-20 w-auto sm:h-28"
           />
-          <div className="min-w-0">
-            <h2 className="pixel text-[11px] leading-relaxed text-ink sm:text-[13px]">
+          <div>
+            <h2 className="pixel text-[10px] leading-relaxed text-ink sm:text-[11px]">
               CityU&nbsp;Hub 欢迎你 🎉
             </h2>
-            <p className="mono mt-2 text-[11px] text-muted">城大开源自助导航</p>
+            <p className="mono mt-1.5 text-[10px] text-muted">城大开源自助导航</p>
           </div>
         </div>
 
