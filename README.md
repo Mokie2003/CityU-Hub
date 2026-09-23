@@ -120,7 +120,7 @@ repos/*.md ─► npm run validate ─► repos-parser ─► web/public/data/*.
 - `data/projects.json`：项目列表 + 标签 / 作者 / 分类聚合
 - `data/projects/<id>.json`：单个项目详情，`readmeHtml` 已渲染好，前端直接插入
 
-`npm run build` 离线解析，产物完全可复现；`npm run build:online` 会额外调用 GitHub API 补齐 stars、语言、头像（需要 `GITHUB_TOKEN`，见 `repos-parser/.env.example`），缺失的字段前端也会在运行时补齐并缓存在 localStorage。
+`npm run build` 离线解析，产物完全可复现；`npm run build:online` 会额外调用 GitHub API 补齐 stars、语言与仓库 About（需要 `GITHUB_TOKEN`，见 `repos-parser/.env.example`）。**线上 Vercel 构建用的就是 `build:online`**，请在 Vercel 项目的环境变量里配 `GITHUB_TOKEN`；没配或 token 失效时构建不会失败，但这三项会留空，由前端运行时补（头像不依赖接口，直接用 `github.com/<用户名>.png`）。
 
 ### 本地运行
 
@@ -296,7 +296,7 @@ repos/*.md ─► npm run validate ─► repos-parser ─► web/public/data/*.
 - `data/projects.json`：項目列表 + 標籤 / 作者 / 分類聚合
 - `data/projects/<id>.json`：單個項目詳情，`readmeHtml` 已渲染好，前端直接插入
 
-`npm run build` 離線解析，產物完全可重現；`npm run build:online` 會額外呼叫 GitHub API 補齊 stars、語言、頭像（需要 `GITHUB_TOKEN`，見 `repos-parser/.env.example`），缺失的欄位前端也會在執行時補齊並快取在 localStorage。
+`npm run build` 離線解析，產物完全可重現；`npm run build:online` 會額外呼叫 GitHub API 補齊 stars、語言與倉庫 About（需要 `GITHUB_TOKEN`，見 `repos-parser/.env.example`）。**線上 Vercel 建構用的就是 `build:online`**，請在 Vercel 專案的環境變數裡設定 `GITHUB_TOKEN`；未設定或 token 失效時建構不會失敗，但這三項會留空，由前端執行時補（頭像不依賴 API，直接用 `github.com/<使用者名稱>.png`）。
 
 ### 本機執行
 
@@ -472,7 +472,7 @@ The parser emits the front-end contract directly, with no API layer in between:
 - `data/projects.json` — project list plus tag / author / category aggregates
 - `data/projects/<id>.json` — one project, with `readmeHtml` already rendered for the detail page
 
-`npm run build` parses offline, so artefacts are fully reproducible. `npm run build:online` additionally calls the GitHub API to fill in stars, language and avatars (needs `GITHUB_TOKEN`, see `repos-parser/.env.example`); anything still missing is filled by the front end at runtime and cached in localStorage.
+`npm run build` parses offline, so artefacts are fully reproducible. `npm run build:online` additionally calls the GitHub API to fill in stars, language and the repository About (needs `GITHUB_TOKEN`, see `repos-parser/.env.example`). **The production build on Vercel uses `build:online`**, so set `GITHUB_TOKEN` in the Vercel project's environment variables. A missing or expired token will not fail the build — those three fields are just left empty and filled by the front end at runtime (avatars never hit the API: they use `github.com/<username>.png`).
 
 ### Local development
 

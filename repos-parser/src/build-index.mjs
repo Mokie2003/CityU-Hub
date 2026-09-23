@@ -49,17 +49,33 @@ function toDate(value, fallback) {
  * 卡片简介由两段组成：`about`（GitHub 仓库 About，仓库没写就是空）与 `description`
  * （本文件正文 Features 之前的介绍摘要）；正文没写介绍时联网构建会回退到 GitHub README。
  * `## Features` 完全由作者决定，写空或不写都不展示，也不会进入卡片摘要。
+ *
+ * 联网补齐失败（限流 / 404 / 断网）只告警不抛出：单个仓库拿不到数据不该让整站构建
+ * 失败，缺的字段由 md 内容与前端运行时兜底。
  */
 async function buildProject(meta, content, fileName, github, useOffline, fileDate) {
   const ref = parseRepoUrl(meta.repoUrl);
   if (!ref) throw new Error(`${fileName}: repoUrl 不是可识别的 GitHub 仓库地址`);
 
   let githubMeta = null;
-  if (!useOffline) githubMeta = await github.fetchRepoMeta(ref);
+  if (!useOffline) {
+    try {
+      githubMeta = await github.fetchRepoMeta(ref);
+    } catch (error) {
+      console.warn(`[build-index] ${fileName}: 获取仓库信息失败，跳过联网补齐 —— ${error.message}`);
+    }
+  }
 
   const featuresHeading = content.match(/^\s{0,3}##\s+Features\s*#*\s*$/im);
   const intro = featuresHeading ? content.slice(0, featuresHeading.index) : content;
-  const fetchedReadme = !intro.trim() && !useOffline ? await github.fetchReadme(ref) : '';
+  let fetchedReadme = '';
+  if (!intro.trim() && !useOffline) {
+    try {
+      fetchedReadme = await github.fetchReadme(ref);
+    } catch (error) {
+      console.warn(`[build-index] ${fileName}: 读取 README 失败，跳过回退 —— ${error.message}`);
+    }
+  }
   const enrichedContent = fillProjectContent(content, { readme: fetchedReadme });
 
   const analysis = analyzeReadme(enrichedContent);
@@ -106,7 +122,16 @@ export async function buildIndex({ inputDir = reposDir, outputPath = outputDir, 
     .map((entry) => entry.name)
     .sort();
   const config = loadConfig();
-  const github = githubClient ?? createGithubClient(config);
+  // 只在需要自建客户端时提醒；测试会注入 mock，不必打扰
+  let github = githubClient;
+  if (!github) {
+    if (!useOffline && !config.githubToken) {
+      console.warn(
+        '[build-index] 未配置 GITHUB_TOKEN，将走匿名接口（60 次/小时/IP，容易限流）；建议配置后再构建',
+      );
+    }
+    github = createGithubClient(config);
+  }
   const projects = [];
   const ids = new Map();
   const repoUrls = new Map();
