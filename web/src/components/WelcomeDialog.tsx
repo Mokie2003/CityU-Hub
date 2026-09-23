@@ -82,20 +82,17 @@ export function WelcomeDialog() {
         className="dialog-panel-in panel-brutal relative my-4 w-full max-w-3xl p-5 sm:p-6"
       >
         {/* logo 居中，标题压在下方 */}
-        <div className="flex flex-col items-center gap-2 text-center">
+        <div className="flex flex-col items-center gap-2.5 text-center">
           <img
             src={cityuLogo}
             alt="CityU Hub 标志"
             width={120}
             height={72}
-            className="h-16 w-auto sm:h-20"
+            className="h-24 w-auto sm:h-32"
           />
-          <div>
-            <h2 className="pixel text-[10px] leading-relaxed text-ink sm:text-[11px]">
-              CityU&nbsp;Hub 欢迎你 🎉
-            </h2>
-            <p className="mono mt-1 text-[10px] text-muted">城大开源自助导航</p>
-          </div>
+          <h2 className="pixel text-[11px] leading-relaxed text-ink sm:text-[13px]">
+            CityU&nbsp;Hub 欢迎你 🎉
+          </h2>
         </div>
 
         <p className="mono mt-4 border-l-[3px] border-brand bg-surface px-3 py-2.5 text-[12px] leading-6 text-ink sm:text-[13px]">
