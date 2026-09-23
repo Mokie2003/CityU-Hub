@@ -1,6 +1,4 @@
-/**
- * lucide-react 已移除品牌图标，这里内联一个 GitHub 图标。
- */
+/** lucide-react 不带品牌图标，这里内联一个 GitHub 图标。 */
 export function GitHubIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" className={className}>

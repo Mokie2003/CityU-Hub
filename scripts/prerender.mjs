@@ -1,19 +1,12 @@
 #!/usr/bin/env node
 /**
- * 预渲染：把打包好的单页应用「展开」成每个路由一份静态 HTML，供搜索引擎收录。
+ * 预渲染：给每个路由生成一份静态 HTML，供搜索引擎收录。
  *
- * 为什么需要它：站点是 Vite 打包的 SPA，最初用 HashRouter，所有项目共用同一个 URL，
- * 爬虫眼里全站只有一页。改用 History 路由后每个项目有了真实地址，但如果只靠前端
- * 渲染，未执行 JS 的爬虫仍然什么都读不到。这里在构建期把每个项目的 head 标签与
- * 正文写进静态 HTML：爬虫拿到的就是成品页面，用户侧的 React 加载后会接管渲染。
+ * SPA 只靠前端渲染的话，不执行 JS 的爬虫读不到任何内容，所以在构建期把每个项目的
+ * head 标签与正文写进静态 HTML；用户侧 React 加载后再接管渲染。
+ * 产物写入 web/dist：首页 index.html，project/<id>/index.html，以及 sitemap.xml、robots.txt。
  *
- * 产物（写入 web/dist）：
- *   index.html                  首页 head + JSON-LD
- *   project/<id>/index.html     每个项目一份，含 title / description / canonical /
- *                               OG / JSON-LD（SoftwareSourceCode）与可爬正文
- *   sitemap.xml  robots.txt     给爬虫的入口清单
- *
- * 数据来源是解析器已产出的 public/data/*.json，所以必须在 vite build 之后运行。
+ * 数据来自解析器产出的 public/data/*.json，必须在 vite build 之后运行。
  */
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -36,13 +29,13 @@ function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, (ch) => HTML_ESCAPES[ch]);
 }
 
-/** 截断到指定长度，避免 meta description 过长被搜索引擎丢弃 */
+/** 截断，避免 meta description 过长被搜索引擎丢弃 */
 function clamp(value, max = 150) {
   const text = String(value ?? '').replace(/\s+/g, ' ').trim();
   return text.length > max ? `${text.slice(0, max - 1)}…` : text;
 }
 
-/** readmeHtml → 纯文本，用于给爬虫一段可索引的正文 */
+/** readmeHtml → 纯文本，给爬虫一段可索引的正文 */
 function htmlToText(html, max = 2400) {
   const text = String(html ?? '')
     .replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, ' ')
@@ -61,7 +54,7 @@ function htmlToText(html, max = 2400) {
   return text.length > max ? `${text.slice(0, max)}…` : text;
 }
 
-/** 粗略估算文本宽度：CJK 按 1em，其余按 0.62em，够画徽章用 */
+/** 粗略估宽：CJK 1em、其余 0.62em，画徽章够用 */
 function textWidth(text, fontSize) {
   let units = 0;
   for (const ch of text) units += /[\u3000-\u9fff\uff00-\uffef]/.test(ch) ? 1 : 0.62;
@@ -98,7 +91,7 @@ function badgeSvg({ label, message }) {
 `;
 }
 
-/** 把 head 里已有的标签换掉（不存在就补一个），避免出现两个 description */
+/** 替换 head 里已有的标签（没有就补），避免出现两个 description */
 function upsertHead(html, { title, description, canonical, type = 'website', image }) {
   let out = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(title)}</title>`);
 
@@ -140,7 +133,7 @@ function injectJsonLd(html, data) {
   );
 }
 
-/** 预渲染阶段的占位正文：React 挂载后会替换 #root 的内容 */
+/** 预渲染占位正文，React 挂载后会替换 #root */
 function injectCrawlBody(html, bodyHtml) {
   return html.replace(
     /<div id="root">\s*<\/div>/,
@@ -166,7 +159,6 @@ if (!list) {
 const projects = list.projects ?? [];
 const urls = [];
 
-// ── 首页 ────────────────────────────────────────────────────────────────────
 {
   let html = upsertHead(shell, {
     title: `${SITE_NAME} · 城大开源自助导航`,
@@ -207,7 +199,6 @@ const urls = [];
   urls.push({ loc: `${SITE_ORIGIN}/`, lastmod: (list.generatedAt ?? '').slice(0, 10), priority: '1.0' });
 }
 
-// ── 每个项目一页 ─────────────────────────────────────────────────────────────
 for (const project of projects) {
   const detail =
     (await readJson(path.join(dataDir, 'projects', `${project.id}.json`))) ?? project;
@@ -264,7 +255,7 @@ for (const project of projects) {
   await fs.mkdir(outDir, { recursive: true });
   await fs.writeFile(path.join(outDir, 'index.html'), injectCrawlBody(html, body), 'utf8');
 
-  // 徽章：作者贴到自己仓库 README，既是被收录的标记，也带来一条反向链接与点击回流
+  // 徽章贴到作者仓库 README，既是被收录标记，也带来一条反向链接与点击回流
   const badgeDir = path.join(distDir, 'badge');
   await fs.mkdir(badgeDir, { recursive: true });
   await fs.writeFile(
@@ -280,7 +271,6 @@ for (const project of projects) {
   });
 }
 
-// ── sitemap 与 robots ───────────────────────────────────────────────────────
 {
   const entries = urls
     .map(

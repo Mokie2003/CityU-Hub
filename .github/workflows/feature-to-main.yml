@@ -1,24 +1,14 @@
 name: Sync feature into main
 
-# 目标分支为 feature 的项目 PR 被合并后自动执行：
-#   1) 把 main 同步进 feature；
-#   2) 把 feature 合入 main（触发站点重建）；
-#   3) 显式触发截图与贡献者名单刷新；
-#   4) 在原 PR 下留言感谢投稿。
+# fork 的 PR 在 pull_request 下拿到的是只读 token、也拿不到 secrets，推分支和留言都会 403，
+# 所以这里用 pull_request_target。
+# 工作流只对仓库自身的分支做 fetch / merge / push，不 checkout 也不执行 PR 里的代码。
 #
-# 为什么用 pull_request_target 而不是 pull_request：
-# fork 提交的 PR 在 pull_request 事件下拿到的是只读 token、也拿不到 secrets，
-# 推分支与留言都会 403；pull_request_target 在 base 仓库上下文运行，有写权限。
-# 本工作流只对仓库自身的分支做 fetch / merge / push，不会 checkout 或执行 PR 里的代码。
+# 用 GITHUB_TOKEN 推送不会触发 push 事件驱动的 workflow，只有 workflow_dispatch 和
+# repository_dispatch 例外，所以推完 main 要显式 dispatch 截图与名单刷新。
 #
-# 为什么要显式 dispatch（第 3 步）：
-# 用仓库自带的 GITHUB_TOKEN 推送，除了 workflow_dispatch 与 repository_dispatch，
-# 不会触发任何新的 workflow run。所以这里把 main 推上去之后，push 事件驱动的
-# 截图与贡献者名单工作流不会自己跑，必须用 workflow_dispatch 点名触发。
-#
-# 一次性仓库设置：
-#   - Settings → Actions → General → Workflow permissions 选 “Read and write permissions”；
-#   - main / feature 若有保护规则，需允许 github-actions[bot] 绕过或关闭 “Require a pull request”。
+# 仓库设置前提：Workflow permissions 选 Read and write；
+# main / feature 的保护规则要允许 github-actions[bot] 绕过。
 on:
   pull_request_target:
     types: [closed]
@@ -28,7 +18,7 @@ permissions:
   contents: write
   issues: write
   pull-requests: write
-  # 点名触发截图 / 贡献者名单工作流需要它
+  # 点名触发别的 workflow 需要它
   actions: write
 
 # 多个 PR 连续合并时串行处理，避免同时改两个分支
@@ -67,8 +57,8 @@ jobs:
           git push origin main
 
       - name: 触发截图与贡献者名单刷新
-        # 上面那次 push 用的是 GITHUB_TOKEN，不会触发 push 事件驱动的工作流，
-        # 所以这里点名触发，否则 PR 合并后 README 的截图与头像墙不会更新。
+        # GITHUB_TOKEN 的 push 不会触发工作流，所以这里点名触发，
+        # 否则 PR 合并后 README 的截图和头像墙不会更新。
         uses: actions/github-script@v7
         with:
           script: |
@@ -88,8 +78,7 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
 
-            // 从 PR 改动的 repos/*.md 反推项目 id，好把徽章片段直接给到手。
-            // 纯属锦上添花：任何一步失败都只是少给一段提示，不影响留言本身。
+            // 从 PR 改动的 repos/*.md 反推项目 id，把徽章片段直接给到手；失败就少一段提示。
             let badge = '';
             try {
               const files = await github.rest.pulls.listFiles({
@@ -104,7 +93,7 @@ jobs:
                   !file.filename.endsWith('/_template.md'),
               );
               if (target) {
-                // 合并后文件已在 feature 上，从那里读比从 PR head 读更稳（fork 的 sha 不在本仓库）
+                // 合并后文件已在 feature 上，从那里读更稳：fork 的 sha 不在本仓库
                 const res = await github.rest.repos.getContent({
                   owner,
                   repo,
@@ -115,7 +104,7 @@ jobs:
                 const frontmatter = text.match(/^---\s*\n([\s\S]*?)\n---/)?.[1] ?? '';
                 const explicitId = frontmatter.match(/^id:\s*["']?([^"'\n]+)["']?\s*$/m)?.[1]?.trim();
                 const repoUrl = frontmatter.match(/^repoUrl:\s*["']?([^"'\n]+)["']?\s*$/m)?.[1]?.trim() ?? '';
-                // 与 repos-parser 的 slugify 同一套规则（owner-repo），去掉哈希兜底那种极端情况
+                // 与 repos-parser 的 slugify 规则保持一致
                 const slug = repoUrl
                   .replace(/\.git$/, '')
                   .replace(/\/+$/, '')

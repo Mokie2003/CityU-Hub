@@ -2,19 +2,12 @@ import { useState } from 'react';
 import { ArrowRight, BookOpen, HeartHandshake } from 'lucide-react';
 import { SubmitDialog } from './SubmitDialog';
 
-/**
- * 首访问欢迎弹窗的「不再提示」标记。勾选后写入 localStorage，之后不再弹出。
- * scripts/update-screenshot.mjs 里有一个同名常量，用来在截图前抑制弹窗，改动时两处同步。
- */
+// 首访欢迎弹窗的「不再提示」标记；scripts/update-screenshot.mjs 有同名常量，改动时两处同步
 const DISMISS_KEY = 'cityu-hub:welcome-dismissed';
 
-/**
- * 有白底的原始 logo：public/cityu.jpg。
- * （public/cityu-logo.png 是同一张图的抠底版，当前未被使用，留着备用。）
- */
+// 有白底的原始 logo；public/cityu-logo.png 是抠底版，暂未用到
 const cityuLogo = `${import.meta.env.BASE_URL}cityu.jpg`;
 
-/** 成为贡献者的好处 */
 const BENEFITS: Array<{ emoji: string; title: string; detail: string }> = [
   {
     emoji: '🏷️',
@@ -55,7 +48,7 @@ function writeDismissed() {
   }
 }
 
-/** 首次访问的欢迎弹窗：介绍站点目标与贡献者收益，并引导去提交项目 */
+/** 首次访问的欢迎弹窗，引导提交项目 */
 export function WelcomeDialog() {
   const [visible, setVisible] = useState(() => !readDismissed());
   const [neverShow, setNeverShow] = useState(false);
@@ -63,7 +56,6 @@ export function WelcomeDialog() {
 
   if (!visible) return null;
 
-  /** 关闭时按勾选状态决定是否记住；不勾选则下次访问仍然弹出 */
   const close = () => {
     if (neverShow) writeDismissed();
     setVisible(false);
@@ -81,7 +73,6 @@ export function WelcomeDialog() {
         aria-label="欢迎来到 CityU Hub"
         className="dialog-panel-in panel-brutal relative my-4 w-full max-w-3xl p-5 sm:p-6"
       >
-        {/* logo 居中，标题压在下方 */}
         <div className="flex flex-col items-center gap-2.5 text-center">
           <img
             src={cityuLogo}

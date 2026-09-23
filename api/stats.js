@@ -1,12 +1,7 @@
-/**
- * 读取聚合统计：GET /api/stats?ids=a,b,c
- *   { uv, clicksTotal, projects: { [id]: { views, clicks } } }
- *
- * ids 由前端传，避免服务端再去扫键。未配置 Redis 时返回全 0，前端照常渲染。
- */
+/** GET /api/stats?ids=a,b,c → { uv, clicksTotal, projects: { [id]: { views, clicks } } } */
 import { redisPipeline, resultAt, upstashConfig } from '../lib/upstash.js';
 
-/** 一次最多查这么多项目，防止有人塞一长串 id 打爆 Redis */
+/** 一次最多查这么多项目，防止有人塞长串 id 打爆 Redis */
 const MAX_IDS = 60;
 const ID_RE = /^[a-z0-9][a-z0-9._-]{0,79}$/i;
 
@@ -35,8 +30,7 @@ export default async function handler(req, res) {
   for (const id of ids) commands.push(['MGET', `view:${id}`, `click:${id}`]);
 
   try {
-    // 全站点击数另记在一个键上：如果拿「已查询项目的点击之和」当总数，
-    // 就会漏掉没查的那些项目，这里直接用独立计数
+    // 全站点击另用独立计数：拿已查项目的点击之和当总数会漏掉没查的那些
     commands.push(['GET', 'click:_total_']);
     const payload = await redisPipeline(commands);
 

@@ -5,10 +5,7 @@ import tailwindcss from '@tailwindcss/vite'
 /** 前端端口固定 5173，被占用时直接报错，不自动漂移 */
 const FRONTEND_PORT = 5173
 
-/**
- * 允许用域名访问 dev / preview：Vite 的 DNS 重绑定保护默认只放行 localhost 与 IP 地址，
- * 用域名（例如 cityu-hub.bond）访问时必须显式列出；前缀点号表示放行其所有子域名。
- */
+// Vite 的 DNS 重绑定保护默认只放行 localhost 与 IP；用域名访问须显式列出，前缀点号表示放行全部子域名
 const ALLOWED_HOSTS = ['cityu-hub.bond', '.cityu-hub.bond']
 
 export default defineConfig(({ mode }) => {

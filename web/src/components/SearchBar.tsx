@@ -30,7 +30,6 @@ export function SearchBar({ value, onChange, placeholder }: SearchBarProps) {
   const committed = useRef(value);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  // URL / 侧边栏等外部来源改动查询串时，同步回输入框
   useEffect(() => {
     if (value !== committed.current) {
       committed.current = value;
@@ -38,7 +37,6 @@ export function SearchBar({ value, onChange, placeholder }: SearchBarProps) {
     }
   }, [value]);
 
-  // 点面板外面就收起规则
   useEffect(() => {
     if (!helpOpen) return;
     const onPointerDown = (event: PointerEvent) => {
@@ -48,7 +46,6 @@ export function SearchBar({ value, onChange, placeholder }: SearchBarProps) {
     return () => document.removeEventListener('pointerdown', onPointerDown);
   }, [helpOpen]);
 
-  // 输入防抖 300ms
   useEffect(() => {
     if (text === committed.current) return;
     const timer = window.setTimeout(() => {

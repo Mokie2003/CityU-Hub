@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import type { Project, SortKey } from '../types';
 import { parseQuery, type Qualifiers } from '../utils/searchParser';
 
-/** 模糊匹配权重：项目名 > 标签 > 作者 > 描述/分类/语言 */
+// 匹配权重：项目名 > 标签 > 作者 > 描述/分类/语言
 const WEIGHT = {
   exactName: 10,
   name: 6,
@@ -16,13 +16,8 @@ const WEIGHT = {
 
 const lower = (value: string | undefined) => (value ?? '').toLowerCase();
 
-/**
- * 限定符筛选规则：
- * - 不同限定符之间是「与」：`author:alice lang:Python` 两个条件都要满足
- * - `tag:` 可以写多个，同样是「与」：`tag:NLP tag:情感分析` 表示两个标签都要有
- * - `author:` / `lang:` / `category:` 都是单值字段，写多个时按「任意一个命中」处理
- * - `author:` 同时匹配 GitHub 用户名与作者实名
- */
+// 不同限定符之间是「与」；tag: 写多个也是「与」，author:/lang:/category: 写多个按「任意命中」；
+// author: 同时匹配 GitHub 用户名与作者实名。
 function matchesQualifiers(project: Project, qualifiers: Qualifiers): boolean {
   const authors = qualifiers.author.map((value) => value.toLowerCase());
   if (authors.length > 0) {
@@ -41,7 +36,6 @@ function matchesQualifiers(project: Project, qualifiers: Qualifiers): boolean {
   );
 }
 
-/** 自由文本的模糊匹配：全部关键词都要命中，命中位置越靠前分越高 */
 function termScore(project: Project, term: string): number {
   const name = lower(project.name);
   if (name === term) return WEIGHT.exactName;
@@ -84,15 +78,10 @@ function compareBy(
   }
 }
 
-/**
- * 先按限定符过滤，再对自由文本做多字段模糊匹配，最后按匹配度 + 排序方式排序。
- * `xx:xx xx:xx` 同时匹配；只有 `xx` 时按全文模糊匹配。
- */
 export function useSearch(
   projects: Project[],
   query: string,
   sort: SortKey = 'updated',
-  /** 项目 id → 热力值，按热度排序时用 */
   heatScores?: Map<string, number>,
 ): Project[] {
   return useMemo(() => {

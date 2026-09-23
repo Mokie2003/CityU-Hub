@@ -104,11 +104,9 @@ export function Sidebar({
                 className="row-brutal"
               >
                 <span className="flex min-w-0 items-center gap-2">
-                  {/* 排名 */}
                   <span className="pixel w-4 shrink-0 text-[9px] text-brand tabular-nums">
                     {String(index + 1).padStart(2, '0')}
                   </span>
-                  {/* GitHub 头像，没有头像时用用户名首字母 */}
                   {author.avatar ? (
                     <img
                       src={author.avatar}
@@ -123,7 +121,6 @@ export function Sidebar({
                       {author.name.slice(0, 1)}
                     </span>
                   )}
-                  {/* 账号（真名） */}
                   <span className="flex min-w-0 items-baseline gap-1">
                     <span className="truncate">{author.name}</span>
                     {author.realName && author.realName !== author.name && (

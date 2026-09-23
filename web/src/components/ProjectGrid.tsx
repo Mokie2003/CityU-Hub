@@ -13,7 +13,7 @@ interface ProjectGridProps {
   stats?: SiteStats | null;
 }
 
-/** 响应式网格：≥1280px 三列 / ≥640px 两列 / 移动端一列 */
+/** 响应式项目网格。 */
 export function ProjectGrid({
   projects,
   loading = false,

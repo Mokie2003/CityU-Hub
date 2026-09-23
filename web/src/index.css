@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* 亮暗模式跟随 html 上的 .dark 类，而不是系统偏好 */
+/* 亮暗跟随 html 的 .dark 类，而非系统偏好 */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
@@ -10,16 +10,13 @@
   --color-line: var(--c-line);
   --color-ink: var(--c-ink);
   --color-muted: var(--c-muted);
-  /* 主色：rgb(244 124 148) */
   --color-brand: #f47c94;
   --color-accent: #a855f7;
   --font-pixel: "Press Start 2P", ui-monospace, monospace;
   --font-mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-/* ---------- 设计 Token（Brutalist Pixel · 红紫白） ---------- */
 :root {
-  /* 亮色：白纸 + 黑硬边框 + 粉紫强调 */
   --c-canvas: #f5f2f8;
   --c-surface: #ffffff;
   --c-elevated: #ece7f3;
@@ -28,7 +25,7 @@
   --c-ink: #101014;
   --c-muted: #5a5266;
   --c-shadow: #17131c;
-  /* 主色填充面上的文字色，保证浅粉底可读 */
+  /* 主色面上的文字色，保证浅粉底可读 */
   --on-brand: #180a0f;
   --glow-brand: rgba(244, 124, 148, 0.55);
   --glow-accent: rgba(168, 85, 247, 0.45);
@@ -38,7 +35,6 @@
 }
 
 .dark {
-  /* 暗色（默认）：近黑 CRT + 3px 硬白边框 */
   --c-canvas: #08060d;
   --c-surface: #100c19;
   --c-elevated: #1a1327;
@@ -72,7 +68,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* 像素网格背景层 */
 body::before {
   content: "";
   position: fixed;
@@ -84,7 +79,6 @@ body::before {
   background-size: 8px 8px;
 }
 
-/* CRT 扫描线覆盖层 */
 body::after {
   content: "";
   position: fixed;
@@ -108,7 +102,6 @@ body::after {
   outline-offset: 2px;
 }
 
-/* ---------- 通用工具类 ---------- */
 .pixel {
   font-family: var(--font-pixel);
   letter-spacing: 0.06em;
@@ -119,13 +112,11 @@ body::after {
   font-family: var(--font-mono);
 }
 
-/* 硬边框面板：3px 边框 + 零圆角 */
 .panel-brutal {
   border: 3px solid var(--c-line);
   background-color: var(--c-surface);
 }
 
-/* 卡片：hover 硬偏移阴影 + 位移 + 主色辉光 */
 .card-brutal {
   border: 3px solid var(--c-line);
   background-color: var(--c-surface);
@@ -139,7 +130,6 @@ body::after {
   box-shadow: 6px 6px 0 var(--c-shadow), 0 0 26px var(--glow-brand);
 }
 
-/* 按钮 */
 .btn-brutal {
   display: inline-flex;
   align-items: center;
@@ -183,9 +173,8 @@ body::after {
   box-shadow: 4px 4px 0 var(--c-shadow), 0 0 22px var(--glow-accent);
 }
 
-/* 彩色高亮主按钮：粉 → 紫 → 青的渐变沿边框流动，配同色辉光。
-   用两层背景做边框——第一层铺满内部（padding-box），第二层只在 3px 边框区露出
-   （border-box）并横向循环；background-position 走满一整个背景图宽度，循环无跳变 */
+/* 渐变沿边框流动：两层背景撑边框，第一层铺内部、第二层只在边框区横向循环，
+   位置走满一个背景图宽度所以循环处不跳变 */
 @keyframes rainbow-border {
   from {
     background-position: 0 0, 0% 50%;
@@ -216,7 +205,6 @@ body::after {
   box-shadow: 4px 4px 0 var(--c-shadow), 0 0 24px var(--glow-accent);
 }
 
-/* 标签 chip：方形 + 2px 边框，hover 变粉紫并辉光 */
 .chip-brutal {
   display: inline-flex;
   align-items: center;
@@ -244,7 +232,6 @@ body::after {
   box-shadow: 0 0 18px var(--glow-brand);
 }
 
-/* 侧栏行 */
 .row-brutal {
   display: flex;
   width: 100%;
@@ -274,7 +261,6 @@ body::after {
   box-shadow: 0 0 18px var(--glow-brand);
 }
 
-/* 输入框 */
 .input-brutal {
   border: 3px solid var(--c-line);
   background-color: var(--c-surface);
@@ -293,7 +279,6 @@ body::after {
   box-shadow: 0 0 22px var(--glow-brand);
 }
 
-/* ---------- 动画 ---------- */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -388,8 +373,7 @@ body::after {
   animation: glow-pulse 3s step-end infinite;
 }
 
-/* 弹窗入场：背景淡入 + 面板略微上移放大。
-   这里的缓动刻意不用像素风的 step-end —— 模糊的跳动感在弹窗上会显得生硬 */
+/* 弹窗入场刻意不用像素风的 step-end：模糊的跳动感在弹窗上显得生硬 */
 @keyframes dialog-backdrop-in {
   from {
     opacity: 0;
@@ -432,7 +416,6 @@ body::after {
   animation: flicker-bar 1.2s step-end infinite;
 }
 
-/* ---------- 热度火苗 ---------- */
 /* 轻微跳动 + 冷暖交替的辉光。这里用平滑缓动而不是 step-end：
    火焰本来是连续的，跳到会像坏掉的灯 */
 @keyframes flame-flicker {
@@ -479,7 +462,6 @@ body::after {
   will-change: transform, filter;
 }
 
-/* 越热烧得越快、辉光越强 */
 .heat-flames[data-level='2'] .heat-flame {
   animation-duration: 1.3s;
 }
@@ -504,7 +486,7 @@ body::after {
   }
 }
 
-/* ---------- Target Cursor（复刻 ReactBits 目标锁定光标） ---------- */
+/* 复刻 ReactBits 的目标锁定光标 */
 html.cursor-hidden,
 html.cursor-hidden * {
   cursor: none !important;
@@ -543,7 +525,6 @@ html.cursor-hidden * {
   will-change: transform;
 }
 
-/* 四个角只保留外侧两条边，形成直角括号 */
 .corner-tl {
   border-right: none;
   border-bottom: none;
@@ -564,7 +545,6 @@ html.cursor-hidden * {
   border-top: none;
 }
 
-/* ---------- 像素宠物 ---------- */
 .pet-root {
   position: fixed;
   top: 0;
@@ -586,7 +566,7 @@ html.cursor-hidden * {
   filter: drop-shadow(0 0 8px rgba(244, 124, 148, 0.55));
 }
 
-/* 三张像素图叠放，动画帧由脚本切换 opacity，避免频繁重渲染 */
+/* 三张像素图叠放，帧由脚本切 opacity，比逐帧重渲染省 */
 .pet-frame {
   position: absolute;
   inset: 0;
@@ -641,7 +621,6 @@ html.cursor-hidden * {
   animation: pet-jump 0.46s step-end 1;
 }
 
-/* 被宠物戳到的组件会闪一下 */
 @keyframes pet-poked {
   0%,
   100% {
@@ -692,7 +671,6 @@ html.cursor-hidden * {
   }
 }
 
-/* ---------- 横向滚动容器 ---------- */
 .edge-fade {
   mask-image: linear-gradient(
     to right,
@@ -711,7 +689,6 @@ html.cursor-hidden * {
   display: none;
 }
 
-/* ---------- README 正文 ---------- */
 .prose-readme {
   line-height: 1.8;
   color: var(--c-ink);

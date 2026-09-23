@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { SubmitDialog } from './SubmitDialog';
 
-/** 顶栏按钮：打开提交面板（网页填表 / 去 GitHub 手写）。窄屏只留图标，避免挤占搜索栏 */
+/** 顶栏提交按钮；窄屏只留图标，避免挤占搜索栏 */
 export function SubmitProject() {
   const [open, setOpen] = useState(false);
 

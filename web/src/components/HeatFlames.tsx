@@ -1,9 +1,6 @@
 import { HEAT_LABELS } from '../utils/heat';
 
-/**
- * 热度等级的火焰图标：等级越高火苗越多、烧得越旺。
- * 每朵火苗的跳动错开一点相位，避免整排同步闪动像在打拍子。
- */
+/** 热度火焰图标。每朵火苗的相位要错开，不然整排同步闪动像在打拍子。 */
 export function HeatFlames({ level, className = '' }: { level: 1 | 2 | 3; className?: string }) {
   return (
     <span

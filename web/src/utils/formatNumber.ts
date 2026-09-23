@@ -1,4 +1,3 @@
-/** 1234 -> 1.2k，1234567 -> 1.2M */
 export function formatNumber(value: number): string {
   if (!Number.isFinite(value)) return '0';
   if (value < 1000) return String(value);
@@ -14,7 +13,6 @@ const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
-/** 相对时间：刚刚 / 3小时前 / 3天前 / 2个月前 / 1年前 */
 export function formatRelativeTime(date: string | Date, now: Date = new Date()): string {
   const target = typeof date === 'string' ? new Date(date) : date;
   const time = target.getTime();
@@ -31,7 +29,6 @@ export function formatRelativeTime(date: string | Date, now: Date = new Date()):
   return `${Math.floor(days / 365)}年前`;
 }
 
-/** 用于页脚展示数据生成时间 */
 export function formatDateTime(value: string | Date): string {
   const date = typeof value === 'string' ? new Date(value) : value;
   if (Number.isNaN(date.getTime())) return '未知';

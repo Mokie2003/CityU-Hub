@@ -7,7 +7,6 @@ interface UsefulLink {
   description: string;
 }
 
-/** 城大常用站点 */
 const USEFUL_LINKS: UsefulLink[] = [
   {
     name: 'CityU AIMS',
@@ -31,7 +30,7 @@ const USEFUL_LINKS: UsefulLink[] = [
   },
 ];
 
-/** 页签按钮 + 右侧抽屉：整合城大常用站点导航 */
+/** 顶栏按钮 + 右侧抽屉：城大常用站点导航 */
 export function UsefulLinks() {
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -65,7 +64,6 @@ export function UsefulLinks() {
           <span className="pixel hidden sm:inline">LINKS</span>
         </button>
 
-        {/* hover / 聚焦时显示的提示 */}
         <span
           role="tooltip"
           className={`pixel pointer-events-none absolute top-full right-0 z-50 mt-2 border-[3px] border-line bg-surface px-3 py-2 text-[9px] whitespace-nowrap text-ink shadow-[4px_4px_0_var(--c-shadow),0_0_18px_var(--glow-brand)] transition-opacity duration-100 ${

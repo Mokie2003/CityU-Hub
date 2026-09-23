@@ -1,4 +1,3 @@
-/** 标签 / 作者 / 分类的出现次数，按次数倒序，次数相同按名称排序 */
 function countValues(values) {
   const counts = new Map();
   for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);

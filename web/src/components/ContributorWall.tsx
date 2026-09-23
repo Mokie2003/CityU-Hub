@@ -1,11 +1,6 @@
 import type { AuthorItem } from '../types';
 
-/**
- * 站内贡献者墙。
- *
- * README 上那份名单只有去 GitHub 才看得到，这里再呈现一次并直达作者主页——
- * 「名字会被记录下来」这件事要让人在站内就看见，投稿激励才成立。
- */
+/** 站内贡献者墙，点头像直达作者 GitHub 主页。 */
 export function ContributorWall({ authors }: { authors: AuthorItem[] }) {
   if (authors.length === 0) return null;
 

@@ -1,8 +1,5 @@
 name: CI
 
-# 每次 PR 与推送到 main 都跑一遍：校验 repos/*.md、跑解析器测试、构建整站。
-# 站点本身由 Vercel 的 Git 集成在推送后自动构建发布，
-# 这个工作流负责在合并前拦住坏数据与坏构建。
 on:
   push:
     branches: [main]
@@ -44,6 +41,6 @@ jobs:
         run: |
           test -f web/dist/index.html
           test -f web/dist/data/projects.json
-          # SEO 产物：没跑预渲染就说明 sitemap / 爬虫可读内容会缺失
+          # 预渲染产物，缺了说明预渲染没生效
           test -f web/dist/sitemap.xml
           test -f web/dist/robots.txt

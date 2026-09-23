@@ -3,10 +3,7 @@ import type { Project } from '../types';
 import { computeHeat, HEAT_LABELS } from '../utils/heat';
 import { HeatFlames } from './HeatFlames';
 
-/**
- * 详情页的热度拆解。
- * 卡片上只给等级，这里把各维度摊开——让人看得懂这个等级是怎么来的。
- */
+/** 详情页热度拆解：把各维度摊开，说明等级怎么来的。 */
 export function HeatPanel({ project, stats }: { project: Project; stats?: ProjectStats }) {
   const heat = computeHeat({ ...project, stats });
 

@@ -1,4 +1,3 @@
-/** 数据加载时的占位卡片 */
 export function SkeletonCard() {
   return (
     <div aria-hidden className="panel-brutal p-5">

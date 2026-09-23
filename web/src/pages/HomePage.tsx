@@ -80,7 +80,7 @@ export function HomePage() {
     patchParams({ q: '', tags: '', category: '' });
   }, [patchParams]);
 
-  // 站内统计只用于热力值与访问量，拿不到（本地开发 / 未配 Redis）就退化为只用构建期数据
+  // 拿不到统计（本地开发 / 未配 Redis）时退化为只用构建期数据
   const [stats, setStats] = useState<SiteStats | null>(null);
 
   useEffect(() => {

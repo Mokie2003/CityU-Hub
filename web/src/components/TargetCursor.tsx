@@ -2,19 +2,12 @@ import { useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 export interface TargetCursorProps {
-  /** 命中这些元素（CSS 选择器）时锁定并框选 */
   targetSelector?: string;
-  /** 空闲状态自转一圈的秒数 */
   spinDuration?: number;
-  /** 是否隐藏系统光标 */
   hideDefaultCursor?: boolean;
-  /** 锁定到目标所需秒数 */
   hoverDuration?: number;
-  /** 锁定期间角标带轻微视差滞后 */
   parallaxOn?: boolean;
-  /** 静止时光标颜色 */
   cursorColor?: string;
-  /** 锁定目标时的光标颜色 */
   cursorColorOnTarget?: string;
 }
 
@@ -35,10 +28,7 @@ const CORNER_NAMES = ['tl', 'tr', 'br', 'bl'] as const;
 
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
 
-/**
- * 目标锁定光标：空闲时整体缓慢自转，悬停到 targetSelector 命中的元素上时
- * 停止自转并把四个角标展开、框住该元素，离开后收回并恢复自转。
- */
+/** 目标锁定光标：空闲自转，悬停到命中元素时展开四角框住它，离开后收回 */
 export function TargetCursor({
   targetSelector = '.cursor-target',
   spinDuration = 2,
@@ -73,7 +63,6 @@ export function TargetCursor({
     if (hideDefaultCursor) root.classList.add('cursor-hidden');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // 光标位置与鼠标位置
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
     let posX = mouseX;
@@ -84,7 +73,6 @@ export function TargetCursor({
     let dotScale = 1;
     let dotScaleTarget = 1;
 
-    // 锁定状态
     let activeEl: HTMLElement | null = null;
     let leaveHandler: (() => void) | null = null;
     let strength = 0;
@@ -95,7 +83,6 @@ export function TargetCursor({
     const cornerPos = REST_OFFSETS.map((offset) => ({ ...offset }));
     /** 每次过渡（进入 / 离开）开始时的角标位置 */
     const cornerFrom = REST_OFFSETS.map((offset) => ({ ...offset }));
-    /** 目标元素四个角的绝对坐标 */
     const cornerAbs = REST_OFFSETS.map((offset) => ({ ...offset }));
     /** 带滞后的目标位置，用于视差 */
     const cornerLag = REST_OFFSETS.map((offset) => ({ ...offset }));
@@ -141,7 +128,6 @@ export function TargetCursor({
     };
 
     const enter = (event: MouseEvent) => {
-      // 从事件目标向上找到最近一个命中选择器的元素
       let node: HTMLElement | null = event.target instanceof HTMLElement ? event.target : null;
       let target: HTMLElement | null = null;
       while (node && node !== document.body) {
@@ -243,7 +229,6 @@ export function TargetCursor({
           const targetX = cornerAbs[index].x - posX;
           const targetY = cornerAbs[index].y - posY;
           if (parallaxOn && strength > 0.99) {
-            // 目标一直在动时让角标轻微滞后，形成视差
             cornerLag[index].x += (targetX - cornerLag[index].x) * 0.25;
             cornerLag[index].y += (targetY - cornerLag[index].y) * 0.25;
           } else {

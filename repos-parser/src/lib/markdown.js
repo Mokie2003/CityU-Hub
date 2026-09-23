@@ -1,12 +1,9 @@
-/**
- * 零依赖 README 解析：从 Markdown 中提取标题、摘要、目录结构、图片等信息。
- */
+/** 零依赖 README 解析：从 Markdown 提取标题、摘要、目录、图片 */
 
 const HTML_COMMENT = /<!--[\s\S]*?-->/g;
 const BADGE_PATTERN =
   /(shields\.io|badgen\.net|badge\.fury\.io|travis-ci|appveyor|circleci|codecov|coveralls|codeclimate|snyk\.io|david-dm|isitmaintained|opencollective|buymeacoffee|ko-fi\.com|hits\.seeyoufarm|visitor-badge|profile-counter|star-history|nodei\.co)/i;
 
-/** 去掉行内 Markdown 标记，得到纯文本 */
 export function toPlainText(markdown) {
   return String(markdown ?? '')
     .replace(HTML_COMMENT, ' ')
@@ -33,7 +30,6 @@ function slugOfHeading(text) {
     .replace(/^-+|-+$/g, '');
 }
 
-/** 抽取 README 标题：优先一级标题，其次 setext 标题，最后取第一行非空文本 */
 function extractTitle(lines) {
   for (let i = 0; i < lines.length; i += 1) {
     const atx = lines[i].match(/^\s{0,3}#\s+(\S.*?)\s*#*\s*$/);
@@ -72,7 +68,6 @@ function extractImages(markdown) {
   return images;
 }
 
-/** 判断段落是否只有徽章/图片/链接等噪声内容 */
 function isNoisyBlock(block, title = '') {
   const meaningful = block
     .split('\n')
@@ -114,7 +109,6 @@ function truncate(text, max = 220) {
   return `${(space > max * 0.5 ? window.slice(0, space) : window).trim()}…`;
 }
 
-/** 抽取摘要：跳过徽章/图片区与「安装/Usage」等章节标题，取第一段有实际内容的段落 */
 function extractSummary(body, title = '') {
   for (const block of body.split(/\n\s*\n/)) {
     if (isNoisyBlock(block, title)) continue;
@@ -126,7 +120,6 @@ function extractSummary(body, title = '') {
   return '';
 }
 
-/** 中英混排的字符/词/阅读时长估算 */
 function textStats(plain) {
   const cjk = (plain.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g) ?? []).length;
   const words = (plain.replace(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g, ' ').match(/[A-Za-z0-9][A-Za-z0-9'-]*/g) ?? [])
@@ -139,10 +132,6 @@ function textStats(plain) {
   };
 }
 
-/**
- * 解析 README 全文
- * @param {string} markdown README 原文
- */
 export function analyzeReadme(markdown) {
   const text = String(markdown ?? '').replace(/\r\n?/g, '\n').replace(HTML_COMMENT, '');
   const lines = text.split('\n');
@@ -155,8 +144,8 @@ export function analyzeReadme(markdown) {
 
   return {
     title: title || '',
-    // 标题是从正文首行兜底推出来的（正文里没有真实标题行）时，body 中仍留着同一段文本，
-    // 此时不能拿它做去重，否则纯正文的介绍会被判成「与标题重复」而丢掉摘要
+    // 标题是从正文首行兜底推出来的时候，body 里还留着同一段文本，不能再拿去去重，
+    // 否则纯正文的介绍会被判成「与标题重复」而丢掉摘要
     summary: extractSummary(body, index >= 0 ? title : ''),
     headings,
     images,
@@ -170,7 +159,6 @@ export function analyzeReadme(markdown) {
 const FEATURES_HEADING = /^\s{0,3}##\s+Features\s*#*\s*$/im;
 const NEXT_HEADING = /^\s{0,3}#{1,6}\s+/;
 
-/** 取 `## Features` 标题到下一个标题之间的正文，空段落返回空字符串 */
 function featuresSectionBody(text, heading) {
   const lines = text.slice(heading.index + heading[0].length).split('\n');
   const body = [];
@@ -181,7 +169,6 @@ function featuresSectionBody(text, heading) {
   return body.join('\n').trim();
 }
 
-/** 作者没写内容的 `## Features` 段落整体去掉，后面的段落照常保留 */
 function dropEmptyFeaturesSection(text) {
   const heading = FEATURES_HEADING.exec(text);
   if (!heading || featuresSectionBody(text, heading)) return text;
@@ -190,7 +177,6 @@ function dropEmptyFeaturesSection(text) {
   return [before, after].filter(Boolean).join('\n\n');
 }
 
-/** 取 `## Features` 之前的介绍正文；Features 段落（含列表）不会进入卡片摘要 */
 export function extractIntroduction(markdown) {
   const text = String(markdown ?? '').replace(/\r\n?/g, '\n');
   const heading = FEATURES_HEADING.exec(text);
@@ -198,8 +184,8 @@ export function extractIntroduction(markdown) {
 }
 
 /**
- * 项目介绍留空时按需回退到 GitHub README。
- * `## Features` 完全由作者决定：写空或不写都不会展示，也不会用仓库简介补齐。
+ * 介绍留空时回退到 GitHub README。
+ * `## Features` 由作者决定：写空或不写都不展示，也不用仓库简介补齐。
  */
 export function fillProjectContent(markdown, { readme = '' } = {}) {
   const text = String(markdown ?? '').replace(/\r\n?/g, '\n');
@@ -210,7 +196,6 @@ export function fillProjectContent(markdown, { readme = '' } = {}) {
   return dropEmptyFeaturesSection([head, rest].filter(Boolean).join('\n\n'));
 }
 
-/** 仓库没提供 topics 时，用 README 关键词兜底推断标签 */
 export function guessTagsFromReadme(markdown, { language, topics = [] } = {}) {
   const lower = String(markdown ?? '').toLowerCase();
   const dictionary = [

@@ -1,15 +1,13 @@
 /**
- * /api/track 与 /api/stats 的测试。
- *
- * 用一个内存版 Upstash REST 服务替身跑真实请求：起一个本地 HTTP 服务实现
- * /pipeline 的 INCR / EXPIRE / PFADD / PFCOUNT / MGET / GET，再把
- * KV_REST_API_URL 指向它，这样两个函数里的逻辑都是按线上路径执行的。
+ * /api/track 与 /api/stats 的测试：起本地 HTTP 服务顶替 Upstash REST（实现 /pipeline
+ * 的 INCR/EXPIRE/PFADD/PFCOUNT/MGET/GET），把 KV_REST_API_URL 指过去，
+ * 两个函数就能按线上路径执行。
  */
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import { after, before, test } from 'node:test';
 
-/** key → string（计数器）或 Set（HLL 集合，测试里用精确集合代替） */
+/** key → string（计数器）或 Set（测试里用精确集合代替 HLL） */
 const store = new Map();
 
 function runCommand([op, key, ...args]) {
@@ -44,7 +42,7 @@ let server;
 let track;
 let stats;
 
-/** 伪造 Vercel 的 req：readJsonBody 会把它当异步可迭代对象读 */
+/** 伪造 Vercel req：readJsonBody 按异步可迭代对象读它，所以要带 Symbol.asyncIterator */
 function mockReq(body, { ip = '203.0.113.1' } = {}) {
   const chunks = body === undefined ? [] : [Buffer.from(JSON.stringify(body))];
   return {

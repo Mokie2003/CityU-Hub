@@ -1,28 +1,12 @@
 name: Sync & rebuild (self-hosted)
 
-# 在目标机器（本地电脑或服务器）上拉取最新代码并重建站点，供 38.175.192.15 上的
-# preview / 静态服务使用。Vercel 侧不需要这个工作流，它由 Git 集成自动构建。
+# 在目标机器（本地电脑或服务器）上拉取最新代码并重建站点，跑在 self-hosted runner 上。
+# Vercel 侧不需要这个工作流，它由 Git 集成自动构建。
 #
-# ── 一次性配置 ────────────────────────────────────────────────────────────────
-# 1) 在目标机器上注册 self-hosted runner（GitHub → Settings → Actions → Runners →
-#    New self-hosted runner），标签带上 cityu-hub：
-#      mkdir -p ~/actions-runner && cd ~/actions-runner
-#      curl -o runner.tar.gz -L <页面给出的下载地址> && tar xzf runner.tar.gz
-#      ./config.sh --url https://github.com/Warpshlczy/CityU-Hub --token <页面给出的 token> --labels cityu-hub
-#      ./run.sh                      # 前台试跑，确认能连上
-#      ./svc.sh install && ./svc.sh start   # 注册为开机自启服务
-#
-# 2) 仓库 Settings → Secrets and variables → Actions → Variables 里添加：
-#      ENABLE_SELF_HOSTED = true    # 不设置时这个工作流直接跳过，不会排队等 runner
-#      REPO_PATH          = /Users/mac/Documents/CityU-Hub   # 目标机器上的仓库绝对路径
-#      RESTART_CMD        = pm2 restart cityu-hub            # 可选：重建后重启服务
-#
-# 3) Secrets 里可选添加（有则走在线解析，补齐 stars / 语言 / 头像）：
-#      REBUILD_GITHUB_TOKEN = <PAT>
-#
-# ── 不想装 runner？用本机定时任务轮询同样可以 ─────────────────────────────────
-#   crontab -e  加入（每 5 分钟检查一次，代码没变时会直接跳过，开销极小）：
-#     */5 * * * * REPO_PATH="$HOME/Documents/CityU-Hub" /bin/bash "$HOME/Documents/CityU-Hub/scripts/sync-and-build.sh" >> "$HOME/cityu-hub-sync.log" 2>&1
+# 仓库 Variables 需设 ENABLE_SELF_HOSTED=true，不设时整个工作流直接跳过、不会排队等 runner；
+# REPO_PATH 是目标机器上的仓库绝对路径，RESTART_CMD 可选，重建后重启服务。
+# Secrets 里可选加 REBUILD_GITHUB_TOKEN，有则走在线解析补齐 stars / 语言 / 头像。
+# 不想装 runner，也可以用 crontab 定时跑 scripts/sync-and-build.sh。
 
 on:
   push:

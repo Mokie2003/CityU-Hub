@@ -2,10 +2,7 @@ import { useState } from 'react';
 import { Check, Copy } from 'lucide-react';
 import { SITE_ORIGIN } from '../utils/seo';
 
-/**
- * 给作者贴到自己仓库 README 的徽章片段。
- * 对作者是「已被收录」的标记，对站点是一条指向项目页的反向链接。
- */
+/** 给作者贴到仓库 README 的徽章片段，兼作指向项目页的外链。 */
 export function BadgeSnippet({ id }: { id: string }) {
   const [copied, setCopied] = useState(false);
   const snippet = `[![CityU Hub](${SITE_ORIGIN}/badge/${id}.svg)](${SITE_ORIGIN}/project/${id})`;
@@ -16,7 +13,7 @@ export function BadgeSnippet({ id }: { id: string }) {
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      // 剪贴板不可用（非 https / 未授权）时不报错，用户可以手动选中复制
+      // 非 https 或未授权时剪贴板不可用，不报错，用户仍可手动选中复制
     }
   };
 

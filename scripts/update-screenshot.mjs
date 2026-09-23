@@ -1,21 +1,13 @@
 #!/usr/bin/env node
 /**
- * 抓取站点首页截图，写入 web/public/screenshot.png，并把截图时间与截图者写进 README。
+ * 抓取首页截图写入 web/public/screenshot.png，并把截图时间与截图者写回 README 的
+ * <!-- screenshot:start -->…<!-- screenshot:end --> 区块。
  *
- * README 里的那张「站点一览」图就是本文件产出的 `web/public/screenshot.png`，
- * 所以只要替换这张图片，README 中引用的截图就同步更新了；
- * 图片下方那行时间与截图者由本文件写在
- * `<!-- screenshot:start -->` … `<!-- screenshot:end -->` 标记区块内。
+ * 桌面视口 1440×900、2 倍密度、只截首屏；站点是纯静态页，等动画与字体就绪再拍，
+ * 免得拍到淡入中的卡片。只有截图真的变了才写盘并刷新时间，否则整体跳过，
+ * 避免时间戳频繁变动带来无意义的提交。
  *
- * 截图参数：桌面视口 1440×900，只截首屏，2 倍像素密度（产物 2880×1800，高分屏不糊）。
- * 站点是纯静态页，动画与字体就绪后再拍，避免拍到淡入过程中的卡片。
- *
- * 图片与标注是一体的：只有截图真的变了才写盘并刷新时间，
- * 截图没变则整个跳过，避免时间戳频繁变动带来无意义的提交。
- *
- * 用法：
- *   node scripts/update-screenshot.mjs
- *   SITE_URL=https://cityu-hub.bond/ node scripts/update-screenshot.mjs
+ * 用法：node scripts/update-screenshot.mjs
  */
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -33,14 +25,9 @@ const VIEWPORT = { width: 1440, height: 900 };
 const DEVICE_SCALE_FACTOR = 2;
 /** 卡片有 stagger 淡入（最多 400ms 延迟 + 动画时长），多等一会再拍 */
 const SETTLE_MS = 1500;
-/**
- * 首访欢迎弹窗的「不再提示」标记。截图用的是全新浏览器上下文，localStorage 是空的，
- * 不预置的话会拍到欢迎弹窗而不是主站。这个键与 web/src/components/WelcomeDialog.tsx
- * 里的 DISMISS_KEY 必须一致，改名时两处同步。
- */
+/** 欢迎弹窗的「不再提示」标记：全新上下文 localStorage 为空，不预置就会拍到弹窗；须与 WelcomeDialog.tsx 的 DISMISS_KEY 保持一致 */
 const WELCOME_DISMISS_KEY = 'cityu-hub:welcome-dismissed';
 
-/** 北京时间，形如 2026-09-23 10:35 */
 function formatCapturedAt(date) {
   return new Intl.DateTimeFormat('sv-SE', {
     timeZone: 'Asia/Shanghai',
@@ -53,7 +40,7 @@ function formatCapturedAt(date) {
   }).format(date);
 }
 
-/** 从 PNG 的 IHDR 块读出宽高，用来在日志里对比新旧尺寸 */
+/** 从 PNG 的 IHDR 块读宽高，用于日志里对比新旧尺寸 */
 function pngSize(buffer) {
   if (buffer.length < 24 || buffer.readUInt32BE(0) !== 0x89504e47) return null;
   return `${buffer.readUInt32BE(16)}x${buffer.readUInt32BE(20)}`;
@@ -67,10 +54,7 @@ async function readIfExists(file) {
   }
 }
 
-/**
- * 标记区块内容：截图 → 时间与截图者（小一号的 <sub>，简中 / 繁中 / 英文）→ 说明。
- * GitHub 会剥掉 <small>，只保留 <sub> / <sup>，所以缩小字号用 <sub>。
- */
+/** 标记区块内容；GitHub 会剥掉 <small> 只保留 <sub>/<sup>，所以缩小字号用 <sub> */
 function renderBlock(capturedAt) {
   const src = path.relative(process.cwd(), OUT_PATH).split(path.sep).join('/');
   return [
@@ -97,7 +81,7 @@ try {
   const page = await context.newPage();
   page.setDefaultTimeout(60_000);
 
-  // 首访会弹出欢迎弹窗，预置标记让页面直接进入「已看过」状态，截到的就是主站本身
+  // 预置「已看过」，截到主站而非欢迎弹窗
   await context.addInitScript((key) => {
     try {
       window.localStorage.setItem(key, '1');

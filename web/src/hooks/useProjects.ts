@@ -10,7 +10,7 @@ interface ProjectsState {
   reload: () => void;
 }
 
-/** 首页数据：项目列表 + 聚合信息 */
+/** 首页：列表 + 聚合 */
 export function useProjects(): ProjectsState {
   const [data, setData] = useState<ProjectsResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +30,7 @@ export function useProjects(): ProjectsState {
         setData(res);
         setLoading(false);
 
-        // 列表先渲染，缺失的语言 / stars 再异步从 GitHub 补齐
+        // 先出列表，缺的语言 / stars 再异步补
         const enriched = await enrichProjectsWithGithub(res.projects, controller.signal);
         if (alive && enriched) {
           setData((prev) => (prev ? { ...prev, projects: enriched } : prev));
@@ -60,7 +60,7 @@ interface ProjectState {
   error: string | null;
 }
 
-/** 详情页数据：按需加载单个项目（含 readmeHtml） */
+/** 详情页：单个项目（含 readmeHtml） */
 export function useProject(id: string | undefined): ProjectState {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);

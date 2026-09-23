@@ -11,13 +11,11 @@ const ACCEL = 520;
 const CURSOR_NOTICE_RANGE = 190;
 const CURSOR_COOLDOWN = 7000;
 
-// ========== 【修改：纯黑猫咪配色】 ==========
 const PIXEL_COLORS: Record<string, string> = {
-  B: '#000000', // 纯黑猫身、轮廓
-  W: '#ffffff', // 白色：耳朵内侧、眼睛
+  B: '#000000',
+  W: '#ffffff',
 };
 
-/** 走路第一帧：双爪分开 */
 const CAT_WALK_A = [
   '..B....B..',
   '..BW..WB..',
@@ -31,7 +29,6 @@ const CAT_WALK_A = [
   '.BB....BBB',
 ];
 
-/** 走路第二帧：双爪收拢 */
 const CAT_WALK_B = [
   '..B....B..',
   '..BW..WB..',
@@ -45,7 +42,6 @@ const CAT_WALK_B = [
   '..BB..BB.B',
 ];
 
-/** 坐下待机帧：整体压低一行，双爪收到身下 */
 const CAT_SIT = [
   '..........',
   '..B....B..',
@@ -121,7 +117,6 @@ return top;
     },
   };
 }
-/** 有背景、有边框或是媒体/控件的元素，都算猫走不过去的实体 */
 function isSolidElement(el: HTMLElement): boolean {
 const rect = el.getBoundingClientRect();
 if (rect.width < 8 || rect.height < 8) return false;
@@ -146,7 +141,6 @@ const cols = Math.max(1, Math.ceil(window.innerWidth / CELL));
 const rows = Math.max(1, Math.ceil(window.innerHeight / CELL));
 const size = cols * rows;
 const blocked = new Uint8Array(size);
-// 顶部固定栏区域整体封锁
 const topRows = Math.min(rows, Math.ceil(TOP_PADDING / CELL));
 blocked.fill(1, 0, topRows * cols);
 const nodes = document.querySelectorAll<HTMLElement>('body *');
@@ -180,7 +174,6 @@ return clamp(Math.floor(x / CELL), 0, Math.max(0, Math.ceil(window.innerWidth / 
 function toRow(y: number) {
 return clamp(Math.floor(y / CELL), 0, Math.max(0, Math.ceil(window.innerHeight / CELL) - 1));
 }
-/** 找到离目标最近的可用格子，找不到返回 -1 */
 function nearestFreeCell(grid: NavGrid, col: number, row: number): number {
 if (isFree(grid, col, row)) return row * grid.cols + col;
 for (let radius = 1; radius <= 40; radius += 1) {
@@ -209,7 +202,6 @@ const NEIGHBORS: Array<[number, number, number]> = [
   [-1, -1, Math.SQRT2],
 ];
 const MAX_EXPANDED = 14000;
-/** A* 寻路，返回像素坐标航点 */
 function findPath(
 grid: NavGrid,
 fromCol: number,
@@ -302,10 +294,7 @@ return <rect key={`${x}-${y}`} x={x} y={y} width={1} height={1} fill={fill} />;
 </svg>
   );
 }
-/**
- * 像素猫咪：只在组件之间的空隙里走动，会追着光标跑，
- * 也会走到卡片/按钮旁边伸爪戳一下。
- */
+/** 像素猫咪：在组件空隙里走动，会追光标，也会凑到卡片/按钮旁伸爪戳一下 */
 export function PixelPet() {
 const rootRef = useRef<HTMLDivElement>(null);
 const faceRef = useRef<HTMLDivElement>(null);
@@ -354,7 +343,6 @@ lastMouseAt: started,
 frameIndex: 2,
 lastProgressAt: started,
     };
-// 出生点：优先落在页脚上方的空隙里
 const spawnCol = toCol(window.innerWidth / 2);
 const spawnRow = toRow(window.innerHeight / 2);
 const spawnCell = nearestFreeCell(grid, spawnCol, spawnRow);
@@ -403,7 +391,6 @@ pet.path = [];
 pet.pokeEl = null;
 pet.modeUntil = now + min + Math.random() * extra;
     };
-/** 从当前可走的格子里随机挑一个 */
 const pickWanderTarget = () => {
 for (let attempt = 0; attempt < 40; attempt += 1) {
 const col = 1 + Math.floor(Math.random() * Math.max(1, grid.cols - 2));
@@ -417,7 +404,6 @@ return pathTo(x, y);
       }
 return false;
     };
-/** 挑一个组件，走到它旁边的空隙里再伸爪 */
 const pickPokeTarget = () => {
 const nodes = Array.from(
 document.querySelectorAll<HTMLElement>('.cursor-target, button, .panel-brutal'),
@@ -484,7 +470,6 @@ el.classList.add('pet-poked');
 window.setTimeout(() => el.classList.remove('pet-poked'), 480);
     };
 const updateBehavior = (now: number) => {
-// 光标靠近就凑过去（猫的捕猎本能）
 if (now > pet.cursorCooldownUntil && pet.mode !== 'poke' && pet.mode !== 'flee') {
 const distance = Math.hypot(pet.mouseX - pet.x, pet.mouseY - pet.y);
 if (distance < CURSOR_NOTICE_RANGE) {
@@ -515,7 +500,6 @@ return;
         }
       }
 if (now - pet.lastProgressAt > 2200) {
-// 卡住了：重新找路，失败就原地休息
 if (!pathTo(pet.targetX, pet.targetY)) rest(now, 600, 1200);
 pet.lastProgressAt = now;
       }
@@ -602,7 +586,6 @@ pet.facing = facing;
 face.style.transform = `scaleX(${facing})`;
         }
       }
-// 逐帧切换像素图：走路 / 奔跑两帧交替，静止时坐下
 const nextFrame = pet.jumping ? 0 : speed > 20 ? Math.floor(now / (pet.running ? 90 : 150)) % 2 : 2;
 if (nextFrame !== frameCache) {
 frames[frameCache].style.opacity = '0';

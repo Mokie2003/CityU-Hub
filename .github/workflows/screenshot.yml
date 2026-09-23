@@ -1,17 +1,9 @@
 name: Screenshot
 
-# 每次推送到 main 后重新抓一张站点首页截图，覆盖 web/public/screenshot.png，
-# 并在 README 的 <!-- screenshot:start --> 区块里标注截图时间与截图者
-# （固定写 github-actions[bot]，与提交者一致）。
-# 截图只是资源替换，不需要再跑一遍构建，所以提交时不带 [skip ci]。
-#
-# 提交策略：先把工作区对齐到 fetch 到的最新 origin/main，再生成截图与标注。
-# 这样提交基线永远等于远端 HEAD，push 一定是快进，不会出现 rebase 冲突
-# ——截图是二进制文件，一旦需要 rebase 就无法自动合并。
-#
-# 触发来源有两个：推送到 main（人手推送），以及 PR 合并后由
-# feature-to-main.yml 用 workflow_dispatch 点名触发（因为 GITHUB_TOKEN 的 push
-# 不会触发工作流）。后者刚推完 main，Vercel 还在构建，所以截图前要等部署完成。
+# main 推送后重抓首页截图覆盖 web/public/screenshot.png，并更新 README 的截图时间标注。
+# 截图是二进制文件，一旦要 rebase 就无法自动合并，所以提交前先对齐到最新 origin/main，
+# 保证 push 一定快进。GITHUB_TOKEN 的 push 不触发工作流，PR 合并后由 feature-to-main.yml
+# 用 workflow_dispatch 点名触发；那种情况 Vercel 还在构建，截图前要等部署完成。
 on:
   push:
     branches: [main]
@@ -28,8 +20,7 @@ concurrency:
 jobs:
   capture:
     name: 抓取首页截图并提交
-    # 机器人自己推的截图提交带 [skip-shot] 标记，且 actor 是 github-actions[bot]，
-    # 两种情况都跳过，避免「提交 → 触发 → 再提交」的自我循环。
+    # 机器人推的截图提交带 [skip-shot]、actor 也是 github-actions[bot]，都跳过，避免自我循环。
     if: ${{ github.event_name != 'push' || (!contains(github.event.head_commit.message, '[skip-shot]') && github.actor != 'github-actions[bot]') }}
     runs-on: ubuntu-latest
     steps:
@@ -55,9 +46,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: 等待站点部署完成
-        # 截图抓的是线上站点，Vercel 收到推送后要重新构建再发布。不等部署完成就
-        # 截图，拍到的会是上一个版本。判据：/data/projects.json 里的 generatedAt
-        # 由构建时的解析器写入，它晚于本次提交时间，说明这次改动已经上线。
+        # 截图抓线上站点，Vercel 收到推送要重新构建才发布，不等就拍到上一版。判据：
+        # /data/projects.json 里构建时写入的 generatedAt 晚于本次提交时间，说明已上线。
         env:
           DEPLOY_READY_URL: https://cityu-hub.bond/data/projects.json
         run: |
@@ -91,8 +81,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          # 生成期间远端可能又有提交，push 会被拒；此时重新对齐基线再生成一次。
-          # 每轮都从 origin/main 重新开始，因此不会累积出需要 rebase 的本地提交。
           for attempt in 1 2 3; do
             echo "=== 第 ${attempt} 次尝试 ==="
 

@@ -5,23 +5,18 @@ import { SubmitProject } from './SubmitProject';
 import { ThemeToggle } from './ThemeToggle';
 import { UsefulLinks } from './UsefulLinks';
 
-/** 页内 logo 与站点图标共用 public/cityu.jpg 这一份文件 */
 const cityuLogo = `${import.meta.env.BASE_URL}cityu.jpg`;
 
 interface HeaderProps {
-  /** 首页把搜索栏塞进来，详情页不传 */
   searchSlot?: ReactNode;
   onOpenSidebar?: () => void;
 }
 
-/** 固定顶栏：3px 硬白边框 + 像素 logo（public/cityu.jpg） */
 export function Header({ searchSlot, onOpenSidebar }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b-[3px] border-line bg-canvas">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-3 gap-y-2.5 px-4 py-2.5 sm:gap-x-4 sm:gap-y-3 sm:px-6 sm:py-3">
-        {/* 移动端筛选按钮。lg:hidden 后的 ! 是必要的：.btn-brutal 的 display 与
-            lg:hidden 权重相同，且在产物 CSS 里排在后面，不加 important 会被它盖掉，
-            导致桌面端也显示这个按钮 */}
+        {/* 移动端筛选按钮。lg:hidden 后的 ! 不能省：.btn-brutal 的 display 与 lg:hidden 权重相同且排在产物 CSS 后面，不加会被盖掉，桌面端也会显示 */}
         {onOpenSidebar && (
           <button
             type="button"
@@ -34,7 +29,7 @@ export function Header({ searchSlot, onOpenSidebar }: HeaderProps) {
         )}
 
         <Link to="/" className="flex shrink-0 items-center gap-2 focus-visible:outline-none sm:gap-3">
-          {/* 原始比例 1972×1188，保持宽高比不裁切 */}
+          {/* 原图 1972×1188，靠 w-auto 保持比例不裁切 */}
           <img
             src={cityuLogo}
             alt="CityU Hub 标志"
@@ -52,8 +47,7 @@ export function Header({ searchSlot, onOpenSidebar }: HeaderProps) {
           </span>
         </Link>
 
-        {/* 有搜索栏时移动端整行独占第二行，桌面端与搜索栏并排；
-            详情页没有搜索栏，按钮照旧靠右与 logo 同行 */}
+        {/* 有搜索栏时移动端独占第二行、桌面端并排；详情页没搜索栏，按钮靠右与 logo 同行 */}
         <div
           className={[
             'flex min-w-0 items-center gap-2',

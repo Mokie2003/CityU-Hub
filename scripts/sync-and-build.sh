@@ -1,20 +1,17 @@
 #!/usr/bin/env bash
 #
-# 把本机仓库同步到远端最新代码，并重建站点（解析 repos/*.md + 打包 web）。
-#
-# 通常由 .github/workflows/deploy.yml 在自托管 runner 上调用，也可以手动执行，
-# 或者挂到 crontab 上定时轮询：
+# 把本机仓库同步到远端最新代码，再重建站点（解析 repos/*.md + 打包 web）。
+# 由 .github/workflows/deploy.yml 在自托管 runner 调用，也可手动或挂 crontab 轮询：
 #
 #   bash scripts/sync-and-build.sh
-#   REPO_PATH=/Users/me/Documents/CityU-Hub bash scripts/sync-and-build.sh
 #
-# 可用环境变量：
+# 环境变量：
 #   REPO_PATH    仓库绝对路径，默认脚本所在仓库
 #   REMOTE       远端名，默认 origin
 #   BRANCH       分支名，默认 main
-#   FORCE        1/true 表示代码已是最新时也强制重建
+#   FORCE        1/true 时即便代码已最新也强制重建
 #   RESTART_CMD  重建完成后执行的命令，例如 "pm2 restart cityu-hub"
-#   GITHUB_TOKEN 提供时走在线解析（补齐 stars / 语言 / 头像），否则离线解析
+#   GITHUB_TOKEN 有则在线解析（补齐 stars / 语言 / 头像），否则离线解析
 #
 set -euo pipefail
 

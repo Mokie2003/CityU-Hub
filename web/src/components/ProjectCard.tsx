@@ -14,7 +14,7 @@ import { TagChips } from './TagChips';
 
 interface ProjectCardProps {
   project: Project;
-  /** 用于 stagger 入场动画与像素编号 [01] */
+  /** 用于入场动画延迟与像素编号 [01] */
   index: number;
   /** 该项目的站内统计；拿不到时热力值只用构建期数据算 */
   stats?: ProjectStats;

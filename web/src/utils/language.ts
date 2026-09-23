@@ -1,4 +1,3 @@
-/** 编程语言色点颜色（取自常见编辑器主题） */
 const LANGUAGE_COLORS: Record<string, string> = {
   Python: '#3572a5',
   TypeScript: '#3178c6',

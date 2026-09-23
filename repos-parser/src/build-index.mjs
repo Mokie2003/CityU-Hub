@@ -30,7 +30,7 @@ function scrubHtml(html) {
     .replace(/(href|src)\s*=\s*(["'])\s*javascript:[^"']*\2/gi, '$1="#"');
 }
 
-/** Markdown → HTML，详情页直接渲染，前端无需再引 markdown 依赖 */
+/** Markdown 转成 HTML */
 export function renderReadmeHtml(markdown) {
   return scrubHtml(String(marked.parse(markdown ?? '')));
 }
@@ -39,15 +39,13 @@ function canonicalRepoUrl(url) {
   return url.toLowerCase().replace(/\/+$/, '').replace(/\.git$/, '');
 }
 
-/** GitHub 的 ISO 时间戳只保留日期部分，产物更易读 */
 function toDate(value, fallback) {
   return typeof value === 'string' && value.length >= 10 ? value.slice(0, 10) : fallback;
 }
 
 /**
- * 读取上一次构建的列表产物，取出各项目已有的 addedAt。
- * 「被本站收录的日期」只有我们自己的产物知道，所以每次构建都要把它沿承下来，
- * 否则每天重新构建都会把老项目算成今天新增。读不到（首次构建）就返回空表。
+ * 读取上次产物的 addedAt 沿承下来。被本站收录的日期 GitHub 上没有，
+ * 只能自己记，否则每天重建都会把老项目算成今天新增；首次构建读不到就返回空表。
  */
 async function readPreviousAddedAt(outputPath) {
   try {
@@ -64,12 +62,7 @@ async function readPreviousAddedAt(outputPath) {
 
 /**
  * 把一个 repos/<id>.md 解析成前端契约（web/src/types/index.ts 里的 Project）。
- * 卡片简介由两段组成：`about`（GitHub 仓库 About，仓库没写就是空）与 `description`
- * （本文件正文 Features 之前的介绍摘要）；正文没写介绍时联网构建会回退到 GitHub README。
- * `## Features` 完全由作者决定，写空或不写都不展示，也不会进入卡片摘要。
- *
- * 联网补齐失败（限流 / 404 / 断网）只告警不抛出：单个仓库拿不到数据不该让整站构建
- * 失败，缺的字段由 md 内容与前端运行时兜底。
+ * 联网补齐（限流 / 404 / 断网）失败只告警不抛出，缺的字段由 md 正文和前端兜底。
  */
 async function buildProject(meta, content, fileName, github, useOffline, fileDate, resolveAddedAt) {
   const ref = parseRepoUrl(meta.repoUrl);

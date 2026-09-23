@@ -16,7 +16,7 @@ function ScrollToTop() {
   return null;
 }
 
-/** 每个会话上报一次站点 UV；接口不可用或开了 Do Not Track 时内部自行跳过 */
+/** 接口不可用或开了 Do Not Track 时内部跳过 */
 function SiteAnalytics() {
   useEffect(() => {
     trackVisit();
@@ -24,10 +24,8 @@ function SiteAnalytics() {
   return null;
 }
 
-/**
- * 老链接兼容：之前用的是 HashRouter，分享出去的地址形如 `/#/project/xxx`。
- * 换成真实路径后这些链接的 hash 不再被解析，这里补一次跳转，避免老分享失效。
- */
+// 老链接兼容：旧版用 HashRouter，分享地址形如 /#/project/xxx。
+// 改成真实路径后 hash 不再被解析，这里补一次跳转，免得老分享失效。
 function LegacyHashRedirect() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -42,22 +40,19 @@ function LegacyHashRedirect() {
 
 export default function App() {
   return (
-    // 用 History 路由：每个项目一个真实 URL（/project/<id>），爬虫才能分别收录；
-    // 深链接刷新由 Vercel 的 rewrite 兜底（见 vercel.json）
+    // 每个项目要有独立真实 URL 才利于爬虫分别收录；深链接刷新由 Vercel rewrite 兜底（见 vercel.json）
     <BrowserRouter>
       <ScrollToTop />
       <SiteAnalytics />
       <LegacyHashRedirect />
-      {/* 全站目标锁定光标：链接、按钮与卡片都会触发框选 */}
       <TargetCursor targetSelector="a, button, .cursor-target" />
-      {/* 像素宠物：在页面里漫步、奔跑，并会和卡片/按钮互动 */}
       <PixelPet />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/project/:id" element={<ProjectDetailPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      {/* 首访欢迎弹窗放在路由之外：直接落在详情页（分享链接）时也要能弹出来 */}
+      {/* 放在路由之外：直接落在详情页分享链接时也要能弹出来 */}
       <WelcomeDialog />
     </BrowserRouter>
   );

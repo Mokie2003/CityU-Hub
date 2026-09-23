@@ -1,8 +1,6 @@
 /**
- * 生成文件/URL 安全的 slug。
- * - 英文/数字/连字符/下划线/点 保留并转小写
- * - 中文字符保留（便于本地中文项目），空格与其它符号转 -
- * - 结果为空或过长时，用内容的哈希兜底，保证唯一且稳定
+ * 生成文件/URL 安全的 slug：保留中文字符（本地中文项目用），空格与其它符号转 -。
+ * 结果为空或过长时用内容哈希兜底，保证唯一且稳定。
  */
 import crypto from 'node:crypto';
 
@@ -23,7 +21,6 @@ export function slugify(input, { maxLength = 60, fallbackPrefix = 'project' } = 
   return `${fallbackPrefix}-${hash}`;
 }
 
-/** 在已存在的 id 集合中获取不冲突的 id：foo、foo-2、foo-3 …… */
 export function uniqueId(base, taken) {
   const set = taken instanceof Set ? taken : new Set(taken ?? []);
   if (!set.has(base)) return base;

@@ -2,16 +2,12 @@ import type { CountItem } from '../types';
 
 export interface TagChipsProps {
   items: string[];
-  /** 选中态（实心红 + 辉光） */
   selected?: string[];
-  /** 传入后 chip 变为可点击按钮 */
+  /** 传了才渲染成可点击的按钮 */
   onToggle?: (name: string) => void;
-  /** 最多展示数量，超出显示 +N */
   max?: number;
   size?: 'sm' | 'md';
-  /** 横向滚动场景下不换行 */
   nowrap?: boolean;
-  /** 可选的计数展示（侧边栏标签云用） */
   counts?: CountItem[];
 }
 
@@ -20,7 +16,7 @@ const SIZE_CLASSES: Record<'sm' | 'md', string> = {
   md: 'px-2.5 py-1 text-xs',
 };
 
-/** 方形像素标签 chips：2px 硬边框，hover 变霓虹红 + 辉光，选中态实心红 */
+/** 方形像素标签 chips */
 export function TagChips({
   items,
   selected = [],

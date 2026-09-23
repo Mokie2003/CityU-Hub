@@ -1,9 +1,7 @@
 name: Sync main
 
-# 每次推送到 main 后自动做两件事：
-#   1) 用 GitHub contributors 刷新 README 里的贡献者名单；
-#   2) 把 main 同步进 feature，让 feature 始终与 main 一致。
-# 另外每周一凌晨定时刷新一次名单（提交数会随提交增长）。
+# main 每次推送后刷新 README 贡献者名单，并把 main 合并进 feature；每周一凌晨再定时刷一次
+# （贡献者的提交数会涨，名单要跟着更新）。
 on:
   push:
     branches: [main]
@@ -21,8 +19,7 @@ concurrency:
 jobs:
   sync:
     name: 刷新名单并同步 feature
-    # 机器人自己推的名单提交带 [skip-contrib] 标记，跳过整轮以免自我循环；
-    # 这次推送里的 feature 同步已在上一轮完成。
+    # 机器人自己推的名单提交带 [skip-contrib]，跳过整轮避免自我循环。
     if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip-contrib]') }}
     runs-on: ubuntu-latest
     steps:
@@ -46,8 +43,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          # 与截图工作流同理：每轮先对齐远端再生成，提交基线永远等于远端 HEAD，
-          # push 必然是快进；被拒就重新对齐重生成，因此不会出现 rebase 冲突。
+          # 每轮先对齐远端再生成，基线永远等于远端 HEAD，push 必定快进，不会 rebase 冲突。
           for attempt in 1 2 3; do
             echo "=== 第 ${attempt} 次尝试 ==="
 

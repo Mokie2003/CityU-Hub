@@ -1,15 +1,10 @@
 import { REPO_URL } from '../constants/repo';
 
-/** 项目一律提到 feature 分支，再由 feature-to-main 工作流合入 main */
+// 项目一律提到 feature 分支，再由 feature-to-main 工作流合入 main
 export const SUBMIT_BRANCH = 'feature';
 
-/**
- * 「去 GitHub 自己写」时预填进编辑器的骨架。
- *
- * 这里刻意不搬运 repos/_template.md 的三语注释：GitHub 的预填内容走 query 传递，
- * 实测 query 超过约 6KB 直接返回 414 URI Too Long，而完整模板编码后约 11KB。
- * 所以只保留字段骨架，字段含义让人去看仓库里的 repos/_template.md。
- */
+// 预填内容走 query 传递，超过约 6KB 会 414 URI Too Long（完整模板编码后约 11KB），
+// 所以只留字段骨架，字段含义让人去看仓库里的 repos/_template.md。
 export const TEMPLATE_SKELETON = `---
 # 字段含义与取值见仓库里的 repos/_template.md（简中 / 繁中 / English）
 # 提交时请删掉这几行注释，注释不影响构建
@@ -35,7 +30,7 @@ status: active
 - 功能二
 `;
 
-/** 预填 URL 的安全上限：实测 6000 字节的 query 可用，8000 起会失败 */
+// 实测约 6000 字节的 query 可用，8000 起会失败
 const MAX_PREFILL_URL = 6000;
 
 export interface ProjectDraft {
@@ -53,7 +48,7 @@ export interface ProjectDraft {
   features: string;
 }
 
-/** 生成合法的 repos/<name>.md 文件名：它同时是不填 id 时的默认 id */
+// 生成合法的 repos/<name>.md 文件名；也是不填 id 时的默认 id
 export function toRepoFileName(raw: string) {
   const cleaned = raw
     .trim()
@@ -66,22 +61,21 @@ export function toRepoFileName(raw: string) {
   return cleaned || 'my-project';
 }
 
-/** 拼出 GitHub 新建文件页地址，内容由 value 预填；无写权限时 GitHub 会自动 fork */
+// 无写权限时 GitHub 会自动 fork
 export function buildNewFileUrl(fileName: string, content: string) {
   return `${REPO_URL}/new/${SUBMIT_BRANCH}?filename=${encodeURIComponent(fileName)}&value=${encodeURIComponent(content)}`;
 }
 
-/** URL 过长时 GitHub 会返回 414，超限就不跳转，改为提示用户精简 */
+// URL 过长 GitHub 会返回 414，超限就不跳转，改为提示用户精简
 export function isUrlTooLong(url: string) {
   return url.length > MAX_PREFILL_URL;
 }
 
-/** YAML 双引号标量：转义反斜杠与引号，避免标题里的 : # 等字符破坏 front matter */
+// YAML 双引号标量：转义反斜杠与引号，免得标题里的 : # 破坏 front matter
 function yamlString(value: string) {
   return `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
 }
 
-/** 逗号 / 空格分隔的标签串 → 合法标签数组（小写，最多 12 个，每个最多 16 字符） */
 export function parseDraftTags(raw: string) {
   return [
     ...new Set(
@@ -93,7 +87,7 @@ export function parseDraftTags(raw: string) {
   ];
 }
 
-/** 把表单内容拼成能直接通过 repo.schema.json 校验的 Markdown */
+// 拼成能直接过 repo.schema.json 校验的 Markdown
 export function buildProjectMarkdown(draft: ProjectDraft) {
   const tags = parseDraftTags(draft.tags);
   const homepageUrl = draft.homepageUrl.trim();

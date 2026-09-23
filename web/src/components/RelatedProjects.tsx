@@ -3,10 +3,7 @@ import { Link } from 'react-router-dom';
 import { fetchProjects } from '../api/projects';
 import type { Project } from '../types';
 
-/**
- * 内链区块：同作者的其他项目 + 共享标签的相关项目。
- * 对访客是继续逛下去的入口，对搜索引擎是页面之间的关联信号。
- */
+/** 内链区块：同作者的其他项目 + 共享标签的相关项目 */
 export function RelatedProjects({ current }: { current: Project }) {
   const [all, setAll] = useState<Project[]>([]);
 

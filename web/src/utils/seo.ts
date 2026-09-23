@@ -1,11 +1,7 @@
-/**
- * 客户端路由切换时同步 head 里的关键标签。
- *
- * 首次进入由构建期的预渲染脚本写入正确的 head；这个模块负责的是「在站内点来点去」
- * 之后的同步——否则从项目页返回首页，标题与 canonical 还停在上一个项目上。
- */
+// 首次进入的 head 由构建期预渲染写；这里负责站内路由切换后的同步，
+// 否则从项目页返回首页，标题与 canonical 还停在上一个项目上。
 
-/** 站点根地址：写进 canonical 用绝对地址，避免被判定为重复内容 */
+// canonical 用绝对地址，避免被判成重复内容
 export const SITE_ORIGIN = 'https://cityu-hub.bond';
 
 function setMeta(selector: string, attr: 'name' | 'property', key: string, content: string) {
@@ -21,9 +17,8 @@ function setMeta(selector: string, attr: 'name' | 'property', key: string, conte
 export interface RouteMeta {
   title: string;
   description: string;
-  /** 站内路径，例如 /project/xxx；用于生成 canonical */
   path: string;
-  /** 页面不存在这类不该被收录的路由：只写 noindex，且不写 canonical */
+  // 不该被收录的路由（如 404）：只写 noindex，不写 canonical
   noindex?: boolean;
 }
 
@@ -40,7 +35,7 @@ export function setRouteMeta({ title, description, path, noindex }: RouteMeta) {
   // 每次切换都重写，否则从 404 回到正常页面会一直带着 noindex
   setMeta('meta[name="robots"]', 'name', 'robots', noindex ? 'noindex, follow' : 'index, follow');
 
-  // 404 这类页面不要 canonical：指向一个不存在的地址比不写更容易被判成重复内容
+  // 404 不要 canonical：指向不存在的地址比不写更容易被判成重复内容
   if (noindex) {
     document.head.querySelector('link[rel="canonical"]')?.remove();
     return;

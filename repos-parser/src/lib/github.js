@@ -111,10 +111,9 @@ export function createGithubClient(config, { fetchImpl = globalThis.fetch } = {}
     },
 
     /**
-     * 近 N 天新增的 star 数，用来判断「最近是不是有人在关注」。
-     *
-     * 需要带 starred_at 的媒体类型，而该媒体类型要求认证，所以没有 token 时返回 null。
-     * 只取第一页（最多 100 个）：仓库超过 100 star 时这个值是下限，够本站这些小项目用了。
+     * 近 N 天新增的 star，判断「最近有没有人关注」。
+     * 带 starred_at 的媒体类型要求认证，没有 token 就返回 null。
+     * 只取第一页，仓库超过 100 star 时拿到的是下限，本站项目够用。
      */
     async fetchStarsGained(ref, days = 7) {
       const url = `https://api.github.com/repos/${ref.owner}/${ref.repo}/stargazers?per_page=100`;

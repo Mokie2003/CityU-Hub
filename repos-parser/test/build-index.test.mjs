@@ -58,7 +58,6 @@ test('buildIndex 把项目 Markdown 构建成前端直接可读的静态 JSON', 
     assert.equal(project.updatedAt, project.createdAt);
     assert.match(project.description, /示例项目/);
     assert.match(project.readmeHtml, /README 驱动/);
-    // 作者写了 Features 就原样渲染
     assert.match(project.readmeHtml, /<h2>Features<\/h2>/);
     assert.deepEqual(result.aggregates.tags, [
       { name: 'react', count: 1 },
@@ -144,14 +143,11 @@ test('buildIndex 不补齐 Features：留空或不写都不展示，也不使用
       },
     });
 
-    // 介绍留空仍然回退到 GitHub README
     const withEmptyFeatures = result.projects.find((p) => p.id === 'empty-features');
     assert.match(withEmptyFeatures.readmeHtml, /来自 GitHub README 的项目介绍/);
-    // 但 Features 留空既不会补仓库简介，也不会留下空标题
     assert.doesNotMatch(withEmptyFeatures.readmeHtml, /来自 GitHub 的仓库简介/);
     assert.doesNotMatch(withEmptyFeatures.readmeHtml, /Features/);
 
-    // 整段没写 Features 时，详情页同样不出现 Features
     const withoutFeatures = result.projects.find((p) => p.id === 'no-features');
     assert.match(withoutFeatures.readmeHtml, /没有写 Features 段落/);
     assert.doesNotMatch(withoutFeatures.readmeHtml, /<h2[^>]*>Features<\/h2>/);

@@ -77,7 +77,7 @@ function TextArea({ label, value, onChange, placeholder, rows = 4 }: TextAreaPro
   );
 }
 
-/** 逐个字段校验，返回的错误会一次性显示在表单顶部 */
+/** 校验失败的错误统一显示在表单顶部 */
 function validateDraft(draft: ProjectDraft) {
   const errors: string[] = [];
   const required: Array<[keyof ProjectDraft, string]> = [
