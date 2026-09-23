@@ -1,19 +1,26 @@
+import { useState } from 'react';
 import { Plus } from 'lucide-react';
-import { SUBMIT_URL } from '../constants/repo';
+import { SubmitDialog } from './SubmitDialog';
 
-/** 顶栏按钮：新标签页打开提交流程。窄屏只留图标，避免挤占搜索栏 */
+/** 顶栏按钮：打开提交面板（网页填表 / 去 GitHub 手写）。窄屏只留图标，避免挤占搜索栏 */
 export function SubmitProject() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <a
-      href={SUBMIT_URL}
-      target="_blank"
-      rel="noreferrer noopener"
-      aria-label="我也要提交项目"
-      title="我也要提交项目"
-      className="chip-brutal flex h-11 shrink-0 items-center gap-2 px-3 text-[9px]"
-    >
-      <Plus className="size-4 text-brand" />
-      <span className="pixel hidden sm:inline">SUBMIT</span>
-    </a>
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="我也要提交项目"
+        aria-expanded={open}
+        title="我也要提交项目"
+        className="chip-brutal flex h-11 shrink-0 items-center gap-2 px-3 text-[9px]"
+      >
+        <Plus className="size-4 text-brand" />
+        <span className="pixel hidden sm:inline">我也要提交项目</span>
+      </button>
+
+      {open && <SubmitDialog onClose={() => setOpen(false)} />}
+    </>
   );
 }
