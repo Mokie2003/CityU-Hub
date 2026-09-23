@@ -2,10 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TriangleAlert, X } from 'lucide-react';
 import { Header } from '../components/Header';
 import { EmptyState } from '../components/EmptyState';
+import { GitHubIcon } from '../components/GitHubIcon';
 import { ProjectGrid } from '../components/ProjectGrid';
 import { SearchBar } from '../components/SearchBar';
 import { Sidebar } from '../components/Sidebar';
 import { TagChips } from '../components/TagChips';
+import { REPO_URL } from '../constants/repo';
 import { useProjects } from '../hooks/useProjects';
 import { useSearch } from '../hooks/useSearch';
 import { useUrlState } from '../hooks/useUrlState';
@@ -263,6 +265,17 @@ export function HomePage() {
       <footer className="border-t-[3px] border-line bg-surface">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-6 sm:px-6">
           <span className="pixel text-[9px] text-brand">CITYU&nbsp;HUB</span>
+          <a
+            href={REPO_URL}
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label="本站 GitHub 仓库"
+            title="本站 GitHub 仓库"
+            className="chip-brutal flex items-center gap-2 px-2.5 py-1"
+          >
+            <GitHubIcon className="size-3.5" />
+            <span className="mono text-[11px]">Warpshlczy/CityU-Hub</span>
+          </a>
           <span className="mono text-[11px] text-muted">{data?.total ?? 0} PROJECTS</span>
           <span className="mono text-[11px] text-muted">
             {data?.authors.length ?? 0} CONTRIBUTORS

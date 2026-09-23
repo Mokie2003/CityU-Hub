@@ -19,12 +19,15 @@ export function Header({ searchSlot, onOpenSidebar }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b-[3px] border-line bg-canvas">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-3 gap-y-2.5 px-4 py-2.5 sm:gap-x-4 sm:gap-y-3 sm:px-6 sm:py-3">
+        {/* 移动端筛选按钮。lg:hidden 后的 ! 是必要的：.btn-brutal 的 display 与
+            lg:hidden 权重相同，且在产物 CSS 里排在后面，不加 important 会被它盖掉，
+            导致桌面端也显示这个按钮 */}
         {onOpenSidebar && (
           <button
             type="button"
             onClick={onOpenSidebar}
             aria-label="打开筛选面板"
-            className="btn-brutal btn-brutal-secondary !p-0 size-11 lg:hidden"
+            className="btn-brutal btn-brutal-secondary !p-0 size-11 lg:hidden!"
           >
             <Menu className="size-5" />
           </button>
