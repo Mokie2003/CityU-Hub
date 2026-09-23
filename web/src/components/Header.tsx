@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu } from 'lucide-react';
+import { SubmitProject } from './SubmitProject';
 import { ThemeToggle } from './ThemeToggle';
 import { UsefulLinks } from './UsefulLinks';
 
@@ -60,6 +61,7 @@ export function Header({ searchSlot, onOpenSidebar }: HeaderProps) {
         >
           {searchSlot && <div className="min-w-0 flex-1">{searchSlot}</div>}
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <SubmitProject />
             <UsefulLinks />
             <ThemeToggle />
           </div>
