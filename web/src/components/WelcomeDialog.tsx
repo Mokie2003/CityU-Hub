@@ -9,11 +9,10 @@ import { SubmitDialog } from './SubmitDialog';
 const DISMISS_KEY = 'cityu-hub:welcome-dismissed';
 
 /**
- * 透明底 logo：public/cityu.jpg 是带白底的不透明图，直接放进弹窗会看到一块白方块。
- * public/cityu-logo.png 是它的抠图版（洪水填充抠掉与边缘连通的近白像素，
- * 缎带内部的白色 CityU 字样不受影响），用 CSS 没法把白底去掉，所以单独存一份。
+ * 有白底的原始 logo：public/cityu.jpg。
+ * （public/cityu-logo.png 是同一张图的抠底版，当前未被使用，留着备用。）
  */
-const cityuLogo = `${import.meta.env.BASE_URL}cityu-logo.png`;
+const cityuLogo = `${import.meta.env.BASE_URL}cityu.jpg`;
 
 /** 成为贡献者的好处 */
 const BENEFITS: Array<{ emoji: string; title: string; detail: string }> = [
@@ -80,47 +79,51 @@ export function WelcomeDialog() {
         role="dialog"
         aria-modal="true"
         aria-label="欢迎来到 CityU Hub"
-        className="dialog-panel-in panel-brutal relative my-4 w-full max-w-xl p-5 sm:p-6"
+        className="dialog-panel-in panel-brutal relative my-4 w-full max-w-3xl p-5 sm:p-6"
       >
-        {/* logo 居中放大、不加边框与辉光，文字压在下方并调小 */}
-        <div className="flex flex-col items-center gap-3 text-center">
+        {/* logo 居中，标题压在下方 */}
+        <div className="flex flex-col items-center gap-2 text-center">
           <img
             src={cityuLogo}
             alt="CityU Hub 标志"
-            width={402}
-            height={264}
-            className="h-20 w-auto sm:h-28"
+            width={120}
+            height={72}
+            className="h-16 w-auto sm:h-20"
           />
           <div>
             <h2 className="pixel text-[10px] leading-relaxed text-ink sm:text-[11px]">
               CityU&nbsp;Hub 欢迎你 🎉
             </h2>
-            <p className="mono mt-1.5 text-[10px] text-muted">城大开源自助导航</p>
+            <p className="mono mt-1 text-[10px] text-muted">城大开源自助导航</p>
           </div>
         </div>
 
-        <p className="mono mt-5 border-l-[3px] border-brand bg-surface px-3 py-3 text-[12px] leading-6 text-ink sm:text-[13px]">
+        <p className="mono mt-4 border-l-[3px] border-brand bg-surface px-3 py-2.5 text-[12px] leading-6 text-ink sm:text-[13px]">
           我们想把它做成城大<strong className="text-brand">最完整的开源资源聚合库</strong>
-          ，而这件事离不开你的贡献 ✨
-          <br />
-          如果你的仓库对同学有用，欢迎放进来，让更多人找到它。
+          ，而这件事离不开你的贡献 ✨ 如果你的仓库对同学有用，欢迎放进来，让更多人找到它。
         </p>
 
-        <ul className="mt-5 space-y-2">
+        {/* 一条一行会让弹窗过高，改成两条一行；窄屏只留标题，细节从 sm 起显示 */}
+        <ul className="mt-4 grid grid-cols-2 gap-2">
           {BENEFITS.map((benefit) => (
-            <li key={benefit.title} className="flex items-start gap-3 border-2 border-line bg-surface px-3 py-2.5">
+            <li
+              key={benefit.title}
+              className="flex items-start gap-2.5 border-2 border-line bg-surface px-3 py-2.5"
+            >
               <span className="shrink-0 text-[15px] leading-6" aria-hidden>
                 {benefit.emoji}
               </span>
               <span className="flex min-w-0 flex-col gap-1">
                 <span className="pixel text-[9px] text-ink">{benefit.title}</span>
-                <span className="mono text-[11px] text-muted">{benefit.detail}</span>
+                <span className="mono hidden text-[11px] text-muted sm:block">
+                  {benefit.detail}
+                </span>
               </span>
             </li>
           ))}
         </ul>
 
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
           <button
             type="button"
             onClick={() => setSubmitting(true)}
@@ -138,17 +141,17 @@ export function WelcomeDialog() {
             <BookOpen className="size-4" />
             先随便看看
           </button>
-        </div>
 
-        <label className="mono mt-5 flex cursor-pointer items-center gap-2 text-[11px] text-muted">
-          <input
-            type="checkbox"
-            checked={neverShow}
-            onChange={(event) => setNeverShow(event.target.checked)}
-            className="size-4 shrink-0 accent-brand"
-          />
-          不再提示（记住我的选择）
-        </label>
+          <label className="mono flex cursor-pointer items-center gap-2 text-[11px] text-muted sm:ml-auto">
+            <input
+              type="checkbox"
+              checked={neverShow}
+              onChange={(event) => setNeverShow(event.target.checked)}
+              className="size-4 shrink-0 accent-brand"
+            />
+            不再提示（记住我的选择）
+          </label>
+        </div>
       </div>
     </div>
   );
