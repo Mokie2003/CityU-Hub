@@ -8,6 +8,10 @@ name: Screenshot
 # 提交策略：先把工作区对齐到 fetch 到的最新 origin/main，再生成截图与标注。
 # 这样提交基线永远等于远端 HEAD，push 一定是快进，不会出现 rebase 冲突
 # ——截图是二进制文件，一旦需要 rebase 就无法自动合并。
+#
+# 触发来源有两个：推送到 main（人手推送），以及 PR 合并后由
+# feature-to-main.yml 用 workflow_dispatch 点名触发（因为 GITHUB_TOKEN 的 push
+# 不会触发工作流）。后者刚推完 main，Vercel 还在构建，所以截图前要等部署完成。
 on:
   push:
     branches: [main]
@@ -16,8 +20,9 @@ on:
 permissions:
   contents: write
 
+# 与 main-sync 共用一个组：两者都会改写 README，串行跑才不会互相覆盖
 concurrency:
-  group: screenshot
+  group: readme-writer
   cancel-in-progress: false
 
 jobs:
@@ -48,6 +53,37 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: 等待站点部署完成
+        # 截图抓的是线上站点，Vercel 收到推送后要重新构建再发布。不等部署完成就
+        # 截图，拍到的会是上一个版本。判据：/data/projects.json 里的 generatedAt
+        # 由构建时的解析器写入，它晚于本次提交时间，说明这次改动已经上线。
+        env:
+          DEPLOY_READY_URL: https://cityu-hub.bond/data/projects.json
+        run: |
+          set -euo pipefail
+          git fetch -q origin main
+          commit_epoch="$(git log -1 --format=%ct origin/main)"
+          target=$((commit_epoch - 60))
+          deadline=$(( $(date +%s) + 900 ))
+
+          while [ "$(date +%s)" -lt "$deadline" ]; do
+            generated="$(curl -fsS --max-time 20 "$DEPLOY_READY_URL" 2>/dev/null | node -e 'let s="";process.stdin.on("data",(d)=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).generatedAt??""))}catch{process.stdout.write("")}})' || true)"
+
+            if [ -n "$generated" ]; then
+              built_epoch="$(node -e 'const t=Date.parse(process.argv[1]);process.stdout.write(Number.isNaN(t)?"0":String(Math.floor(t/1000)))' "$generated" 2>/dev/null || echo 0)"
+              if [ "$built_epoch" -ge "$target" ]; then
+                echo "站点已更新到本次提交：generatedAt=${generated}"
+                exit 0
+              fi
+              echo "部署尚未完成：generatedAt=${generated}（${built_epoch} < ${target}），15 秒后再查"
+            else
+              echo "站点暂不可达，15 秒后再查"
+            fi
+            sleep 15
+          done
+
+          echo "警告：等待部署超时（15 分钟），按当前线上版本截图" >&2
 
       - name: 抓取截图并在最新远端基线上提交
         env:

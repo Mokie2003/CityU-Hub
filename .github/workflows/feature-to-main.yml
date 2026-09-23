@@ -3,12 +3,18 @@ name: Sync feature into main
 # 目标分支为 feature 的项目 PR 被合并后自动执行：
 #   1) 把 main 同步进 feature；
 #   2) 把 feature 合入 main（触发站点重建）；
-#   3) 在原 PR 下留言感谢投稿。
+#   3) 显式触发截图与贡献者名单刷新；
+#   4) 在原 PR 下留言感谢投稿。
 #
 # 为什么用 pull_request_target 而不是 pull_request：
 # fork 提交的 PR 在 pull_request 事件下拿到的是只读 token、也拿不到 secrets，
 # 推分支与留言都会 403；pull_request_target 在 base 仓库上下文运行，有写权限。
 # 本工作流只对仓库自身的分支做 fetch / merge / push，不会 checkout 或执行 PR 里的代码。
+#
+# 为什么要显式 dispatch（第 3 步）：
+# 用仓库自带的 GITHUB_TOKEN 推送，除了 workflow_dispatch 与 repository_dispatch，
+# 不会触发任何新的 workflow run。所以这里把 main 推上去之后，push 事件驱动的
+# 截图与贡献者名单工作流不会自己跑，必须用 workflow_dispatch 点名触发。
 #
 # 一次性仓库设置：
 #   - Settings → Actions → General → Workflow permissions 选 “Read and write permissions”；
@@ -22,6 +28,8 @@ permissions:
   contents: write
   issues: write
   pull-requests: write
+  # 点名触发截图 / 贡献者名单工作流需要它
+  actions: write
 
 # 多个 PR 连续合并时串行处理，避免同时改两个分支
 concurrency:
@@ -57,6 +65,22 @@ jobs:
           git checkout main
           git merge --no-edit feature
           git push origin main
+
+      - name: 触发截图与贡献者名单刷新
+        # 上面那次 push 用的是 GITHUB_TOKEN，不会触发 push 事件驱动的工作流，
+        # 所以这里点名触发，否则 PR 合并后 README 的截图与头像墙不会更新。
+        uses: actions/github-script@v7
+        with:
+          script: |
+            for (const workflow_id of ['main-sync.yml', 'screenshot.yml']) {
+              await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id,
+                ref: 'main',
+              });
+              core.info(`已触发 ${workflow_id}`);
+            }
 
       - name: 在原 PR 下留言
         uses: actions/github-script@v7

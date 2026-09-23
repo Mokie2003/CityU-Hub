@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: main-sync
+  group: readme-writer
   cancel-in-progress: false
 
 jobs:
@@ -40,21 +40,41 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: 刷新 README 贡献者头像墙与名单
+      - name: 刷新名单并在最新远端基线上提交
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/update-contributors.mjs
-
-      - name: 有变化就提交并推送
         run: |
-          if git diff --quiet -- README.md; then
-            echo "贡献者信息无变化，跳过提交"
-            exit 0
-          fi
-          git add README.md
-          git commit -m "chore(contributors): 刷新贡献者头像墙与名单 [skip-contrib]"
-          git pull --rebase origin main
-          git push origin main
+          set -euo pipefail
+
+          # 与截图工作流同理：每轮先对齐远端再生成，提交基线永远等于远端 HEAD，
+          # push 必然是快进；被拒就重新对齐重生成，因此不会出现 rebase 冲突。
+          for attempt in 1 2 3; do
+            echo "=== 第 ${attempt} 次尝试 ==="
+
+            git fetch origin main
+            git reset --hard origin/main
+
+            node scripts/update-contributors.mjs
+
+            if git diff --quiet -- README.md; then
+              echo "贡献者信息无变化，跳过提交"
+              exit 0
+            fi
+
+            git add README.md
+            git commit -m "chore(contributors): 刷新贡献者头像墙与名单 [skip-contrib]"
+
+            if git push origin main; then
+              echo "已推送到 main"
+              exit 0
+            fi
+
+            echo "推送被拒：远端在生成期间有了新提交，重新对齐后重试"
+            sleep 5
+          done
+
+          echo "连续 3 次推送失败，放弃" >&2
+          exit 1
 
       - name: 把 main 同步进 feature
         run: |
