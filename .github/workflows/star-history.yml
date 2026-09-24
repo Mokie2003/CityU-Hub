@@ -1,0 +1,76 @@
+name: Star history
+
+# 每天记一次各仓库的 star 数并提交，构建时用它算「近 7 天涨星」。
+# GitHub 的 stargazers 接口自 2026-07 起只对仓库 admin / collaborator 开放，
+# 收录的又都是别人的仓库，拿不到 starred_at，只能自己攒历史。
+# 历史不足 7 天时该维度显示「—」而不是 0。
+on:
+  schedule:
+    # UTC 22:10 = 北京时间 06:10，避开整点排队高峰
+    - cron: '10 22 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: star-history
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    name: 记录 star 数并提交
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci --no-audit --no-fund
+
+      - name: 配置 git 身份
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: 记录快照并在最新远端基线上提交
+        # 带 token 时按 5000 次/小时走，不带就是匿名 60 次/小时；仓库数量远小于后者
+        env:
+          GITHUB_TOKEN: ${{ secrets.REBUILD_GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          for attempt in 1 2 3; do
+            echo "=== 第 ${attempt} 次尝试 ==="
+
+            git fetch origin main
+            git reset --hard origin/main
+
+            node scripts/update-star-history.mjs
+
+            if git diff --quiet -- repos-parser/star-history.json; then
+              exit 0
+            fi
+
+            # 带 [skip-shot]：star 数天天变，不必为此天天重抓首页截图
+            git add repos-parser/star-history.json
+            git commit -m "chore(star-history): 记录 $(date -u +%F) 的 star 快照 [skip-shot]"
+
+            if git push origin main; then
+              echo "已推送到 main"
+              exit 0
+            fi
+
+            echo "推送被拒：远端在生成期间有了新提交，重新对齐后重试"
+            sleep 5
+          done
+
+          echo "连续 3 次推送失败，放弃" >&2
+          exit 1

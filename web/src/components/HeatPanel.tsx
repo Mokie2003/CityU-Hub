@@ -5,14 +5,14 @@ import type { HeatDimensions } from '../utils/heat';
 import { formatNumber } from '../utils/formatNumber';
 import { HeatFlames } from './HeatFlames';
 
-/** 显示真实数量，热度高低交给进度条；999 表示项目没填 updatedAt */
-const RAW_FORMAT: Record<keyof HeatDimensions, (value: number) => string> = {
-  stars: formatNumber,
-  growth: (value) => `+${formatNumber(value)}`,
-  views: formatNumber,
-  clicks: formatNumber,
-  forks: formatNumber,
-  freshness: (value) => (value >= 999 ? '—' : `${Math.round(value)}天`),
+/** 显示真实数量，热度高低交给进度条；null 表示这一维还没数据 */
+const RAW_FORMAT: Record<keyof HeatDimensions, (value: number | null) => string> = {
+  stars: (value) => (value === null ? '—' : formatNumber(value)),
+  growth: (value) => (value === null ? '—' : `+${formatNumber(value)}`),
+  views: (value) => (value === null ? '—' : formatNumber(value)),
+  clicks: (value) => (value === null ? '—' : formatNumber(value)),
+  forks: (value) => (value === null ? '—' : formatNumber(value)),
+  freshness: (value) => (value === null || value >= 999 ? '—' : `${Math.round(value)}天`),
 };
 
 /** 详情页热度拆解：把各维度摊开，说明等级怎么来的。 */
@@ -54,8 +54,9 @@ export function HeatPanel({ project, stats }: { project: Project; stats?: Projec
 
       <p className="mono mt-4 text-[10px] leading-5 text-muted">
         热度满分 100，由 Star 总数、近 7 天涨星、站内浏览、跳转 GitHub 的点击、Fork 数
-        与最近更新时间加权算出。右侧是各维度的真实数量，进度条是它对热度的贡献。
-        站内数据是匿名计数，浏览器开启 Do Not Track 时不参与统计。
+        与最近更新时间加权算出。右侧是各维度的真实数量，进度条是它对热度的贡献；
+        显示「—」表示这一维暂时还没有数据。涨星靠站内每天记录一次，
+        攒够 7 天后才有值。站内数据是匿名计数，浏览器开启 Do Not Track 时不参与统计。
       </p>
     </section>
   );

@@ -6,6 +6,7 @@ import { aggregateProjects } from './lib/aggregate.js';
 import { createGithubClient, parseRepoUrl } from './lib/github.js';
 import { analyzeReadme, extractIntroduction, fillProjectContent, guessTagsFromReadme } from './lib/markdown.js';
 import { slugify } from './lib/slug.js';
+import { computeStarsGained7d, readStarHistory, starHistoryPath } from './lib/starHistory.js';
 import { loadConfig } from './config.js';
 import { parseFrontmatterDocument } from './lib/frontmatter.js';
 
@@ -64,7 +65,7 @@ async function readPreviousAddedAt(outputPath) {
  * 把一个 repos/<id>.md 解析成前端契约（web/src/types/index.ts 里的 Project）。
  * 联网补齐（限流 / 404 / 断网）失败只告警不抛出，缺的字段由 md 正文和前端兜底。
  */
-async function buildProject(meta, content, fileName, github, useOffline, fileDate, resolveAddedAt) {
+async function buildProject(meta, content, fileName, github, useOffline, fileDate, resolveAddedAt, resolveStarsGained7d) {
   const ref = parseRepoUrl(meta.repoUrl);
   if (!ref) throw new Error(`${fileName}: repoUrl 不是可识别的 GitHub 仓库地址`);
 
@@ -74,16 +75,6 @@ async function buildProject(meta, content, fileName, github, useOffline, fileDat
       githubMeta = await github.fetchRepoMeta(ref);
     } catch (error) {
       console.warn(`[build-index] ${fileName}: 获取仓库信息失败，跳过联网补齐 —— ${error.message}`);
-    }
-  }
-
-  // 近 7 天涨星：判断「最近是不是有人关注」，需要 token 才有 starred_at
-  let starsGained7d = 0;
-  if (!useOffline && githubMeta) {
-    try {
-      starsGained7d = (await github.fetchStarsGained(ref)) ?? 0;
-    } catch (error) {
-      console.warn(`[build-index] ${fileName}: 读取近 7 天涨星失败 —— ${error.message}`);
     }
   }
 
@@ -128,7 +119,7 @@ async function buildProject(meta, content, fileName, github, useOffline, fileDat
     githubUrl: ref.repoUrl,
     demoUrl: meta.homepageUrl || githubMeta?.homepageUrl || null,
     stars: githubMeta?.stars ?? 0,
-    starsGained7d,
+    starsGained7d: resolveStarsGained7d(`${ref.owner}/${ref.repo}`, githubMeta?.stars ?? null),
     forks: githubMeta?.forks ?? 0,
     language: githubMeta?.language ?? '',
     license: githubMeta?.license ?? '',
@@ -163,6 +154,8 @@ export async function buildIndex({ inputDir = reposDir, outputPath = outputDir, 
   const repoUrls = new Map();
   // 上一次的产物：把 addedAt 沿承下来（GitHub 上没有「什么时候被本站收录」这个信息）
   const previousAddedAt = await readPreviousAddedAt(outputPath);
+  // 近 7 天涨星靠自建快照算；离线构建拿不到 star 数，读了也没用
+  const starHistory = useOffline ? [] : await readStarHistory(starHistoryPath());
   const today = new Date().toISOString().slice(0, 10);
 
   for (const fileName of files) {
@@ -179,6 +172,7 @@ export async function buildIndex({ inputDir = reposDir, outputPath = outputDir, 
       useOffline,
       fileDate,
       (projectId) => previousAddedAt.get(projectId) ?? today,
+      (repo, stars) => computeStarsGained7d(starHistory, repo, stars, today),
     );
 
     const repoKey = canonicalRepoUrl(project.githubUrl);
