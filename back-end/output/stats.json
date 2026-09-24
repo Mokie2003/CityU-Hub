@@ -1,0 +1,17 @@
+{
+  "total": 2,
+  "active": 2,
+  "featured": 0,
+  "withReadme": 2,
+  "languages": [
+    {
+      "name": "Python",
+      "count": 1
+    },
+    {
+      "name": "TeX",
+      "count": 1
+    }
+  ],
+  "builtAt": "2026-09-21T09:13:47.336Z"
+}

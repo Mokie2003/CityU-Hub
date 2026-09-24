@@ -1,0 +1,54 @@
+[
+  {
+    "name": "agent-skills",
+    "count": 1
+  },
+  {
+    "name": "ai-agent",
+    "count": 1
+  },
+  {
+    "name": "chinese",
+    "count": 1
+  },
+  {
+    "name": "claude-skill",
+    "count": 1
+  },
+  {
+    "name": "copilot-skill",
+    "count": 1
+  },
+  {
+    "name": "education",
+    "count": 1
+  },
+  {
+    "name": "obsidian",
+    "count": 1
+  },
+  {
+    "name": "pptx",
+    "count": 1
+  },
+  {
+    "name": "python",
+    "count": 1
+  },
+  {
+    "name": "skills",
+    "count": 1
+  },
+  {
+    "name": "slides",
+    "count": 1
+  },
+  {
+    "name": "study-notes",
+    "count": 1
+  },
+  {
+    "name": "tex",
+    "count": 1
+  }
+]

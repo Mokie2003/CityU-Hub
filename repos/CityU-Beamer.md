@@ -1,7 +1,7 @@
 ---
 title: cityu-beamer
-author: Brandon
-authorName: cxb
+author: CHANG Xuben
+authorName: Brandon
 major: Computer Science
 enrollmentYear: 2026
 repoUrl: https://github.com/inscripoem/cityu-beamer

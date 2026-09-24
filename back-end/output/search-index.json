@@ -1,0 +1,39 @@
+[
+  {
+    "id": "inscripoem-cityu-beamer",
+    "title": "cityu-beamer",
+    "summary": "A reusable Beamer theme based on the January 2025 City University of Hong Kong PowerPoint template. This is a community adaptation, not an officially endorsed university template.",
+    "author": "Brandon",
+    "category": "学习辅助",
+    "language": "TeX",
+    "tags": [
+      "slides",
+      "tex"
+    ],
+    "status": "active",
+    "searchableText": "cityu-beamer a reusable beamer theme based on the january 2025 city university of hong kong powerpoint template. this is a community adaptation, not an officially endorsed university template. beamer template for city university of hong kong (unofficial) brandon 学习辅助 tex slides tex"
+  },
+  {
+    "id": "l01nki1-extend-slides",
+    "title": "extend-slides",
+    "summary": "- become a neko maid - do some lovely jobs",
+    "author": "lllllllly",
+    "category": "学习辅助",
+    "language": "Python",
+    "tags": [
+      "skills",
+      "agent-skills",
+      "ai-agent",
+      "chinese",
+      "claude-skill",
+      "copilot-skill",
+      "education",
+      "obsidian",
+      "pptx",
+      "study-notes",
+      "python"
+    ],
+    "status": "active",
+    "searchableText": "extend-slides - become a neko maid - do some lovely jobs 把课程课件/讲义/录音转写扩展成可独立复习的中文讲解文档，解决平时学习/期末复习难题 lllllllly 学习辅助 python skills agent-skills ai-agent chinese claude-skill copilot-skill education obsidian pptx study-notes python"
+  }
+]
