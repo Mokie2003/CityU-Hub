@@ -24,13 +24,13 @@ export interface HeatResult {
   score: number;
   level: 1 | 2 | 3;
   // raw 是真实数量，points 是乘权重后的得分；对外一律展示 raw，
-  // 否则 28 个 star 会显示成 26，看着像统计错了
+  // 否则 28 个 star 会显示成 26，看着像统计错了。raw 为 null 表示这一维还没有数据。
   parts: Array<{
     key: keyof HeatDimensions;
     label: string;
     ratio: number;
     points: number;
-    raw: number;
+    raw: number | null;
   }>;
 }
 
@@ -54,7 +54,8 @@ function ratio(value: number, full: number) {
 
 export interface HeatInput {
   stars: number;
-  starsGained7d?: number;
+  /** 缺省或 null 表示历史快照还没攒够 7 天，这一维无从计算 */
+  starsGained7d?: number | null;
   forks: number;
   updatedAt?: string;
   stats?: ProjectStats;
@@ -75,9 +76,9 @@ export function computeHeat(input: HeatInput, now = Date.now()): HeatResult {
     freshness: Math.max(0, 1 - days / 90),
   };
 
-  const rawValues: HeatDimensions = {
+  const rawValues: { [K in keyof HeatDimensions]: number | null } = {
     stars: input.stars,
-    growth: input.starsGained7d ?? 0,
+    growth: input.starsGained7d ?? null,
     views: input.stats?.views ?? 0,
     clicks: input.stats?.clicks ?? 0,
     forks: input.forks,

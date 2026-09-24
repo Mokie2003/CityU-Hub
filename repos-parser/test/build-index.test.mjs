@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
 import { buildIndex } from '../src/build-index.mjs';
+import { shiftDate } from '../src/lib/starHistory.js';
 
 test('buildIndex 把项目 Markdown 构建成前端直接可读的静态 JSON', async () => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'cityu-hub-build-'));
@@ -139,7 +140,6 @@ test('buildIndex 不补齐 Features：留空或不写都不展示，也不使用
           defaultBranch: 'main',
         }),
         fetchReadme: async () => '# Remote Project\n\n来自 GitHub README 的项目介绍。',
-        fetchStarsGained: async () => 0,
       },
     });
 
@@ -153,6 +153,62 @@ test('buildIndex 不补齐 Features：留空或不写都不展示，也不使用
     assert.doesNotMatch(withoutFeatures.readmeHtml, /<h2[^>]*>Features<\/h2>/);
     assert.doesNotMatch(withoutFeatures.readmeHtml, /来自 GitHub 的仓库简介/);
   } finally {
+    await fs.rm(root, { recursive: true, force: true });
+  }
+});
+
+test('buildIndex 用自建 star 快照算近 7 天涨星，历史不足时留空', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'cityu-hub-stars-'));
+  const inputDir = path.join(root, 'repos');
+  const outputDir = path.join(root, 'output');
+  const historyPath = path.join(root, 'star-history.json');
+  const repo = 'demo-owner/demo-project';
+  await fs.mkdir(inputDir);
+  await fs.writeFile(
+    path.join(inputDir, 'demo.md'),
+    [
+      '---',
+      'id: demo-project',
+      'title: Demo Project',
+      'author: demo-owner',
+      'authorName: Demo Student',
+      'major: Computer Science',
+      'enrollmentYear: 2024',
+      'repoUrl: https://github.com/demo-owner/demo-project',
+      'category: web',
+      '---',
+      '',
+      '演示用的项目介绍。',
+    ].join('\n'),
+    'utf8',
+  );
+
+  const githubClient = {
+    fetchRepoMeta: async () => ({ repo: 'demo-project', owner: 'demo-owner', stars: 28, forks: 3 }),
+    fetchReadme: async () => '',
+  };
+  const today = new Date().toISOString().slice(0, 10);
+  const writeHistory = (daysAgo, stars) =>
+    fs.writeFile(
+      historyPath,
+      JSON.stringify({ version: 1, snapshots: [{ date: shiftDate(today, -daysAgo), stars: { [repo]: stars } }] }),
+      'utf8',
+    );
+
+  const previousPath = process.env.STAR_HISTORY_PATH;
+  try {
+    process.env.STAR_HISTORY_PATH = historyPath;
+
+    await writeHistory(8, 20);
+    const withBaseline = await buildIndex({ inputDir, outputPath: outputDir, githubClient });
+    assert.equal(withBaseline.projects[0].starsGained7d, 8);
+
+    await writeHistory(3, 27);
+    const tooShort = await buildIndex({ inputDir, outputPath: outputDir, githubClient });
+    assert.equal(tooShort.projects[0].starsGained7d, null);
+  } finally {
+    if (previousPath === undefined) delete process.env.STAR_HISTORY_PATH;
+    else process.env.STAR_HISTORY_PATH = previousPath;
     await fs.rm(root, { recursive: true, force: true });
   }
 });

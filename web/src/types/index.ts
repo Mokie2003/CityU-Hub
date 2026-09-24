@@ -19,8 +19,8 @@ export interface Project {
   githubUrl: string;
   demoUrl: string | null;
   stars: number;
-  // 近 7 天新增 star；没有 token 时构建期拿不到，为 0
-  starsGained7d?: number;
+  // 近 7 天新增 star，取自自建快照；null 表示站内历史还没攒够 7 天
+  starsGained7d?: number | null;
   forks: number;
   language: string;
   license: string;
