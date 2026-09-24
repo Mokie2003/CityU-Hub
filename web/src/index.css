@@ -149,6 +149,17 @@ body::after {
   box-shadow: 4px 4px 0 var(--c-shadow), 0 0 22px var(--glow-brand);
 }
 
+/* 提交中禁用，去掉位移和发光，避免看起来还能点 */
+.btn-brutal:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.btn-brutal:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 .btn-brutal-primary {
   background-color: #f47c94;
   color: var(--on-brand);

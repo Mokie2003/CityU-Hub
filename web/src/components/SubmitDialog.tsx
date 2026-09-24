@@ -9,6 +9,7 @@ import {
   toRepoFileName,
   type ProjectDraft,
 } from '../utils/submitTemplate';
+import { submitProject } from '../api/submit';
 
 const EMPTY_DRAFT: ProjectDraft = {
   title: '',
@@ -126,11 +127,13 @@ function draftFileName(draft: ProjectDraft) {
   return `${toRepoFileName(repo || draft.title)}.md`;
 }
 
-/** 提交入口弹窗：网页填表自动生成 PR，或去 GitHub 手写 */
+/** 提交入口弹窗：网页填表由本站直接开 PR，或去 GitHub 手写 */
 export function SubmitDialog({ onClose }: { onClose: () => void }) {
   const [mode, setMode] = useState<'choose' | 'form'>('choose');
   const [draft, setDraft] = useState<ProjectDraft>(EMPTY_DRAFT);
   const [errors, setErrors] = useState<string[]>([]);
+  const [pending, setPending] = useState(false);
+  const [created, setCreated] = useState<{ url: string; number: number } | null>(null);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -153,11 +156,28 @@ export function SubmitDialog({ onClose }: { onClose: () => void }) {
     onClose();
   };
 
-  const submitForm = () => {
+  const submitForm = async () => {
     const found = validateDraft(draft);
     setErrors(found);
     if (found.length > 0) return;
-    openGithub(`repos/${draftFileName(draft)}`, buildProjectMarkdown(draft));
+
+    const fileName = `repos/${draftFileName(draft)}`;
+    const content = buildProjectMarkdown(draft);
+
+    setPending(true);
+    const result = await submitProject({ fileName, content });
+    setPending(false);
+
+    if (result.status === 'created') {
+      setCreated({ url: result.url, number: result.number });
+      return;
+    }
+    // 服务端没配好时退回 GitHub 原生流程，照样能提交，只是要先 fork
+    if (result.status === 'fallback') {
+      openGithub(fileName, content);
+      return;
+    }
+    setErrors([result.message]);
   };
 
   return (
@@ -177,7 +197,7 @@ export function SubmitDialog({ onClose }: { onClose: () => void }) {
               我也要提交项目
             </h2>
             <p className="mono mt-2 text-[11px] text-muted">
-              {mode === 'choose' ? '选择一种提交方式' : '填好后会打开 GitHub，由它自动 fork 并开 PR'}
+              {mode === 'choose' ? '选择一种提交方式' : '填好后由本站直接开 PR，不用先 fork 仓库'}
             </p>
           </div>
           <button
@@ -201,7 +221,7 @@ export function SubmitDialog({ onClose }: { onClose: () => void }) {
               <span className="flex flex-col gap-1.5">
                 <span className="pixel text-[10px] text-ink">网页填写</span>
                 <span className="mono text-[11px] text-muted">
-                  在这里填好字段，提交后自动跳到 GitHub 并生成 PR。需要你有 GitHub 账号。
+                  在这里填好字段，提交后由本站直接开 PR，不用 fork 仓库，也不必登录 GitHub。
                 </span>
               </span>
             </button>
@@ -223,10 +243,29 @@ export function SubmitDialog({ onClose }: { onClose: () => void }) {
             <p className="mono flex items-start gap-2 border-l-[3px] border-brand bg-surface px-3 py-2 text-[11px] text-muted">
               <ExternalLink className="mt-0.5 size-3.5 shrink-0 text-brand" />
               <span>
-                两种方式都会提 PR 到 <span className="text-ink">feature</span> 分支；你对本仓库没有写权限时，
-                GitHub 会自动在你名下创建 fork。合并后网站会自动更新。
+                两种方式都会提 PR 到 <span className="text-ink">feature</span> 分支，合并后网站会自动更新。
+                网页填写由本站代你开 PR，不用 fork；去 GitHub 自己写则会由 GitHub 提示你先 fork。
               </span>
             </p>
+          </div>
+        ) : created ? (
+          <div className="mt-5 space-y-4">
+            <p className="mono text-[12px] text-ink">
+              PR #{created.number} 已经开好了，维护者合并后网站会自动收录。
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <a
+                href={created.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-brutal btn-brutal-primary"
+              >
+                在 GitHub 查看 PR
+              </a>
+              <button type="button" onClick={onClose} className="btn-brutal btn-brutal-secondary">
+                关闭
+              </button>
+            </div>
           </div>
         ) : (
           <>
@@ -306,8 +345,13 @@ export function SubmitDialog({ onClose }: { onClose: () => void }) {
             </div>
 
             <div className="mt-5 flex flex-wrap items-center gap-3">
-              <button type="button" onClick={submitForm} className="btn-brutal btn-brutal-primary">
-                生成 PR
+              <button
+                type="button"
+                onClick={submitForm}
+                disabled={pending}
+                className="btn-brutal btn-brutal-primary"
+              >
+                {pending ? '开 PR 中…' : '生成 PR'}
               </button>
               <button
                 type="button"
@@ -315,6 +359,7 @@ export function SubmitDialog({ onClose }: { onClose: () => void }) {
                   setErrors([]);
                   setMode('choose');
                 }}
+                disabled={pending}
                 className="btn-brutal btn-brutal-secondary"
               >
                 返回

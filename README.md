@@ -99,8 +99,8 @@ CityU-Hub/
 │       ├── hooks/              # useProjects、useSearch、useUrlState
 │       ├── pages/              # 首页、项目详情页
 │       └── utils/              # 搜索语法解析、格式化、slug
-├── api/                        # Vercel 函数：track（埋点）/ stats（读聚合），统计用
-├── lib/                        # 函数与脚本共用的工具（Upstash REST 客户端）
+├── api/                        # Vercel 函数：track（埋点）/ stats（读聚合）/ submit（代开 PR）
+├── lib/                        # 函数与脚本共用的工具（Upstash REST 客户端、GitHub 写端客户端）
 ├── scripts/
 │   ├── prerender.mjs           # 构建后产出静态页、sitemap.xml、robots.txt 与徽章 SVG
 │   ├── sync-and-build.sh       # 目标机器拉取最新代码并重建站点
@@ -129,6 +129,8 @@ repos/*.md ─► npm run validate ─► repos-parser ─► web/public/data/*.
 打包完成后 `scripts/prerender.mjs` 还会为每个路由生成一份带 Meta 与 JSON-LD 的静态 HTML，并产出 `sitemap.xml`、`robots.txt` 与 `badge/<id>.svg` 徽章 —— 搜索引擎拿到的就是渲染好的内容，不依赖 JS。
 
 站内统计（全站 UV、卡片浏览与外链点击）走 `api/track` 与 `api/stats` 两个函数，数据放在 Upstash Redis，前端据此计算卡片热力值。在 Vercel 环境变量里配 `KV_REST_API_URL` / `KV_REST_API_TOKEN`（Upstash 集成默认注入这两个名字，也兼容 `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`）。**没配时埋点静默失效**，页面照常渲染，热力值只按 GitHub 数据计算。
+
+网站上的「我也要提交项目」表单走 `api/submit`：由站点自己往 `feature` 分支开 PR，提交者不必先 fork 仓库，也不用登录 GitHub。它需要 Vercel 里的 `SUBMIT_GITHUB_TOKEN`（细粒度令牌，给 Contents 与 Pull requests 的读写权限即可），并按 IP 限流（每小时 5 次）。因为 PR 是站点账号开的，表单里填的 GitHub 用户名无法核实，PR 正文中会注明这一点。**没配 token 或没配 Redis 时该接口返回 `submit-disabled`**，前端会自动退回原来的 GitHub 原生流程 —— 由 GitHub 提示用户 fork，功能不会整块失效。
 
 ### 本地运行
 
@@ -283,8 +285,8 @@ CityU-Hub/
 │       ├── hooks/              # useProjects、useSearch、useUrlState
 │       ├── pages/              # 首頁、項目詳情頁
 │       └── utils/              # 搜尋語法解析、格式化、slug
-├── api/                        # Vercel 函式：track（埋點）/ stats（讀聚合），統計用
-├── lib/                        # 函式與腳本共用的工具（Upstash REST 客戶端）
+├── api/                        # Vercel 函式：track（埋點）/ stats（讀聚合）/ submit（代開 PR）
+├── lib/                        # 函式與腳本共用的工具（Upstash REST 客戶端、GitHub 寫端客戶端）
 ├── scripts/
 │   ├── prerender.mjs           # 建構後產出靜態頁、sitemap.xml、robots.txt 與徽章 SVG
 │   ├── sync-and-build.sh       # 目標機器拉取最新程式碼並重建網站
@@ -313,6 +315,8 @@ repos/*.md ─► npm run validate ─► repos-parser ─► web/public/data/*.
 打包完成後 `scripts/prerender.mjs` 還會為每個路由產生一份帶 Meta 與 JSON-LD 的靜態 HTML，並產出 `sitemap.xml`、`robots.txt` 與 `badge/<id>.svg` 徽章 —— 搜尋引擎拿到的是已渲染的內容，不依賴 JS。
 
 站內統計（全站 UV、卡片瀏覽與外連點擊）走 `api/track` 與 `api/stats` 兩個函式，資料放在 Upstash Redis，前端據此計算卡片熱力值。在 Vercel 環境變數裡設定 `KV_REST_API_URL` / `KV_REST_API_TOKEN`（Upstash 整合預設注入這兩個名字，也相容 `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`）。**未設定時埋點靜默失效**，頁面照常渲染，熱力值只按 GitHub 資料計算。
+
+網站上的「我也要提交項目」表單走 `api/submit`：由站點自己往 `feature` 分支開 PR，提交者不必先 fork 倉庫，也不用登入 GitHub。它需要 Vercel 裡的 `SUBMIT_GITHUB_TOKEN`（細粒度權杖，給 Contents 與 Pull requests 的讀寫權限即可），並按 IP 限流（每小時 5 次）。因為 PR 是站點帳號開的，表單裡填的 GitHub 使用者名稱無法核實，PR 正文中會註明這一點。**未設定 token 或未設定 Redis 時該函式回傳 `submit-disabled`**，前端會自動退回原本的 GitHub 原生流程 —— 由 GitHub 提示使用者 fork，功能不會整塊失效。
 
 ### 本機執行
 
@@ -467,8 +471,8 @@ CityU-Hub/
 │       ├── hooks/              # useProjects, useSearch, useUrlState
 │       ├── pages/              # Home, project detail
 │       └── utils/              # Search parser, formatting, slug helpers
-├── api/                        # Vercel functions: track (beacon) / stats (read), for analytics
-├── lib/                        # Helpers shared by functions and scripts (Upstash REST client)
+├── api/                        # Vercel functions: track (beacon) / stats (read) / submit (open PRs)
+├── lib/                        # Helpers shared by functions and scripts (Upstash REST client, GitHub write client)
 ├── scripts/
 │   ├── prerender.mjs           # After the build: static pages, sitemap.xml, robots.txt, badge SVGs
 │   ├── sync-and-build.sh       # Pull the latest code on a target machine and rebuild
@@ -497,6 +501,8 @@ The parser emits the front-end contract directly, with no API layer in between:
 After bundling, `scripts/prerender.mjs` writes a static HTML snapshot per route with Meta tags and JSON-LD, plus `sitemap.xml`, `robots.txt` and the `badge/<id>.svg` badges — crawlers get rendered content without running JS.
 
 Site analytics (total UV, card views, outbound clicks) run through the `api/track` and `api/stats` functions with data kept in Upstash Redis; the front end turns that into each card's heat score. Set `KV_REST_API_URL` / `KV_REST_API_TOKEN` in the Vercel environment variables (the Upstash integration injects those two names by default; `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` also work). **Without them the beacons fail silently**, pages render as usual, and heat scores fall back to GitHub data only.
+
+The "我也要提交项目" form on the site goes through `api/submit`: the site itself opens a PR against the `feature` branch, so submitters never have to fork the repository or sign in to GitHub. It needs `SUBMIT_GITHUB_TOKEN` in Vercel (a fine-grained token with read/write on Contents and Pull requests is enough) and is rate limited per IP (5 per hour). Since the PR is opened by the site account, the GitHub username typed into the form cannot be verified — the PR body says so. **Without the token or without Redis the endpoint returns `submit-disabled`**, and the front end falls back to GitHub's native flow, where GitHub asks the user to fork. The feature degrades instead of breaking.
 
 ### Local development
 
